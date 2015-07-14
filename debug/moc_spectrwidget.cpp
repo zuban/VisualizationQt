@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'spectrwidget.h'
 **
-** Created: Mon 13. Jul 17:57:11 2015
+** Created: Tue 14. Jul 17:47:52 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_SpectrWidget[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      88,   14, // methods
+      86,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -68,59 +68,57 @@ static const uint qt_meta_data_SpectrWidget[] = {
     1084, 1079,   13,   13, 0x08,
     1130, 1079,   13,   13, 0x08,
     1163, 1079,   13,   13, 0x08,
-    1199,  169,   13,   13, 0x08,
-    1213,   13,   13,   13, 0x08,
-    1242,   13,   13,   13, 0x08,
-    1274, 1079,   13,   13, 0x08,
-    1325,   13,   13,   13, 0x08,
-    1362,   13,   13,   13, 0x08,
-    1391, 1079,   13,   13, 0x08,
-    1446, 1438,   13,   13, 0x08,
-    1479, 1438,   13,   13, 0x08,
-    1515, 1438,   13,   13, 0x08,
-    1550, 1438,   13,   13, 0x08,
-    1583,   13,   13,   13, 0x08,
-    1619, 1438,   13,   13, 0x08,
-    1660,   13,   13,   13, 0x08,
-    1694, 1438,   13,   13, 0x08,
-    1734, 1727,   13,   13, 0x08,
-    1775, 1079,   13,   13, 0x08,
-    1816, 1079,   13,   13, 0x08,
-    1857, 1079,   13,   13, 0x08,
-    1898, 1079,   13,   13, 0x08,
-    1939,   13,   13,   13, 0x08,
-    1977, 1079,   13,   13, 0x08,
-    2019, 1079,   13,   13, 0x08,
-    2055, 1438,   13,   13, 0x08,
-    2086, 1438,   13,   13, 0x08,
-    2119, 1438,   13,   13, 0x08,
-    2160, 2151,   13,   13, 0x08,
-    2196,   13,   13,   13, 0x08,
-    2230,   13,   13,   13, 0x08,
-    2260,   13,   13,   13, 0x08,
-    2295,   13,   13,   13, 0x08,
-    2332,   13,   13,   13, 0x08,
-    2365,   13,   13,   13, 0x08,
-    2402,   13,   13,   13, 0x08,
-    2438,   13,   13,   13, 0x08,
-    2470,   13,   13,   13, 0x08,
-    2507, 1438,   13,   13, 0x08,
-    2552, 2546,   13,   13, 0x08,
-    2585,   13,   13,   13, 0x08,
-    2625,   13,   13,   13, 0x08,
-    2667,   13,   13,   13, 0x08,
-    2710,   13,   13,   13, 0x08,
-    2746,   13,   13,   13, 0x08,
-    2785,   13,   13,   13, 0x08,
-    2823,   13,   13,   13, 0x08,
-    2864,   13,   13,   13, 0x08,
-    2907,   13,   13,   13, 0x08,
-    2950, 1079,   13,   13, 0x08,
-    2997, 1079,   13,   13, 0x08,
-    3044, 1079,   13,   13, 0x08,
-    3091, 1079,   13,   13, 0x08,
-    3138, 1079,   13,   13, 0x08,
-    3186, 3180,   13,   13, 0x08,
+    1199,   13,   13,   13, 0x08,
+    1228,   13,   13,   13, 0x08,
+    1260, 1079,   13,   13, 0x08,
+    1311,   13,   13,   13, 0x08,
+    1348,   13,   13,   13, 0x08,
+    1377, 1079,   13,   13, 0x08,
+    1432, 1424,   13,   13, 0x08,
+    1465, 1424,   13,   13, 0x08,
+    1501, 1424,   13,   13, 0x08,
+    1536, 1424,   13,   13, 0x08,
+    1569,   13,   13,   13, 0x08,
+    1605, 1424,   13,   13, 0x08,
+    1646,   13,   13,   13, 0x08,
+    1680, 1424,   13,   13, 0x08,
+    1713, 1079,   13,   13, 0x08,
+    1754, 1079,   13,   13, 0x08,
+    1795, 1079,   13,   13, 0x08,
+    1836, 1079,   13,   13, 0x08,
+    1877,   13,   13,   13, 0x08,
+    1915, 1079,   13,   13, 0x08,
+    1957, 1079,   13,   13, 0x08,
+    1993, 1424,   13,   13, 0x08,
+    2024, 1424,   13,   13, 0x08,
+    2057, 1424,   13,   13, 0x08,
+    2098, 2089,   13,   13, 0x08,
+    2134,   13,   13,   13, 0x08,
+    2168,   13,   13,   13, 0x08,
+    2198,   13,   13,   13, 0x08,
+    2233,   13,   13,   13, 0x08,
+    2270,   13,   13,   13, 0x08,
+    2303,   13,   13,   13, 0x08,
+    2340,   13,   13,   13, 0x08,
+    2376,   13,   13,   13, 0x08,
+    2408,   13,   13,   13, 0x08,
+    2445, 1424,   13,   13, 0x08,
+    2490, 2484,   13,   13, 0x08,
+    2523,   13,   13,   13, 0x08,
+    2563,   13,   13,   13, 0x08,
+    2605,   13,   13,   13, 0x08,
+    2648,   13,   13,   13, 0x08,
+    2684,   13,   13,   13, 0x08,
+    2723,   13,   13,   13, 0x08,
+    2761,   13,   13,   13, 0x08,
+    2802,   13,   13,   13, 0x08,
+    2845,   13,   13,   13, 0x08,
+    2888, 1079,   13,   13, 0x08,
+    2935, 1079,   13,   13, 0x08,
+    2982, 1079,   13,   13, 0x08,
+    3029, 1079,   13,   13, 0x08,
+    3076, 1079,   13,   13, 0x08,
+    3124, 3118,   13,   13, 0x08,
 
        0        // eod
 };
@@ -158,7 +156,7 @@ static const char qt_meta_stringdata_SpectrWidget[] = {
     "on_type_combobox_currentIndexChanged(QString)\0"
     "on_max_spinbox_valueChanged(int)\0"
     "on_min_spinbox_valueChanged(double)\0"
-    "time(QString)\0on_rect_pushButton_clicked()\0"
+    "on_rect_pushButton_clicked()\0"
     "on_polygon_pushButton_clicked()\0"
     "on_spec_type_combobox_currentIndexChanged(QString)\0"
     "on_select_point_pushButton_clicked()\0"
@@ -172,7 +170,6 @@ static const char qt_meta_stringdata_SpectrWidget[] = {
     "on_select_point_pushButton_toggled(bool)\0"
     "on_cont_read_pushButton_clicked()\0"
     "on_zoom_pushButton_toggled(bool)\0"
-    "action\0on_horizontalSlider_actionTriggered(int)\0"
     "on_x_scale_lineEdit_textChanged(QString)\0"
     "on_x_shift_lineEdit_textChanged(QString)\0"
     "on_y_shift_lineEdit_textChanged(QString)\0"
@@ -253,59 +250,57 @@ void SpectrWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 32: _t->on_type_combobox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 33: _t->on_max_spinbox_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 34: _t->on_min_spinbox_valueChanged((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 35: _t->time((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 36: _t->on_rect_pushButton_clicked(); break;
-        case 37: _t->on_polygon_pushButton_clicked(); break;
-        case 38: _t->on_spec_type_combobox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 39: _t->on_select_point_pushButton_clicked(); break;
-        case 40: _t->on_line_pushButton_clicked(); break;
-        case 41: _t->on_color_comboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 42: _t->on_rect_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 43: _t->on_polygon_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 44: _t->on_circle_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 45: _t->on_line_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 46: _t->on_delete_last_pushButton_clicked(); break;
-        case 47: _t->on_select_point_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 48: _t->on_cont_read_pushButton_clicked(); break;
-        case 49: _t->on_zoom_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 50: _t->on_horizontalSlider_actionTriggered((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 51: _t->on_x_scale_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 52: _t->on_x_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 53: _t->on_y_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 54: _t->on_y_scale_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 55: _t->on_delete_sketch_pushButton_clicked(); break;
-        case 56: _t->on_fi_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 57: _t->on_fi_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 58: _t->on_flip_checkBox_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 59: _t->on_sketch_checkBox_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 60: _t->on_scale_checkBox_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 61: _t->on_fi_shift_slider_sliderMoved((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 62: _t->on_x_y_scale_pushButton_clicked(); break;
-        case 63: _t->on_angle_pushbutton_clicked(); break;
-        case 64: _t->on_x_y_shitft_pushButton_clicked(); break;
-        case 65: _t->on_ok_x_y_scale_pushButton_clicked(); break;
-        case 66: _t->on_ok_angle_pushbutton_clicked(); break;
-        case 67: _t->on_ok_x_y_shift_pushButton_clicked(); break;
-        case 68: _t->on_x_y_scale_pushButton_2_clicked(); break;
-        case 69: _t->on_angle_pushbutton_2_clicked(); break;
-        case 70: _t->on_x_y_shitft_pushButton_2_clicked(); break;
-        case 71: _t->on_photo_enable_checkBox_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 72: _t->on_tabWidget_currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 73: _t->on_photo_x_y_scale_pushButton_clicked(); break;
-        case 74: _t->on_photo_x_y_scale_pushButton_2_clicked(); break;
-        case 75: _t->on_photo_ok_x_y_scale_pushButton_clicked(); break;
-        case 76: _t->on_photo_angle_pushbutton_clicked(); break;
-        case 77: _t->on_photo_ok_angle_pushbutton_clicked(); break;
-        case 78: _t->on_photo_angle_pushbutton_2_clicked(); break;
-        case 79: _t->on_photo_x_y_shitft_pushButton_clicked(); break;
-        case 80: _t->on_photo_ok_x_y_shift_pushButton_clicked(); break;
-        case 81: _t->on_photo_x_y_shitft_pushButton_2_clicked(); break;
-        case 82: _t->on_photo_x_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 83: _t->on_photo_y_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 84: _t->on_photo_x_scale_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 85: _t->on_photo_y_scale_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 86: _t->on_photo_fi_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 87: _t->on_photo_fi_shift_slider_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 35: _t->on_rect_pushButton_clicked(); break;
+        case 36: _t->on_polygon_pushButton_clicked(); break;
+        case 37: _t->on_spec_type_combobox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 38: _t->on_select_point_pushButton_clicked(); break;
+        case 39: _t->on_line_pushButton_clicked(); break;
+        case 40: _t->on_color_comboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 41: _t->on_rect_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 42: _t->on_polygon_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 43: _t->on_circle_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 44: _t->on_line_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 45: _t->on_delete_last_pushButton_clicked(); break;
+        case 46: _t->on_select_point_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 47: _t->on_cont_read_pushButton_clicked(); break;
+        case 48: _t->on_zoom_pushButton_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 49: _t->on_x_scale_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 50: _t->on_x_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 51: _t->on_y_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 52: _t->on_y_scale_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 53: _t->on_delete_sketch_pushButton_clicked(); break;
+        case 54: _t->on_fi_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 55: _t->on_fi_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 56: _t->on_flip_checkBox_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 57: _t->on_sketch_checkBox_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 58: _t->on_scale_checkBox_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 59: _t->on_fi_shift_slider_sliderMoved((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 60: _t->on_x_y_scale_pushButton_clicked(); break;
+        case 61: _t->on_angle_pushbutton_clicked(); break;
+        case 62: _t->on_x_y_shitft_pushButton_clicked(); break;
+        case 63: _t->on_ok_x_y_scale_pushButton_clicked(); break;
+        case 64: _t->on_ok_angle_pushbutton_clicked(); break;
+        case 65: _t->on_ok_x_y_shift_pushButton_clicked(); break;
+        case 66: _t->on_x_y_scale_pushButton_2_clicked(); break;
+        case 67: _t->on_angle_pushbutton_2_clicked(); break;
+        case 68: _t->on_x_y_shitft_pushButton_2_clicked(); break;
+        case 69: _t->on_photo_enable_checkBox_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 70: _t->on_tabWidget_currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 71: _t->on_photo_x_y_scale_pushButton_clicked(); break;
+        case 72: _t->on_photo_x_y_scale_pushButton_2_clicked(); break;
+        case 73: _t->on_photo_ok_x_y_scale_pushButton_clicked(); break;
+        case 74: _t->on_photo_angle_pushbutton_clicked(); break;
+        case 75: _t->on_photo_ok_angle_pushbutton_clicked(); break;
+        case 76: _t->on_photo_angle_pushbutton_2_clicked(); break;
+        case 77: _t->on_photo_x_y_shitft_pushButton_clicked(); break;
+        case 78: _t->on_photo_ok_x_y_shift_pushButton_clicked(); break;
+        case 79: _t->on_photo_x_y_shitft_pushButton_2_clicked(); break;
+        case 80: _t->on_photo_x_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 81: _t->on_photo_y_shift_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 82: _t->on_photo_x_scale_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 83: _t->on_photo_y_scale_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 84: _t->on_photo_fi_lineEdit_textChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 85: _t->on_photo_fi_shift_slider_valueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -343,9 +338,9 @@ int SpectrWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 88)
+        if (_id < 86)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 88;
+        _id -= 86;
     }
     return _id;
 }

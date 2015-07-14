@@ -53,9 +53,9 @@ Widget::Widget(QWidget *parent) :
 
 Widget::~Widget()
 {
+    delete zGraph;
     delete ui;
 }
-
 
 void Widget::get_data_2D(double set_datax,double set_datay, int len)
 {
@@ -108,7 +108,7 @@ void Widget::change_text(double text)
 void Widget::on_graph_type_comboBox_currentIndexChanged(const QString &arg1)
 {
     if (zGraph==NULL)
-            return;
+        return;
     if (arg1=="Amplitude")
     {
         zGraph->redefine_type(arg1);
@@ -150,7 +150,7 @@ void Widget::on_graph_type_comboBox_currentIndexChanged(const QString &arg1)
 void Widget::on_graph_lin_log_type_comboBox_currentIndexChanged(const QString &arg1)
 {
     if (zGraph==NULL)
-            return;
+        return;
     if (arg1=="Lin")
     {
         zGraph->redefine_type(arg1);
@@ -272,7 +272,7 @@ void Widget::on_graph_wight_spinBox_valueChanged(const QString &arg1)
     bool ok;
     int a= arg1.toInt(&ok);
     if (ok)
-    zGraph->change_graph_width(arg1.toInt(&ok));
+        zGraph->change_graph_width(arg1.toInt(&ok));
     else QMessageBox::information(0,"error","Invalid input");
 }
 
@@ -415,7 +415,7 @@ void Widget::on_ampl_max_comboBox_currentIndexChanged(const QString &arg1)
     double a1= arg1.toDouble(&ok1);
     double a2= ui->ampl_span_comboBox->currentText().toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(arg1.toDouble(),ui->ampl_span_comboBox->currentText().toDouble());
+        zGraph->reDrawScale(arg1.toDouble(),ui->ampl_span_comboBox->currentText().toDouble());
     else QMessageBox::information(0,"error","Invalid input");
 }
 
@@ -427,8 +427,8 @@ void Widget::on_ampl_span_comboBox_currentIndexChanged(const QString &arg1)
     double a1= ui->ampl_max_comboBox->currentText().toDouble(&ok1);
     double a2= arg1.toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(ui->ampl_max_comboBox->currentText().toDouble(),arg1.toDouble());
-        else QMessageBox::information(0,"error","Invalid input");
+        zGraph->reDrawScale(ui->ampl_max_comboBox->currentText().toDouble(),arg1.toDouble());
+    else QMessageBox::information(0,"error","Invalid input");
 }
 
 void Widget::on_phase_center_comboBox_currentIndexChanged(const QString &arg1)
@@ -437,8 +437,8 @@ void Widget::on_phase_center_comboBox_currentIndexChanged(const QString &arg1)
     double a1= arg1.toDouble(&ok1);
     double a2= ui->phase_span_comboBox->currentText().toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(arg1.toDouble(),ui->phase_span_comboBox->currentText().toDouble());
-     else QMessageBox::information(0,"error","Invalid input");
+        zGraph->reDrawScale(arg1.toDouble(),ui->phase_span_comboBox->currentText().toDouble());
+    else QMessageBox::information(0,"error","Invalid input");
 }
 
 void Widget::on_phase_autoscale_radioButton_clicked()
@@ -458,7 +458,7 @@ void Widget::on_phase_span_comboBox_currentIndexChanged(const QString &arg1)
     double a1=ui->phase_center_comboBox->currentText().toDouble(&ok1);
     double a2=arg1.toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(ui->phase_center_comboBox->currentText().toDouble(),arg1.toDouble());
+        zGraph->reDrawScale(ui->phase_center_comboBox->currentText().toDouble(),arg1.toDouble());
     else QMessageBox::information(0,"error","Invalid input");
 }
 
@@ -474,7 +474,7 @@ void Widget::on_phase_manual_radioButton_clicked()
     double a1= ui->phase_center_comboBox->currentText().toDouble(&ok1);
     double a2= ui->phase_span_comboBox->currentText().toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(ui->phase_center_comboBox->currentText().toDouble(),ui->phase_span_comboBox->currentText().toDouble());
+        zGraph->reDrawScale(ui->phase_center_comboBox->currentText().toDouble(),ui->phase_span_comboBox->currentText().toDouble());
     else QMessageBox::information(0,"error","Invalid input");
 }
 
@@ -490,8 +490,8 @@ void Widget::on_phase_up_radioButton_clicked()
     double a1= ui->phase_center_comboBox->currentText().toDouble(&ok1);
     double a2= ui->phase_span_comboBox->currentText().toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(ui->phase_center_comboBox->currentText().toDouble(),ui->phase_span_comboBox->currentText().toDouble());
-     else QMessageBox::information(0,"error","Invalid input");
+        zGraph->reDrawScale(ui->phase_center_comboBox->currentText().toDouble(),ui->phase_span_comboBox->currentText().toDouble());
+    else QMessageBox::information(0,"error","Invalid input");
 }
 
 void Widget::on_real_center_comboBox_currentIndexChanged(const QString &arg1)
@@ -500,8 +500,8 @@ void Widget::on_real_center_comboBox_currentIndexChanged(const QString &arg1)
     double a1= arg1.toDouble(&ok1);
     double a2= ui->real_span_comboBox->currentText().toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(arg1.toDouble(),ui->real_span_comboBox->currentText().toDouble());
-     else QMessageBox::information(0,"error","Invalid input");
+        zGraph->reDrawScale(arg1.toDouble(),ui->real_span_comboBox->currentText().toDouble());
+    else QMessageBox::information(0,"error","Invalid input");
 }
 
 void Widget::on_real_span_comboBox_currentIndexChanged(const QString &arg1)
@@ -513,7 +513,7 @@ void Widget::on_real_span_comboBox_currentIndexChanged(const QString &arg1)
     double a1= ui->real_center_comboBox->currentText().toDouble(&ok1);
     double a2= arg1.toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(ui->real_center_comboBox->currentText().toDouble(),arg1.toDouble());
+        zGraph->reDrawScale(ui->real_center_comboBox->currentText().toDouble(),arg1.toDouble());
     else QMessageBox::information(0,"error","Invalid input");
 }
 
@@ -535,8 +535,8 @@ void Widget::on_real_manual_radioButton_clicked()
     double a1= ui->real_center_comboBox->currentText().toDouble(&ok1);
     double a2= ui->real_span_comboBox->currentText().toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(ui->real_center_comboBox->currentText().toDouble(),ui->real_span_comboBox->currentText().toDouble());
-     else QMessageBox::information(0,"error","Invalid input");
+        zGraph->reDrawScale(ui->real_center_comboBox->currentText().toDouble(),ui->real_span_comboBox->currentText().toDouble());
+    else QMessageBox::information(0,"error","Invalid input");
     ui->real_center_comboBox->setEnabled(true);
     ui->real_span_comboBox->setEnabled(true);
 }
@@ -546,12 +546,12 @@ void Widget::on_real_up_radioButton_clicked()
     if (ui->real_span_comboBox->currentText().toDouble()==0)
         return;
     zGraph->eReImScale=ZGraph::ReUp;
-     bool ok1,ok2;
+    bool ok1,ok2;
     double a1= ui->real_center_comboBox->currentText().toDouble(&ok1);
     double a2= ui->real_span_comboBox->currentText().toDouble(&ok2);
     if (ok1 && ok2)
-    zGraph->reDrawScale(ui->real_center_comboBox->currentText().toDouble(),ui->real_span_comboBox->currentText().toDouble());
-     else QMessageBox::information(0,"error","Invalid input");
+        zGraph->reDrawScale(ui->real_center_comboBox->currentText().toDouble(),ui->real_span_comboBox->currentText().toDouble());
+    else QMessageBox::information(0,"error","Invalid input");
     ui->real_center_comboBox->setEnabled(false);
     ui->real_span_comboBox->setEnabled(true);
 }
@@ -559,11 +559,11 @@ void Widget::on_real_up_radioButton_clicked()
 void Widget::on_imag_center_comboBox_currentIndexChanged(const QString &arg1)
 {
     bool ok1,ok2;
-   double a1= arg1.toDouble(&ok1);
-   double a2= ui->imag_span_comboBox->currentText().toDouble(&ok2);
-   if (ok1 && ok2)
-    zGraph->reDrawScale(arg1.toDouble(),ui->imag_span_comboBox->currentText().toDouble());
-   else QMessageBox::information(0,"error","Invalid input");
+    double a1= arg1.toDouble(&ok1);
+    double a2= ui->imag_span_comboBox->currentText().toDouble(&ok2);
+    if (ok1 && ok2)
+        zGraph->reDrawScale(arg1.toDouble(),ui->imag_span_comboBox->currentText().toDouble());
+    else QMessageBox::information(0,"error","Invalid input");
 }
 
 void Widget::on_imag_span_comboBox_currentIndexChanged(const QString &arg1)
@@ -572,10 +572,10 @@ void Widget::on_imag_span_comboBox_currentIndexChanged(const QString &arg1)
         return;
 
     bool ok1,ok2;
-   double a1= ui->real_center_comboBox->currentText().toDouble(&ok1);
-   double a2= arg1.toDouble(&ok2);
-   if (ok1 && ok2)
-    zGraph->reDrawScale(ui->real_center_comboBox->currentText().toDouble(),arg1.toDouble());
+    double a1= ui->real_center_comboBox->currentText().toDouble(&ok1);
+    double a2= arg1.toDouble(&ok2);
+    if (ok1 && ok2)
+        zGraph->reDrawScale(ui->real_center_comboBox->currentText().toDouble(),arg1.toDouble());
     else QMessageBox::information(0,"error","Invalid input");
 }
 
@@ -591,12 +591,12 @@ void Widget::on_imag_manual_radioButton_clicked()
 {
     if (ui->imag_span_comboBox->currentText().toDouble()==0)
         return;
-     zGraph->eReImScale=ZGraph::ReManual;
+    zGraph->eReImScale=ZGraph::ReManual;
     bool ok1,ok2;
-   double a1= ui->imag_center_comboBox->currentText().toDouble(&ok1);
-   double a2= ui->imag_span_comboBox->currentText().toDouble(&ok2);
-   if (ok1 && ok2)
-    zGraph->reDrawScale(ui->imag_center_comboBox->currentText().toDouble(),ui->imag_span_comboBox->currentText().toDouble());
+    double a1= ui->imag_center_comboBox->currentText().toDouble(&ok1);
+    double a2= ui->imag_span_comboBox->currentText().toDouble(&ok2);
+    if (ok1 && ok2)
+        zGraph->reDrawScale(ui->imag_center_comboBox->currentText().toDouble(),ui->imag_span_comboBox->currentText().toDouble());
     else QMessageBox::information(0,"error","Invalid input");
     ui->imag_center_comboBox->setEnabled(true);
     ui->imag_span_comboBox->setEnabled(true);
@@ -607,10 +607,10 @@ void Widget::on_imag_up_radioButton_clicked()
         return;
     zGraph->eReImScale=ZGraph::ReUp;
     bool ok1,ok2;
-   double a1= ui->imag_center_comboBox->currentText().toDouble(&ok1);
-   double a2= ui->imag_span_comboBox->currentText().toDouble(&ok2);
-   if (ok1 && ok2)
-    zGraph->reDrawScale(ui->imag_center_comboBox->currentText().toDouble(),ui->imag_span_comboBox->currentText().toDouble());
+    double a1= ui->imag_center_comboBox->currentText().toDouble(&ok1);
+    double a2= ui->imag_span_comboBox->currentText().toDouble(&ok2);
+    if (ok1 && ok2)
+        zGraph->reDrawScale(ui->imag_center_comboBox->currentText().toDouble(),ui->imag_span_comboBox->currentText().toDouble());
     else QMessageBox::information(0,"error","Invalid input");
     ui->imag_center_comboBox->setEnabled(false);
     ui->imag_span_comboBox->setEnabled(true);

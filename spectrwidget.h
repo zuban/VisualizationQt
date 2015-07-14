@@ -24,11 +24,13 @@ class SpectrWidget : public QWidget
 public:
 
     Form_Spectr *control;
+    IOData *data;
 
     double_complex MakeComplex(double x,double y);
     float_complex fMakeComplex(float x,float y);
     Spectro_Plot* sp_plot;
     Z2Vector *z2vector;
+    QVector<double_complex> arr;
     explicit SpectrWidget(QWidget *parent = 0);
     ~SpectrWidget();
 
@@ -81,7 +83,7 @@ private slots:
 
     void on_min_spinbox_valueChanged(double arg1);
 
-    void time(QString a);
+   // void time(QString a);
 
     void on_rect_pushButton_clicked();
 
@@ -111,7 +113,7 @@ private slots:
 
     void on_zoom_pushButton_toggled(bool checked);
 
-    void on_horizontalSlider_actionTriggered(int action);
+    //void on_horizontalSlider_actionTriggered(int action);
 
     void on_x_scale_lineEdit_textChanged(const QString &arg1);
 

@@ -18,68 +18,16 @@ public:
     {
         setTrackerMode(AlwaysOn);
     }
-
     virtual QwtText trackerTextF(const QPointF &pos) const
     {
         QColor bg(Qt::white);
         bg.setAlpha(200);
-
         QwtText text = QwtPlotZoomer::trackerTextF(pos);
         text.setBackgroundBrush( QBrush( bg ));
         return text;
     }
 };
 
-//////////////////////////////////////////////////////////////////////////
-class RasterData: public QwtMatrixRasterData
-{
-public:
-
-
-    RasterData(QVector<double> *vector,double intx1,double intx2,double inty1,double inty2,int column,int colormax,double colormin)
-    {
-        //        QVector<double> values;
-        //        for ( uint i = 0; i < vector.size()-1; i++ )
-        //            values += vector.at(i);
-
-        const int numColumns = column;
-        setValueMatrix(*vector, numColumns);
-
-        setInterval( Qt::XAxis,
-                     QwtInterval( intx1, intx2, QwtInterval::IncludeBorders) );
-        setInterval( Qt::YAxis,
-                     QwtInterval( inty1, inty2, QwtInterval::IncludeBorders ) );
-        setInterval( Qt::ZAxis, QwtInterval(colormin, colormax) );
-    }
-
-};
-
-//////////////////////////////////////////////////////////////////
-class ColorMap: public QwtLinearColorMap
-{
-public:
-    ColorMap():
-        QwtLinearColorMap(Qt::black, Qt::red)
-    {
-        //addColorStop(0.2, Qt::blue);
-        addColorStop(0.2, Qt::blue);
-        addColorStop(0.4, Qt::cyan);
-        addColorStop(0.6, Qt::yellow);
-        addColorStop(0.8, Qt::red);
-    }
-};
-class ColorAlphamap: public QwtAlphaColorMap
-{
-public:
-    ColorAlphamap():
-        QwtAlphaColorMap(Qt::red)
-    {
-
-    }
-};
-
-
-///////////////////////////////////////////////////////////////////
 Spectro_Plot::Spectro_Plot(QWidget *parent):
     QwtPlot(parent)
 {
@@ -90,7 +38,10 @@ Spectro_Plot::Spectro_Plot(QWidget *parent):
     grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
     grid->attach(this);
 
-
+    color_map = NULL;
+    alpha_color_map= NULL;
+    raster= NULL;
+    data= NULL;
 
     /////////////////////////////////////////////////////////////
     zoomer = new MyZoomer(canvas());
@@ -99,7 +50,7 @@ Spectro_Plot::Spectro_Plot(QWidget *parent):
     zoomer->setMousePattern(QwtEventPattern::MouseSelect3,
                             Qt::RightButton);
     /////////////////////////////////////////////////////////////
-    QwtPlotPanner *panner = new QwtPlotPanner(canvas());
+    panner = new QwtPlotPanner(canvas());
     panner->setAxisEnabled(QwtPlot::yRight, false);
     panner->setMouseButton(Qt::MidButton);
 
@@ -147,105 +98,103 @@ Spectro_Plot::Spectro_Plot(QWidget *parent):
     connect(photo,SIGNAL(photo_signal_inv_transform_x(double)),this,SLOT(inv_trans_x(double)));
     connect(photo,SIGNAL(photo_signal_inv_transform_y(double)),this,SLOT(inv_trans_y(double)));
 
-
-
-
 }
 
 void Spectro_Plot::draw_spectr(Z2Vector z2vector,double intx1,double intx2,double inty1,double inty2,int colormax,double colormin)
 {
+    QVector<double>  *vct= new QVector<double>(z2vector.size());
 
-
-
-    clock_t t3 = clock();
-    if (is_transparent==false)
-    {
-        ColorMap *color_map=new ColorMap();
-        d_spectrogram->setColorMap(color_map);
-    }
-    if (is_transparent==true)
-    {
-        ColorAlphamap *color_map =new ColorAlphamap();
-        d_spectrogram->setColorMap(color_map);
-    }
-
-    QVector<double> vector;
-    vector.resize(z2vector.size());
     if (etype==Ampl)
     {
-        for ( uint i = 0; i < vector.size()-1; i++ )
+        for ( int i = 0; i < vct->size(); i++ )
         {
-            vector[i]=10.0*log10(real(z2vector.at(i))*real(z2vector.at(i))+imag(z2vector.at(i))*imag(z2vector.at(i))+1e-20);
+
+             (*vct)[i] = 10.0*log10(real(z2vector.at(i))*real(z2vector.at(i))+imag(z2vector.at(i))*imag(z2vector.at(i))+1e-20);
         }
     }
     if (etype==Phase)
     {
-        for ( uint i = 0; i < vector.size()-1; i++ )
+        for ( int i = 0; i < vct->size(); i++ )
         {
-            vector[i]=atan2(imag(z2vector.at(i)),real(z2vector.at(i)))*180.0/3.1415926;
+             (*vct)[i]=atan2(imag(z2vector.at(i)),real(z2vector.at(i)))*180.0/3.1415926;
         }
     }
     if (etype==Re)
     {
-        for ( uint i = 0; i < vector.size()-1; i++ )
+        for ( int i = 0; i < vct->size(); i++ )
         {
-            vector[i]=real(z2vector.at(i));
+             (*vct)[i]=real(z2vector.at(i));
         }
     }
     if (etype==Im)
     {
-        for ( uint i = 0; i < vector.size()-1; i++ )
+        for ( int i = 0; i < vct->size(); i++ )
         {
-            vector[i]=z2vector.at(i).imag();
+            (*vct)[i]=z2vector.at(i).imag();
         }
     }
-    RasterData *raster=new RasterData(&vector,intx1,intx2,inty1,inty2,z2vector.nx,colormax,colormin);
-    clock_t t4 = clock();
-    emit signal_from_vector("Calculus:"+QString::number((t4-t3))+" ");
-    clock_t t1 = clock();
+    if (raster!=NULL)
+        delete raster;
+    raster=new RasterData(vct,intx1,intx2,inty1,inty2,z2vector.nx,colormax,colormin);
     d_spectrogram->setData(raster);
     setAxisScale(QwtPlot::xBottom, intx1,intx2);
     setAxisScale(QwtPlot::yLeft, inty1,inty2);
     d_spectrogram->attach(this);
-    RasterData *data = (RasterData *)d_spectrogram->data();
-    data->setResampleMode( (QwtMatrixRasterData::ResampleMode) QwtMatrixRasterData::BilinearInterpolation);
+
+//    RasterData *data = (RasterData *)d_spectrogram->data();
+//    data->setResampleMode( (QwtMatrixRasterData::ResampleMode) QwtMatrixRasterData::BilinearInterpolation);
     const QwtInterval zInterval = d_spectrogram->data()->interval( Qt::ZAxis );
     // A color bar on the right axis
     QwtScaleWidget *rightAxis = axisWidget(QwtPlot::yRight);
     rightAxis->setTitle("Intensity");
     rightAxis->setColorBarEnabled(true);
+
     if (is_transparent==false)
     {
-        ColorMap *color_map=new ColorMap();
-        rightAxis->setColorMap( zInterval, color_map);
+        if (color_map==NULL)
+        {
+            color_map=new ColorMap();
+            d_spectrogram->setColorMap(color_map);
+            rightAxis->setColorMap( zInterval, color_map);
+            if (alpha_color_map!=NULL)
+            {
+                delete alpha_color_map;
+                alpha_color_map=NULL;
+            }
+        }
     }
     if (is_transparent==true)
     {
-        ColorAlphamap *color_map =new ColorAlphamap();
-        rightAxis->setColorMap( zInterval, color_map);
+        if (alpha_color_map==NULL)
+        {
+            alpha_color_map =new ColorAlphamap();
+            d_spectrogram->setColorMap(alpha_color_map);
+            rightAxis->setColorMap( zInterval, alpha_color_map);
+            if (color_map!=NULL)
+            {
+                delete color_map;
+                color_map=NULL;
+            }
+        }
     }
     rightAxis->setColorBarWidth(25);
     setAxisScale(QwtPlot::yRight, zInterval.minValue(), zInterval.maxValue() );
     enableAxis(QwtPlot::yRight);
     replot();
+    delete vct;
 
-    clock_t t2 = clock();
-    emit signal_from_vector("Graphics:"+QString::number((t2-t1))+" ");
 }
 void Spectro_Plot::slot_for_spectr(QPointF pos)
 {
-    //double x=invTransform(QwtPlot::xBottom,pos.x());
-    //double y=invTransform(QwtPlot::yLeft,pos.y());
-
-
 }
+
 void Spectro_Plot::slot_for_zoomer(QPointF p1,QPointF p2)
 {
-    //  zoomer->zoom(QRect(QPoint(invTransform(QwtPlot::xBottom,p1.x()),invTransform(QwtPlot::yLeft,p1.y())),
-    //                   QPoint(invTransform(QwtPlot::xBottom,p2.x()),invTransform(QwtPlot::yLeft,p2.y())) ));
-    zoomer->zoom(QRectF(QPointF(invTransform(QwtPlot::xBottom,p1.x()),invTransform(QwtPlot::yLeft,p1.y())),
-                        QPointF(invTransform(QwtPlot::xBottom,p2.x()),invTransform(QwtPlot::yLeft,p2.y())) ));
+    if (zoomer!=NULL)
+        zoomer->zoom(QRectF(QPointF(invTransform(QwtPlot::xBottom,p1.x()),invTransform(QwtPlot::yLeft,p1.y())),
+                            QPointF(invTransform(QwtPlot::xBottom,p2.x()),invTransform(QwtPlot::yLeft,p2.y())) ));
 }
+
 void Spectro_Plot::slot_for_zoomer_norm()
 {
     this->setAxisAutoScale(QwtPlot::xBottom,true);
@@ -269,9 +218,3 @@ double Spectro_Plot::inv_trans_y(double y)
 {
     return invTransform(QwtPlot::yLeft,y);
 }
-//void Spectro_Plot::resizeEvent ( QResizeEvent * event )
-//{
-
-
-//}
-

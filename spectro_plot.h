@@ -8,6 +8,10 @@
 #include "qwt_plot.h"
 #include "spectro_draw.h"
 #include "photoclass.h"
+#include "qwt_plot_panner.h"
+#include "colormap.h"
+#include "coloralphamap.h"
+#include "rasterdata.h"
 
 class MyZoomer;
 class Spectro_Plot : public QwtPlot
@@ -24,6 +28,13 @@ public:
     Spectro_draw *draw_widget;
     MyZoomer* zoomer;
     PhotoClass *photo;
+    QwtPlotPanner *panner;
+    ColorMap *color_map;
+    ColorAlphamap *alpha_color_map;
+    RasterData *raster;
+    RasterData *data;
+//     QVector<double>  *vct;
+
 
 
 

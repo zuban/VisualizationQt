@@ -7,6 +7,7 @@
 #include "cuda_dll_module.h"
 #include "ui_form_spectr.h"
 #include "form_spectr.h"
+#include <QMessageBox>
 
 
 double GLOBAL_F_start;
@@ -24,12 +25,12 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
     sp_plot->setWindowOpacity(0.5);
     sp_plot->move(5,60);
     sp_plot->resize(this->width()-5,this->height()-60);
-
-
+    control=NULL;
+    data=NULL;
     ui->progressBar->setValue(0);
     ui->polygon_pushButton->setChecked(true);
 
-    connect(sp_plot,SIGNAL(signal_from_vector(QString)),this,SLOT(time(QString)));
+    //connect(sp_plot,SIGNAL(signal_from_vector(QString)),this,SLOT(time(QString)));
     //connect(sp_plot->draw_widget,SIGNAL(signal_change_text(QString)),this,SLOT(change_text(QString)));
     connect(sp_plot->draw_widget,SIGNAL(signla_x_shift(double)),this,SLOT(change_x_shift(double)));
     connect(sp_plot->draw_widget,SIGNAL(signla_y_shift(double)),this,SLOT(change_y_shift(double)));
@@ -66,24 +67,40 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
 
 SpectrWidget::~SpectrWidget()
 {
+    delete sp_plot;
+    delete z2vector;
+    delete data;
     delete ui;
 }
 
 void SpectrWidget::on_read_pushbutton_clicked()
 {
+    if (data!=NULL)
+    {
+        QMessageBox::information(0,"error","Only one graph");
+        return;
+    }
     QString way = QFileDialog::getOpenFileName(this, tr("Open File"), "",tr(".bin Files (*.bin)"));
     if (way==0)
     {
         return;
     }
+
     ui->progressBar->setValue(10);
-    IOData *data = new IOData(this);
+    data = new IOData(this);
     int N_k;
     int N_fi;
     double F_start,F_stop, AzStart,AzStop;
     ui->progressBar->setValue(15);
     data->d_readmasSize(way,N_k,N_fi);
     double_complex *masin=new double_complex[N_k*N_fi];
+
+    arr.resize(N_k*N_fi);
+    for (int i=0;i<N_k*N_fi;i++)
+    {
+        arr[i]=masin[i];
+    }
+
     ui->progressBar->setValue(20);
     data->d_readFile(way,N_k,N_fi,F_start,F_stop,AzStart,AzStop,masin);
     control->ui->Nk_lineedit_data->setText(QString::number(N_k));
@@ -163,6 +180,7 @@ void SpectrWidget::on_read_pushbutton_clicked()
         ui->progressBar->setValue(100);
         delete mas;
     }
+    delete masin;
 }
 
 bool bInProgress = false;
@@ -219,7 +237,6 @@ void SpectrWidget::change_FI0_cuda_test(int count)
         }
 
         bInProgress = false;
-
     }
     else {
         ui->progressBar->setValue(50);
@@ -268,7 +285,7 @@ void SpectrWidget::change_FI0_cuda_test(int count)
 }
 void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
 {
-    clock_t t7 = clock();
+//    clock_t t7 = clock();
     if (arg1=="Ampl")
     {
         sp_plot->etype=Spectro_Plot::Ampl;
@@ -289,8 +306,8 @@ void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
         sp_plot->etype=Spectro_Plot::Im;
         sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toInt(),ui->min_spinbox->text().toInt());
     }
-    clock_t t8 = clock();
-    time("Changetime:"+QString::number((t8-t7))+" ");
+//    clock_t t8 = clock();
+//    time("Changetime:"+QString::number((t8-t7))+" ");
 
 }
 
@@ -304,10 +321,10 @@ void SpectrWidget::on_min_spinbox_valueChanged(double arg1)
     sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toInt(),arg1);
 }
 
-void SpectrWidget::time(QString a)
-{
-    //ui->lineEdit->setText(ui->lineEdit->text()+" "+a);
-}
+//void SpectrWidget::time(QString a)
+//{
+//    //ui->lineEdit->setText(ui->lineEdit->text()+" "+a);
+//}
 
 void SpectrWidget::on_rect_pushButton_clicked()
 {
@@ -590,7 +607,6 @@ void SpectrWidget::on_zoom_pushButton_toggled(bool checked)
 void SpectrWidget::change_x_shift(double a)
 {
     control->ui->x_shift_lineEdit->setText(QString::number(a));
-
 }
 void SpectrWidget::change_y_shift(double a)
 {
@@ -613,10 +629,10 @@ void SpectrWidget::change_k(double a)
     control->ui->k_lineEdit->setText(QString::number(a));
 }
 
-void SpectrWidget::on_horizontalSlider_actionTriggered(int action)
-{
+//void SpectrWidget::on_horizontalSlider_actionTriggered(int action)
+//{
 
-}
+//}
 
 void SpectrWidget::on_x_scale_lineEdit_textChanged(const QString &arg1)
 {
@@ -650,10 +666,6 @@ void SpectrWidget::on_delete_sketch_pushButton_clicked()
         sp_plot->draw_widget->repaint();
     }
 }
-
-
-
-
 
 void SpectrWidget::on_fi_shift_lineEdit_textChanged(const QString &arg1)
 {

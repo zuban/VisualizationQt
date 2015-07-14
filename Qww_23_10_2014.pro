@@ -52,7 +52,10 @@ HEADERS  += mainwindow.h \
     spectrwidget.h \
     form_spectr.h \
     w_wlib.h \
-    iodata.h
+    iodata.h \
+    colormap.h \
+    coloralphamap.h \
+    rasterdata.h
 
 FORMS    += mainwindow.ui \
     widget.ui \

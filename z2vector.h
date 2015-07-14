@@ -13,9 +13,9 @@ class Z2Vector : public QVector<Complex>
 
 public:
     Z2Vector();
-    void test_debug();
+//    void test_debug();
     void set_zero_vector(int nX,int nY,double startX,double stopX,double startY,double stopY);
-    void ReadAscii(QString line);
+//    void ReadAscii(QString line);
     double startx,starty,stopx,stopy;
     int nx,ny;
     // void set_value(int a,int b,Complex c);
