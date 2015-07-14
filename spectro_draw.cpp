@@ -16,7 +16,7 @@ Spectro_draw::Spectro_draw(QWidget *parent) :
     is_select_mode_enable=false;
     left_select=0;
     right_select=0;
-    is_zoom_mode_enable=false;
+   is_zoom_mode_enable=false;
     is_new_point=true;
     is_sketch_mode_enable=false;
     is_scale_mode_enable=false;
@@ -55,24 +55,24 @@ void Spectro_draw::draw( QPainter  *painter)
             painter->setBrush(*brush);
             painter->setPen(QPen(*brush,2));
             if (list.size()>1)
-            {
-                if (((Point)(list.at(i))).updown==false)
-                {
-                    if (((Point)(list.at(i+1))).updown==false)
-                    {
-                        painter->drawLine(QPointF(signal_transform_x(((Point)(list.at(i))).point.x()),signal_transform_y(((Point)(list.at(i))).point.y())),
-                                          QPointF(signal_transform_x(((Point)(list.at(i+1))).point.x()),signal_transform_y(((Point)(list.at(i+1))).point.y())));
-                    }
-                    if(i>0)
-                    {
-                    }
-                }
-                else
-                {
-                    painter->drawLine(QPointF(signal_transform_x(((Point)(list.at(i))).point.x()),signal_transform_y(((Point)(list.at(i))).point.y())),
-                                      QPointF(signal_transform_x(((Point)(list.at(i+1))).point.x()),signal_transform_y(((Point)(list.at(i+1))).point.y())));
-                }
-            }
+                       {
+                           if (((Point)(list.at(i))).updown==false)
+                           {
+                               if (((Point)(list.at(i+1))).updown==false)
+                               {
+                                   painter->drawLine(QPointF(signal_transform_x(((Point)(list.at(i))).point.x()),signal_transform_y(((Point)(list.at(i))).point.y())),
+                                                     QPointF(signal_transform_x(((Point)(list.at(i+1))).point.x()),signal_transform_y(((Point)(list.at(i+1))).point.y())));
+                               }
+                               if(i>0)
+                               {
+                               }
+                           }
+                           else
+                           {
+                               painter->drawLine(QPointF(signal_transform_x(((Point)(list.at(i))).point.x()),signal_transform_y(((Point)(list.at(i))).point.y())),
+                                                 QPointF(signal_transform_x(((Point)(list.at(i+1))).point.x()),signal_transform_y(((Point)(list.at(i+1))).point.y())));
+                           }
+                       }
         }
     }
     if (sketch_list.size()>0)
@@ -123,34 +123,34 @@ void Spectro_draw::draw( QPainter  *painter)
     if (is_scale_mode_scale1==true)
     {
         if (scale_mode_scale_list1.size()==2)
-            painter->drawLine(scale_mode_scale_list1.at(0),scale_mode_scale_list1.at(1));
+             painter->drawLine(scale_mode_scale_list1.at(0),scale_mode_scale_list1.at(1));
 
     }
     if (is_scale_mode_scale2==true)
     {
         if (scale_mode_scale_list2.size()==2)
-            painter->drawLine(scale_mode_scale_list2.at(0),scale_mode_scale_list2.at(1));
+             painter->drawLine(scale_mode_scale_list2.at(0),scale_mode_scale_list2.at(1));
 
     }
     if (is_scale_mode_angle1==true)
     {
         if (scale_mode_angle_list1.size()==2)
-            painter->drawLine(scale_mode_angle_list1.at(0),scale_mode_angle_list1.at(1));
+             painter->drawLine(scale_mode_angle_list1.at(0),scale_mode_angle_list1.at(1));
     }
     if (is_scale_mode_angle2==true)
     {
         if (scale_mode_angle_list2.size()==2)
-            painter->drawLine(scale_mode_angle_list2.at(0),scale_mode_angle_list2.at(1));
+             painter->drawLine(scale_mode_angle_list2.at(0),scale_mode_angle_list2.at(1));
     }
     if (is_scale_mode_point1==true)
     {
         if (scale_mode_point_list1.size()==1)
-            painter->drawPoint(scale_mode_point_list1.at(0));
+             painter->drawPoint(scale_mode_point_list1.at(0));
     }
     if (is_scale_mode_point2==true)
     {
         if (scale_mode_point_list2.size()==1)
-            painter->drawPoint(scale_mode_point_list2.at(0));
+             painter->drawPoint(scale_mode_point_list2.at(0));
     }
 
 
@@ -244,7 +244,7 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
                     if (eType==Rect)
                     {
                         list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),
-                                                        ((Point)(list.at(list.size()-1))).point.y()),getRGB(eColor),false,Rect));
+                                               ((Point)(list.at(list.size()-1))).point.y()),getRGB(eColor),false,Rect));
                         list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),getRGB(eColor),false,Rect));
                         list.append(* new Point(QPointF(((Point)(list.at(list.size()-3))).point.x(),
                                                         signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),getRGB(eColor),false,Rect));
@@ -438,12 +438,12 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
     {
         if (is_scale_mode_scale1==true)
         {
-            if (event->type() == QEvent::MouseButtonPress )
-            {
-                scale_mode_scale_list1.append(QPointF(((QMouseEvent*)event)->posF()));
-                this->repaint();
-                if (scale_mode_scale_list1.size()==2)
-                {
+           if (event->type() == QEvent::MouseButtonPress )
+           {
+               scale_mode_scale_list1.append(QPointF(((QMouseEvent*)event)->posF()));
+               this->repaint();
+               if (scale_mode_scale_list1.size()==2)
+               {
                     double x1=signal_inv_transform_x(scale_mode_scale_list1.at(0).x());
                     double x2=signal_inv_transform_x(scale_mode_scale_list1.at(1).x());
                     double y1=signal_inv_transform_y(scale_mode_scale_list1.at(0).y());
@@ -451,26 +451,26 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
                     double a=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
                     emit signal_to_change_scale_scale1(a);
                     scale_mode_scale_list1.clear();
-                }
-            }
+               }
+           }
         }
         if (is_scale_mode_scale2==true)
         {
-            if (event->type() == QEvent::MouseButtonPress )
-            {
-                scale_mode_scale_list2.append(QPointF(((QMouseEvent*)event)->posF()));
-                this->repaint();
-                if (scale_mode_scale_list2.size()==2)
-                {
-                    double x1=signal_inv_transform_x(scale_mode_scale_list2.at(0).x());
-                    double x2=signal_inv_transform_x(scale_mode_scale_list2.at(1).x());
-                    double y1=signal_inv_transform_y(scale_mode_scale_list2.at(0).y());
-                    double y2=signal_inv_transform_y(scale_mode_scale_list2.at(1).y());
-                    double a=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-                    emit signal_to_change_scale_scale2(a);
-                    scale_mode_scale_list2.clear();
-                }
-            }
+           if (event->type() == QEvent::MouseButtonPress )
+           {
+               scale_mode_scale_list2.append(QPointF(((QMouseEvent*)event)->posF()));
+               this->repaint();
+               if (scale_mode_scale_list2.size()==2)
+               {
+                   double x1=signal_inv_transform_x(scale_mode_scale_list2.at(0).x());
+                   double x2=signal_inv_transform_x(scale_mode_scale_list2.at(1).x());
+                   double y1=signal_inv_transform_y(scale_mode_scale_list2.at(0).y());
+                   double y2=signal_inv_transform_y(scale_mode_scale_list2.at(1).y());
+                   double a=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+                   emit signal_to_change_scale_scale2(a);
+                   scale_mode_scale_list2.clear();
+               }
+           }
         }
         if (is_scale_mode_angle1==true)
         {
@@ -518,8 +518,8 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
                 this->repaint();
                 if (scale_mode_point_list1.size()==1)
                 {
-                    emit signal_to_change_scale_point1(QPointF(signal_inv_transform_x(scale_mode_point_list1.at(0).x()),signal_inv_transform_y(scale_mode_point_list1.at(0).y())));
-                    scale_mode_point_list1.clear();
+                     emit signal_to_change_scale_point1(QPointF(signal_inv_transform_x(scale_mode_point_list1.at(0).x()),signal_inv_transform_y(scale_mode_point_list1.at(0).y())));
+                     scale_mode_point_list1.clear();
                 }
             }
         }
@@ -909,17 +909,16 @@ void Spectro_draw::read_from_file()
 void Spectro_draw::replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc,double fi0,double fi_shift,double k)
 {
     double fi_new=fi0+k*fi_shift;
-    if (list.size()>0)
-        for (int i=0;i<list.size();i++)
-        {
-            double x=((Point)(list.at(i))).point.x();
-            double y=((Point)(list.at(i))).point.y();
-            double a=(x*cos((fi_new-fi)*2*3.1415926/360)+y*sin((fi_new-fi)*2*3.1415926/360));
-            double b=(y*cos((fi_new-fi)*2*3.1415926/360)-x*sin((fi_new-fi)*2*3.1415926/360));
-            QColor color=((Point)(list.at(i))).color;
-            bool uppd=((Point)(list.at(i))).updown;
-            list.replace(i,(* new Point(QPointF( a,b) ,color,uppd,Line)));
-        }
+    for (int i=0;i<list.size();i++)
+    {
+        double x=((Point)(list.at(i))).point.x();
+        double y=((Point)(list.at(i))).point.y();
+        double a=(x*cos((fi_new-fi)*2*3.1415926/360)+y*sin((fi_new-fi)*2*3.1415926/360));
+        double b=(y*cos((fi_new-fi)*2*3.1415926/360)-x*sin((fi_new-fi)*2*3.1415926/360));
+        QColor color=((Point)(list.at(i))).color;
+        bool uppd=((Point)(list.at(i))).updown;
+        list.replace(i,(* new Point(QPointF( a,b) ,color,uppd,Line)));
+    }
     if (x_sh!=0 && y_sh!=0 && x_sc!=0 && y_sc!=0)
     {
         if (sketch_list.size()>0)
@@ -939,7 +938,7 @@ void Spectro_draw::replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc
             }
         }
 
-
+        this->repaint();
 
         x_scale=x_sc;
         y_scale=y_sc;
@@ -947,7 +946,6 @@ void Spectro_draw::replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc
         y_shift=y_sh;
         fi=fi_new;
     }
-    this->repaint();
 }
 void Spectro_draw::flip()
 {

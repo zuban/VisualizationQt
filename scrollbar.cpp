@@ -9,14 +9,14 @@ ScrollBar::ScrollBar(QWidget * parent):
 }
 
 ScrollBar::ScrollBar(Qt::Orientation o, 
-                     QWidget *parent):
+        QWidget *parent):
     QScrollBar(o, parent)
 {
     init();
 }
 
 ScrollBar::ScrollBar(double minBase, double maxBase, 
-                     Qt::Orientation o, QWidget *parent):
+        Qt::Orientation o, QWidget *parent):
     QScrollBar(o, parent)
 {
     init();
@@ -63,8 +63,8 @@ void ScrollBar::setBase(double min, double max)
 
 void ScrollBar::moveSlider(double min, double max)
 {
-    const int sliderTicks = qRound((max - min) /
-                                   (d_maxBase - d_minBase) * d_baseTicks);
+    const int sliderTicks = qRound((max - min) / 
+        (d_maxBase - d_minBase) * d_baseTicks);
 
     // setRange initiates a valueChanged of the scrollbars
     // in some situations. So we block

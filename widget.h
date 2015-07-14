@@ -20,19 +20,14 @@ public:
     
 private slots:
 
-    void resizeEvent ( QResizeEvent * event );
-
-
-    void get_data_2D(double set_datax,double set_datay,int len);
-
-
+void resizeEvent ( QResizeEvent * event );
     void change_text(double text);
 
     void enable_delete_pushbutton(bool a);
 
-    //void slot_on_read_pushButton_clicked();
+    void slot_on_read_pushButton_clicked();
 
-    // void slot_on_add_pushButton_clicked();
+    void slot_on_add_pushButton_clicked();
 
     void on_graph_type_comboBox_currentIndexChanged(const QString &arg1);
 
@@ -100,13 +95,13 @@ private slots:
 
     void on_magnifier_pushButton_toggled(bool checked);
 
-    //    void slot_on_test_col_radioButton_toggled(bool checked);
+    void slot_on_test_col_radioButton_toggled(bool checked);
 
-    //    void slot_on_test_row_radioButton_toggled(bool checked);
+    void slot_on_test_row_radioButton_toggled(bool checked);
 
-    //  void on_test_row_column_lineEdit_textChanged(const QString &arg1);
+    void on_test_row_column_lineEdit_textChanged(const QString &arg1);
 
-    void slot_on_test_cuda_pushButton_clicked(int num, bool row);
+    void slot_on_test_cuda_pushButton_clicked(QString str);
 
 private:
     Ui::Widget *ui;

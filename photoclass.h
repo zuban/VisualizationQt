@@ -11,30 +11,30 @@ public:
     explicit PhotoClass(QWidget *parent = 0);
     QLabel *label;
     QPixmap *image;
-    //  QImage *MyImage;
+  //  QImage *MyImage;
     void resize_photo(double x,double y);
     double res_x;
     double res_y;
     void move_photo(QPointF point);
     void set_opacity(double a);
     void rotate(double x);
-    void draw( QPainter  *painter);
+       void draw( QPainter  *painter);
 
 
 
-    bool is_scale_mode_scale1;
-    bool is_scale_mode_scale2;
-    QList<QPointF> scale_mode_scale_list1;
-    QList<QPointF> scale_mode_scale_list2;
-    bool is_scale_mode_angle1;
-    bool is_scale_mode_angle2;
-    QList<QPointF> scale_mode_angle_list1;
-    QList<QPointF> scale_mode_angle_list2;
-    bool is_scale_mode_point1;
-    bool is_scale_mode_point2;
-    QList<QPointF> scale_mode_point_list1;
-    QList<QPointF> scale_mode_point_list2;
-    void replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc, double fi0, double fi_shift, double k);
+       bool is_scale_mode_scale1;
+        bool is_scale_mode_scale2;
+      QList<QPointF> scale_mode_scale_list1;
+      QList<QPointF> scale_mode_scale_list2;
+       bool is_scale_mode_angle1;
+       bool is_scale_mode_angle2;
+         QList<QPointF> scale_mode_angle_list1;
+         QList<QPointF> scale_mode_angle_list2;
+       bool is_scale_mode_point1;
+        bool is_scale_mode_point2;
+         QList<QPointF> scale_mode_point_list1;
+         QList<QPointF> scale_mode_point_list2;
+         void replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc, double fi0, double fi_shift, double k);
 
 
 

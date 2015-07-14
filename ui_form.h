@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'form.ui'
 **
-** Created: Mon 13. Jul 17:49:13 2015
+** Created: Fri 10. Apr 15:39:56 2015
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -34,6 +34,8 @@ public:
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *verticalLayout;
+    QPushButton *read_pushButton;
+    QPushButton *add_pushButton;
     QPushButton *export_pushButton;
     QVBoxLayout *verticalLayout_2;
     QPushButton *test_cuda_pushButton;
@@ -56,6 +58,18 @@ public:
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        read_pushButton = new QPushButton(groupBox);
+        read_pushButton->setObjectName(QString::fromUtf8("read_pushButton"));
+        read_pushButton->setMinimumSize(QSize(60, 45));
+
+        verticalLayout->addWidget(read_pushButton);
+
+        add_pushButton = new QPushButton(groupBox);
+        add_pushButton->setObjectName(QString::fromUtf8("add_pushButton"));
+        add_pushButton->setMinimumSize(QSize(60, 45));
+
+        verticalLayout->addWidget(add_pushButton);
+
         export_pushButton = new QPushButton(groupBox);
         export_pushButton->setObjectName(QString::fromUtf8("export_pushButton"));
         export_pushButton->setMinimumSize(QSize(60, 45));
@@ -110,8 +124,10 @@ public:
     {
         Form->setWindowTitle(QApplication::translate("Form", "Form", 0, QApplication::UnicodeUTF8));
         groupBox->setTitle(QApplication::translate("Form", "2D Graphics", 0, QApplication::UnicodeUTF8));
+        read_pushButton->setText(QApplication::translate("Form", "Read", 0, QApplication::UnicodeUTF8));
+        add_pushButton->setText(QApplication::translate("Form", "Add", 0, QApplication::UnicodeUTF8));
         export_pushButton->setText(QApplication::translate("Form", "Export", 0, QApplication::UnicodeUTF8));
-        test_cuda_pushButton->setText(QApplication::translate("Form", "Update data", 0, QApplication::UnicodeUTF8));
+        test_cuda_pushButton->setText(QApplication::translate("Form", "TestCuda Button", 0, QApplication::UnicodeUTF8));
         test_col_radioButton->setText(QApplication::translate("Form", "Columns", 0, QApplication::UnicodeUTF8));
         test_row_radioButton->setText(QApplication::translate("Form", "Rows", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

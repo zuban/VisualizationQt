@@ -17,7 +17,7 @@ Form_Spectr::~Form_Spectr()
 
 void Form_Spectr::on_read_pushbutton_clicked()
 {
-    emit signal_on_read_pushbutton_clicked();
+ emit signal_on_read_pushbutton_clicked();
 }
 
 
@@ -207,7 +207,6 @@ void Form_Spectr::on_k_lineEdit_textChanged(const QString &arg1)
 void Form_Spectr::on_horizontalSlider_for_cuda_test_valueChanged(int value)
 {
     emit change_FI0_cuda_test(value);
-
 }
 
 void Form_Spectr::on_fi_shift_slider_valueChanged(int value)

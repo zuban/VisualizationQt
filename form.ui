@@ -25,6 +25,32 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
+           <widget class="QPushButton" name="read_pushButton">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>45</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Read</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="add_pushButton">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>45</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Add</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="export_pushButton">
             <property name="minimumSize">
              <size>
@@ -50,7 +76,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Update data</string>
+             <string>TestCuda Button</string>
             </property>
            </widget>
           </item>

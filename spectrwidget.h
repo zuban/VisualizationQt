@@ -26,20 +26,17 @@ public:
     Form_Spectr *control;
 
     double_complex MakeComplex(double x,double y);
-    float_complex fMakeComplex(float x,float y);
+     float_complex fMakeComplex(float x,float y);
     Spectro_Plot* sp_plot;
     Z2Vector *z2vector;
     explicit SpectrWidget(QWidget *parent = 0);
     ~SpectrWidget();
 
-signals:
-    void set_data_2D(double set_datax,double set_datay,int len);
-
 
 private slots:
 
     void change_FI0_cuda_test(int count);
-    void get_control(Form_Spectr* control1);
+    void  get_control(Form_Spectr* control1);
     void resizeEvent ( QResizeEvent * event );
     void change_x_shift(double a);
     void change_y_shift(double a);

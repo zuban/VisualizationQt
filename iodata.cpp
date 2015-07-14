@@ -27,7 +27,7 @@ void IOData::d_readFile(QString path,int &N_k,int &N_fi,double &Fstart,double &F
 }
 void IOData::d_writeFile(QString path,int N_k,int N_fi,double Fstart,double Fstop,double AzStart, double AzStop,double_complex *array)
 {
-    char *cpath = path.toAscii().data();
+     char *cpath = path.toAscii().data();
     bofstream *ostream = new bofstream(cpath);
 
     *ostream << N_k << N_fi << Fstart<< Fstop << AzStart << AzStop ;
