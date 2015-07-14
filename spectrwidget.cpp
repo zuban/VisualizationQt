@@ -30,7 +30,7 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
     ui->polygon_pushButton->setChecked(true);
 
     connect(sp_plot,SIGNAL(signal_from_vector(QString)),this,SLOT(time(QString)));
-    connect(sp_plot->draw_widget,SIGNAL(signal_change_text(QString)),this,SLOT(change_text(QString)));
+    //connect(sp_plot->draw_widget,SIGNAL(signal_change_text(QString)),this,SLOT(change_text(QString)));
     connect(sp_plot->draw_widget,SIGNAL(signla_x_shift(double)),this,SLOT(change_x_shift(double)));
     connect(sp_plot->draw_widget,SIGNAL(signla_y_shift(double)),this,SLOT(change_y_shift(double)));
     connect(sp_plot->draw_widget,SIGNAL(signla_x_scale(double)),this,SLOT(change_x_scale(double)));
@@ -38,7 +38,7 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
     connect(sp_plot->draw_widget,SIGNAL(signla_fi(double)),this,SLOT(change_fi(double)));
     connect(sp_plot->draw_widget,SIGNAL(signla_k(double)),this,SLOT(change_k(double)));
     connect(sp_plot->draw_widget,SIGNAL(signla_fi_shift(double)),this,SLOT(change_fi_shift(double)));
-    connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale(double)),this,SLOT(slot_size(double)));
+    //connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale(double)),this,SLOT(slot_size(double)));
     connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale_scale1(double)),this,SLOT(slot_to_change_scale_scale1(double)));
     connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale_scale2(double)),this,SLOT(slot_to_change_scale_scale2(double)));
     connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale_angle1(double,double)),this,SLOT(slot_to_change_scale_angle1(double,double)));
@@ -53,7 +53,7 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
     connect(sp_plot->photo,SIGNAL(photo_signla_fi(double)),this,SLOT(photo_change_fi(double)));
     connect(sp_plot->photo,SIGNAL(photo_signla_k(double)),this,SLOT(photo_change_k(double)));
     connect(sp_plot->photo,SIGNAL(photo_signla_fi_shift(double)),this,SLOT(photo_change_fi_shift(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale(double)),this,SLOT(photo_slot_size(double)));
+    //connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale(double)),this,SLOT(photo_slot_size(double)));
     connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_scale1(double)),this,SLOT(photo_slot_to_change_scale_scale1(double)));
     connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_scale2(double)),this,SLOT(photo_slot_to_change_scale_scale2(double)));
     connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_angle1(double,double)),this,SLOT(photo_slot_to_change_scale_angle1(double,double)));
@@ -72,10 +72,10 @@ SpectrWidget::~SpectrWidget()
 void SpectrWidget::on_read_pushbutton_clicked()
 {
     QString way = QFileDialog::getOpenFileName(this, tr("Open File"), "",tr(".bin Files (*.bin)"));
-         if (way==0)
-         {
-             return;
-         }
+    if (way==0)
+    {
+        return;
+    }
     ui->progressBar->setValue(10);
     IOData *data = new IOData(this);
     int N_k;
@@ -84,7 +84,7 @@ void SpectrWidget::on_read_pushbutton_clicked()
     ui->progressBar->setValue(15);
     data->d_readmasSize(way,N_k,N_fi);
     double_complex *masin=new double_complex[N_k*N_fi];
-ui->progressBar->setValue(20);
+    ui->progressBar->setValue(20);
     data->d_readFile(way,N_k,N_fi,F_start,F_stop,AzStart,AzStop,masin);
     control->ui->Nk_lineedit_data->setText(QString::number(N_k));
     control->ui->Nfi_lineedit_data->setText(QString::number(N_fi));
@@ -92,19 +92,19 @@ ui->progressBar->setValue(20);
     control->ui->Fstop_lineedit_data->setText(QString::number(F_stop));
     control->ui->Azstart_lieedit_data->setText(QString::number(AzStart));
     control->ui->Azstop_lineedit_data->setText(QString::number(AzStop));
-ui->progressBar->setValue(50);
+    ui->progressBar->setValue(50);
 
     bool is_double = true;
     if (is_double)
     {
         double pi = 3.1415926;
         bool bWhole = true;
-       int NEWCOL=2048;// int NEWCOL=2048;
+        int NEWCOL=2048;// int NEWCOL=2048;
         int NEWROW=1024;
         double fi_degspan = 20.0;
         if(bWhole){
             fi_degspan = 360.0;
-           // N_fi = 15000;
+            // N_fi = 15000;
         }
         double_complex *mas=new double_complex[NEWCOL*NEWROW];
         bool a = SetArrayZ2Z(N_k,N_fi,F_start,F_stop,AzStart,AzStop,(double*)masin,false);
@@ -126,6 +126,13 @@ ui->progressBar->setValue(50);
         ui->progressBar->setValue(90);
         sp_plot->draw_spectr(*z2vector,get_xstart(),get_xstop(),get_zstart(),get_zstop(),-10.0,-60);
         ui->progressBar->setValue(100);
+
+
+
+        //        control->ui->Fstart_lineedit_data->setText(QString::number(get_xstart()));
+        //        control->ui->Fstop_lineedit_data->setText(QString::number(get_xstop()));
+        //        control->ui->Azstart_lieedit_data->setText(QString::number(get_zstart()));
+        //        control->ui->Azstop_lineedit_data->setText(QString::number(get_zstop()));
         delete mas;
     }
     else {
@@ -161,93 +168,102 @@ ui->progressBar->setValue(50);
 bool bInProgress = false;
 void SpectrWidget::change_FI0_cuda_test(int count)
 {
+
+
     bool is_double = true;
     if (is_double)
     {
-         ui->progressBar->setValue(50);
+        ui->progressBar->setValue(50);
         if(bInProgress) return;
         bInProgress = true;
         int NEWCOL=2048;
         int NEWROW=1024;
         double_complex *mas=new double_complex[NEWCOL*NEWROW];
-        double dAzStart = (double)count - 10;
-        double dAzStop = (double)count + 10;
+        double dAzStart = (double)count - 10.0;
+        double dAzStop = (double)count + 10.0;
         try{
-             bool b = CalcZ2Z(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(double*)mas);
+            bool b = CalcZ2Z(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(double*)mas);
         }
         catch(...) {
-             printf ("CUDA ERROR\n");
-             bInProgress = false;
-             return;
+            printf ("CUDA ERROR\n");
+            bInProgress = false;
+            return;
         }
 
         try{
-        //test end
-        z2vector->resize(NEWROW*NEWCOL);
+            //test end
+            z2vector->resize(NEWROW*NEWCOL);
 
-        z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
+            z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
 
-        for (int i=0;i<z2vector->size()-1;i++)
-        {
-            (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
-        }
-        delete mas;
+            for (int i=0;i<z2vector->size()-1;i++)
+            {
+                (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
+            }
+            delete mas;
 
-        sp_plot->draw_spectr(*z2vector,get_xstart(),get_xstop(),get_zstart(),get_zstop(),-10.0,-60);
-        ui->progressBar->setValue(100);
+            sp_plot->draw_spectr(*z2vector,get_xstart(),get_xstop(),get_zstart(),get_zstop(),-10.0,-60);
+            ui->progressBar->setValue(100);
+            sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
+                                                control->ui->fi_lineEdit->text().toDouble(),control->ui->horizontalSlider_for_cuda_test->value(),control->ui->k_lineEdit->text().toDouble());
+
+            //        control->ui->Fstart_lineedit_data->setText(QString::number(get_xstart()));
+            //        control->ui->Fstop_lineedit_data->setText(QString::number(get_xstop()));
+            //        control->ui->Azstart_lieedit_data->setText(QString::number(get_zstart()));
+            //        control->ui->Azstop_lineedit_data->setText(QString::number(get_zstop()));
         }
         catch(...) {
             printf ("RENDER ERROR\n");
             bInProgress = false;
-           return;
+            return;
         }
 
         bInProgress = false;
 
-}
+    }
     else {
         ui->progressBar->setValue(50);
 
-    if(bInProgress) return;
-    bInProgress = true;
-    printf ("count enter %d \n", count);
-    int NEWCOL=2048;
-    int NEWROW=1024;
-    float_complex *mas=new float_complex[NEWCOL*NEWROW];
-    float dAzStart = (float)count - 10;
-    float dAzStop = (float)count + 10;
-    try{
-        bool b = CalcC2C(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(float*)mas);
-    }
-    catch(...) {
-        printf ("CUDA ERROR\n");
-        bInProgress = false;
-        return;
-    }
-    printf ("count proceed\n");
-    try{
-        //test end
-        z2vector->resize(NEWROW*NEWCOL);
-        printf ("count  %d \n", count);
-        z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
-
-        for (int i=0;i<z2vector->size()-1;i++)
-        {
-            (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
+        if(bInProgress) return;
+        bInProgress = true;
+        printf ("count enter %d \n", count);
+        int NEWCOL=2048;
+        int NEWROW=1024;
+        float_complex *mas=new float_complex[NEWCOL*NEWROW];
+        float dAzStart = (float)count - 10;
+        float dAzStop = (float)count + 10;
+        try{
+            bool b = CalcC2C(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(float*)mas);
         }
+        catch(...) {
+            printf ("CUDA ERROR\n");
+            bInProgress = false;
+            return;
+        }
+        printf ("count proceed\n");
+        try{
+            //test end
+            z2vector->resize(NEWROW*NEWCOL);
+            printf ("count  %d \n", count);
+            z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
 
-        delete mas;
+            for (int i=0;i<z2vector->size()-1;i++)
+            {
+                (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
+            }
 
-        sp_plot->draw_spectr(*z2vector,f_get_xstart(),f_get_xstop(),f_get_zstart(),f_get_zstop(),-10.0,-60);
-        ui->progressBar->setValue(100);
-    }
-    catch(...) {
-        printf ("RENDER ERROR\n");
+            delete mas;
+
+            sp_plot->draw_spectr(*z2vector,f_get_xstart(),f_get_xstop(),f_get_zstart(),f_get_zstop(),-10.0,-60);
+            ui->progressBar->setValue(100);
+        }
+        catch(...) {
+            printf ("RENDER ERROR\n");
+            bInProgress = false;
+            return;
+        }
+        printf ("count exit\n");
         bInProgress = false;
-        return;
-    }
-    printf ("count exit\n");
-    bInProgress = false;
     }
 }
 void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)

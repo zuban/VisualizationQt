@@ -22,13 +22,13 @@ public:
     int get_string_lenght();
     void set_enable_delete_button(bool a);
 signals:
-      void enable_delete_button(bool a);
+    void enable_delete_button(bool a);
 private:
-     bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event);
     void draw( QPainter  *painter);
     QString mystring;
 protected:
-     void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *);
 
     
 public slots:

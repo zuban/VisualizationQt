@@ -29,7 +29,7 @@ void PhotoClass::resize_photo(double x, double y)
 }
 void PhotoClass::set_opacity(double a)
 {
-     label->setWindowOpacity(a);
+    label->setWindowOpacity(a);
 }
 void PhotoClass::move_photo(QPointF point)
 {
@@ -56,12 +56,12 @@ bool PhotoClass::eventFilter(QObject *object, QEvent *event)
 {
     if (is_scale_mode_scale1==true)
     {
-       if (event->type() == QEvent::MouseButtonPress )
-       {
-           scale_mode_scale_list1.append(QPointF(((QMouseEvent*)event)->posF()));
-           this->repaint();
-           if (scale_mode_scale_list1.size()==2)
-           {
+        if (event->type() == QEvent::MouseButtonPress )
+        {
+            scale_mode_scale_list1.append(QPointF(((QMouseEvent*)event)->posF()));
+            this->repaint();
+            if (scale_mode_scale_list1.size()==2)
+            {
                 double x1=photo_signal_inv_transform_x(scale_mode_scale_list1.at(0).x());
                 double x2=photo_signal_inv_transform_x(scale_mode_scale_list1.at(1).x());
                 double y1=photo_signal_inv_transform_y(scale_mode_scale_list1.at(0).y());
@@ -69,26 +69,26 @@ bool PhotoClass::eventFilter(QObject *object, QEvent *event)
                 double a=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
                 emit photo_signal_to_change_scale_scale1(a);
                 scale_mode_scale_list1.clear();
-           }
-       }
+            }
+        }
     }
     if (is_scale_mode_scale2==true)
     {
-       if (event->type() == QEvent::MouseButtonPress )
-       {
-           scale_mode_scale_list2.append(QPointF(((QMouseEvent*)event)->posF()));
-           this->repaint();
-           if (scale_mode_scale_list2.size()==2)
-           {
-               double x1=photo_signal_inv_transform_x(scale_mode_scale_list2.at(0).x());
-               double x2=photo_signal_inv_transform_x(scale_mode_scale_list2.at(1).x());
-               double y1=photo_signal_inv_transform_y(scale_mode_scale_list2.at(0).y());
-               double y2=photo_signal_inv_transform_y(scale_mode_scale_list2.at(1).y());
-               double a=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
-               emit photo_signal_to_change_scale_scale2(a);
-               scale_mode_scale_list2.clear();
-           }
-       }
+        if (event->type() == QEvent::MouseButtonPress )
+        {
+            scale_mode_scale_list2.append(QPointF(((QMouseEvent*)event)->posF()));
+            this->repaint();
+            if (scale_mode_scale_list2.size()==2)
+            {
+                double x1=photo_signal_inv_transform_x(scale_mode_scale_list2.at(0).x());
+                double x2=photo_signal_inv_transform_x(scale_mode_scale_list2.at(1).x());
+                double y1=photo_signal_inv_transform_y(scale_mode_scale_list2.at(0).y());
+                double y2=photo_signal_inv_transform_y(scale_mode_scale_list2.at(1).y());
+                double a=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+                emit photo_signal_to_change_scale_scale2(a);
+                scale_mode_scale_list2.clear();
+            }
+        }
     }
     if (is_scale_mode_angle1==true)
     {
@@ -136,8 +136,8 @@ bool PhotoClass::eventFilter(QObject *object, QEvent *event)
             this->repaint();
             if (scale_mode_point_list1.size()==1)
             {
-                 emit photo_signal_to_change_scale_point1(QPointF(photo_signal_inv_transform_x(scale_mode_point_list1.at(0).x()),photo_signal_inv_transform_y(scale_mode_point_list1.at(0).y())));
-                 scale_mode_point_list1.clear();
+                emit photo_signal_to_change_scale_point1(QPointF(photo_signal_inv_transform_x(scale_mode_point_list1.at(0).x()),photo_signal_inv_transform_y(scale_mode_point_list1.at(0).y())));
+                scale_mode_point_list1.clear();
             }
         }
     }
@@ -154,7 +154,7 @@ bool PhotoClass::eventFilter(QObject *object, QEvent *event)
             }
         }
     }
-return false;
+    return false;
 }
 
 void PhotoClass::replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc,double fi0,double fi_shift,double k)

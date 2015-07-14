@@ -24,19 +24,19 @@ public:
 
 
     bool is_scale_mode_scale1;
-     bool is_scale_mode_scale2;
-   QList<QPointF> scale_mode_scale_list1;
-   QList<QPointF> scale_mode_scale_list2;
+    bool is_scale_mode_scale2;
+    QList<QPointF> scale_mode_scale_list1;
+    QList<QPointF> scale_mode_scale_list2;
     bool is_scale_mode_angle1;
     bool is_scale_mode_angle2;
-      QList<QPointF> scale_mode_angle_list1;
-      QList<QPointF> scale_mode_angle_list2;
+    QList<QPointF> scale_mode_angle_list1;
+    QList<QPointF> scale_mode_angle_list2;
     bool is_scale_mode_point1;
-     bool is_scale_mode_point2;
-      QList<QPointF> scale_mode_point_list1;
-      QList<QPointF> scale_mode_point_list2;
- //   QPointF scale_point1;//for size mode
- //   QPointF scale_point2;
+    bool is_scale_mode_point2;
+    QList<QPointF> scale_mode_point_list1;
+    QList<QPointF> scale_mode_point_list2;
+    //   QPointF scale_point1;//for size mode
+    //   QPointF scale_point2;
 
 
     int left_select;
@@ -73,16 +73,16 @@ public:
     explicit Spectro_draw(QWidget *parent = 0);
     void draw( QPainter  *painter);
     void get_selected_area(int num);
-        QList<Point> list;
+    QList<Point> list;
 
-        QList<Point> sketch_list;
+    QList<Point> sketch_list;
 
-         int find_point(int number);
-         void change_color(QColor color);
-         void delete_last();
-           int find_closest_point(QPointF point);
-           int get_equal_point(int num);
-           void read_from_file();
+    int find_point(int number);
+    void change_color(QColor color);
+    void delete_last();
+    int find_closest_point(QPointF point);
+    int get_equal_point(int num);
+    void read_from_file();
 
 
 private:

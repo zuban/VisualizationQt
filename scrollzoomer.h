@@ -36,7 +36,7 @@ public:
     ScrollBarPosition vScrollBarPosition() const;
 
     QWidget* cornerWidget() const;
-    virtual void setCornerWidget(QWidget *); 
+    virtual void setCornerWidget(QWidget *);
     
     virtual bool eventFilter(QObject *, QEvent *);
 
@@ -62,5 +62,5 @@ private:
     bool d_inZoom;
     bool d_alignCanvasToScales;
 };
-            
+
 #endif

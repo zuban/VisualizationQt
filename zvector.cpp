@@ -11,8 +11,8 @@
 
 ZVector::ZVector() : QVector<Complex>()
 {
-//   is_test=false;
-//   is_rows=true;
+    //   is_test=false;
+    //   is_rows=true;
 
 }
 void ZVector::ReadAscii(QString line) //in: way; out: flag only????
@@ -31,13 +31,13 @@ void ZVector::ReadAscii(QString line) //in: way; out: flag only????
     while (!in.atEnd())
     {
 
-       QString line1=in.readLine();
-       QStringList list2 = line1.split(",", QString::SkipEmptyParts);
+        QString line1=in.readLine();
+        QStringList list2 = line1.split(",", QString::SkipEmptyParts);
 
-       StringList <<  list2[0];
-       StringList <<  list2[1];
-       StringList <<  list2[2];
-       k++;
+        StringList <<  list2[0];
+        StringList <<  list2[1];
+        StringList <<  list2[2];
+        k++;
     }
     resize(k);
     zLenght=k;
