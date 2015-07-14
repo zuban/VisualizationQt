@@ -4,7 +4,12 @@ st49.skt
 
 
 # C++ objects and libs
+*.manifest
 
+
+*.Debug
+*.Release
+*.pdb
 *.slo
 *.lo
 *.o
@@ -44,3 +49,35 @@ Makefile*
 *.ptx
 *.cubin
 *.fatbin
+
+
+# In repository we don't need to have:
+# Compiled object files
+*.o
+
+# Generated MOC, resource and UI files
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# Debug and Release directories (created under Windows, not Linux)
+debug/
+release/
+
+# .log files (usually created by QtTest - thanks to VestniK)
+*.log
+
+# Built windows .exe and linux binaries
+# NOTE: PROJECT is a your project's name, analog of PROJECT.exe in Linux
+*.exe
+*.dll
+PROJECT
+
+# Windows-specific files
+Thumbs.db
+desktop.ini
+# Mac-specific things (thanks to Michael Aaron Safyan)
+.DS_Store
+
+# Editors temporary files 
+*~
