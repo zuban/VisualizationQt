@@ -28,12 +28,12 @@ private:
     EColor color[nGraphsMax];
     QString title[nGraphsMax];
     ECurveType type[nGraphsMax];
-   Qt::PenStyle getPen(ECurveType type);
-   QColor getRGB(EColor color);
+    Qt::PenStyle getPen(ECurveType type);
+    QColor getRGB(EColor color);
 protected:
-   void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event);
 signals:
-   void signal_from_legend(double pos);
+    void signal_from_legend(double pos);
     
 public slots:
     

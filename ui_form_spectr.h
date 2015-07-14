@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'form_spectr.ui'
 **
-** Created: Sun 12. Apr 16:30:12 2015
+** Created: Mon 13. Jul 17:49:13 2015
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -791,7 +791,7 @@ public:
 
         retranslateUi(Form_Spectr);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(Form_Spectr);

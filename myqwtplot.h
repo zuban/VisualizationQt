@@ -12,8 +12,7 @@ public:
 
 
     explicit MyQwtPlot(QWidget *parent = 0);
-
-   QtLegend *mylegend;
+    QtLegend *mylegend;
     MyMarker *mymarker;
     
 signals:

@@ -17,24 +17,23 @@
 ZGraph::ZGraph(QWidget *parent) :
     QWidget(parent)
 {
-    // Init_CUDA();
-
-    col_or_row_number=0;
-    is_rows=true;
     eSpecialMarker=nonactive;
     myPlot = new MyQwtPlot(this);
- //  myPlot->resize(1230,602);
 
-     panner =new QwtPlotPanner(myPlot->canvas());
-      panner->setMouseButton( Qt::RightButton );
+    panner =new QwtPlotPanner(myPlot->canvas());
+    panner->setMouseButton( Qt::RightButton );
     d_picker = new QwtPlotPicker(myPlot->canvas());
     d_picker->setStateMachine( new QwtPickerDragPointMachine() );
-connect(d_picker, SIGNAL( appended( const QPoint & ) ),SLOT( click_on_canvas( const QPoint & ) ) );
+    connect(d_picker, SIGNAL( appended( const QPoint & ) ),SLOT( click_on_canvas( const QPoint & ) ) );
+
     d_selectedCurve = NULL;
     d_selectedPoint = -1;
+
     markers_count=0;
     eRun=first;
     graphs_count=0;
+
+    //lines color
     eColor[0]=black;
     eColor[1]=gray;
     eColor[2]=darkGreen;
@@ -42,21 +41,23 @@ connect(d_picker, SIGNAL( appended( const QPoint & ) ),SLOT( click_on_canvas( co
     eColor[4]=darkCyan;
     eColor[5]=black;
     eColor[6]=darkYellow;
-
-    gate_marker1=new QwtPlotMarker();
-    gate_marker2=new QwtPlotMarker();
-    gate_marker1->setLineStyle(QwtPlotMarker::VLine );
-    gate_marker1->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
-   gate_marker1->setLinePen(QPen(Qt::black, 1.5, Qt::DashLine));
-    gate_marker1->setSymbol(line_symbol);
-    gate_marker2->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
-   gate_marker2->setLinePen(QPen(Qt::black, 1.5, Qt::DashLine));
-    gate_marker2->setSymbol(line_symbol);
-
     for (int i=7;i<N_GRAPHS_MAX;i++)
     {
         eColor[i]=black;
     }
+
+    //    gate_marker1=new QwtPlotMarker();
+    //    gate_marker2=new QwtPlotMarker();
+
+    //    gate_marker1->setLineStyle(QwtPlotMarker::VLine );
+    //    gate_marker1->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
+    //    gate_marker1->setLinePen(QPen(Qt::black, 1.5, Qt::DashLine));
+    //    gate_marker1->setSymbol(line_symbol);
+    //    gate_marker2->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
+    //    gate_marker2->setLinePen(QPen(Qt::black, 1.5, Qt::DashLine));
+    //    gate_marker2->setSymbol(line_symbol);
+
+
     reference_marker=new QwtPlotMarker();
     reference_marker=NULL;
     for (int i=0;i<N_GRAPHS_MAX;i++)
@@ -64,7 +65,8 @@ connect(d_picker, SIGNAL( appended( const QPoint & ) ),SLOT( click_on_canvas( co
         eCurveType[i]=SolidLine;
         curve_width[i]=1.5;
     }
-     line_symbol=new QwtSymbol( QwtSymbol::Diamond, Qt::green, Qt::NoPen, QSize( 10,10 ));
+
+    line_symbol=new QwtSymbol( QwtSymbol::Diamond, Qt::green, Qt::NoPen, QSize( 10,10 ));
     for (int i=0;i<N_GRAPHS_MAX;i++)
     {
         zVector[i]=new ZVector();
@@ -76,11 +78,9 @@ connect(d_picker, SIGNAL( appended( const QPoint & ) ),SLOT( click_on_canvas( co
 
 
         line_marker[i]=new QwtPlotMarker();
-
         line_marker[i]->setLineStyle(QwtPlotMarker::VLine );
         line_marker[i]->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
         line_marker[i]->setLinePen(QPen(Qt::black, 1.5, Qt::DashLine));
-
         line_marker[i]->setSymbol(line_symbol);
     }
 
@@ -93,125 +93,127 @@ connect(d_picker, SIGNAL( appended( const QPoint & ) ),SLOT( click_on_canvas( co
     myPlot->canvas()->installEventFilter(this);
 
 }
-void ZGraph::draw_default_graph(QString way)
-{
+//void ZGraph::draw_default_graph(QString way)
+//{
+//    if (eRun==first)
+//    {
+//        graphs_count=1;
 
-    if (eRun==first)
-    {
-        graphs_count=1;
+//        zVector[0]->ReadAscii(way);
 
-        zVector[0]->ReadAscii(way);
-        double xs[zVector[0]->zLenght];
-        double ys[zVector[0]->zLenght];
-        for (int i=0;i<zVector[0]->zLenght;i++)
-        {
-            Complex C=(*zVector[0])[i];
-            xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
+//        double xs[zVector[0]->zLenght];
+//        double ys[zVector[0]->zLenght];
+//        for (int i=0;i<zVector[0]->zLenght;i++)
+//        {
+//            Complex C=(*zVector[0])[i];
+//            xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
 
-            ys[i]=10.0*log10(real(C)*real(C)+imag(C)*imag(C));
-        }
-        QwtPointArrayData * const dataLin1 = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
-        myPlot->setCanvasBackground(Qt::white);
-        curve[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
-        curve[0]->setData(dataLin1);
-        curve[0]->attach(myPlot);
-        QwtPlotGrid *grid=new QwtPlotGrid();
-        grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
-        grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
-        grid->attach(myPlot);
-        myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
-        myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
-        myPlot->setAxisAutoScale(QwtPlot::yRight,true);
-        myPlot->setAxisAutoScale(QwtPlot::xTop,true);
+//            ys[i]=10.0*log10(real(C)*real(C)+imag(C)*imag(C));
+//        }
+//        if (dataLin[0]!=NULL)
+//        {
+//            delete dataLin[0];
+//            dataLin[0]=NULL;
+//        }
+//        dataLin[0] = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
+//        myPlot->setCanvasBackground(Qt::white);
+//        curve[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
+//        curve[0]->setData(dataLin[0]);
+//        curve[0]->attach(myPlot);
+//        QwtPlotGrid *grid=new QwtPlotGrid();
+//        grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
+//        grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
+//        grid->attach(myPlot);
+//        myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
+//        myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
+//        myPlot->setAxisAutoScale(QwtPlot::yRight,true);
+//        myPlot->setAxisAutoScale(QwtPlot::xTop,true);
 
-        myPlot->mylegend->add_graph();
-        eRun=nonfirst;
-    }
-    else
-    {
-        for (int i=0;i<N_GRAPHS_MAX;i++)
-        {
-            if (curve[i]!=NULL)
-            {
-                delete curve[i];
-                curve[i]=new QwtPlotCurve();
+//        myPlot->mylegend->add_graph();
+//        eRun=nonfirst;
+//    }
+//    else
+//    {
+//        for (int i=0;i<N_GRAPHS_MAX;i++)
+//        {
+//            if (curve[i]!=NULL)
+//            {
+//                delete curve[i];
+//                curve[i]=new QwtPlotCurve();
 
-            }
-            graphs_count=1;
+//            }
+//            graphs_count=1;
 
-            zVector[0]->ReadAscii(way);
-            double xs[zVector[0]->zLenght];
-            double ys[zVector[0]->zLenght];
-            for (int i=0;i<zVector[0]->zLenght;i++)
-            {
-                Complex C=(*zVector[0])[i];
-                xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
+//            zVector[0]->ReadAscii(way);
+//            double xs[zVector[0]->zLenght];
+//            double ys[zVector[0]->zLenght];
+//            for (int i=0;i<zVector[0]->zLenght;i++)
+//            {
+//                Complex C=(*zVector[0])[i];
+//                xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
 
-                ys[i]=10.0*log10(real(C)*real(C)+imag(C)*imag(C));
-            }
-            QwtPointArrayData * const dataLin1 = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
-            myPlot->setCanvasBackground(Qt::white);
-            curve[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
-            curve[0]->setData(dataLin1);
-            curve[0]->attach(myPlot);
-            QwtPlotGrid *grid=new QwtPlotGrid();
-            grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
-            grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
-            grid->attach(myPlot);
-            myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
-            myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
-            myPlot->setAxisAutoScale(QwtPlot::yRight,true);
-            myPlot->setAxisAutoScale(QwtPlot::xTop,true);
+//                ys[i]=10.0*log10(real(C)*real(C)+imag(C)*imag(C));
+//            }
+//            if (dataLin[0]!=NULL)
+//            {
+//                delete dataLin[0];
+//                dataLin[0]=NULL;
+//            }
+//            dataLin[0] = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
+//            myPlot->setCanvasBackground(Qt::white);
+//            curve[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
+//            curve[0]->setData(dataLin[0]);
+//            curve[0]->attach(myPlot);
+//            QwtPlotGrid *grid=new QwtPlotGrid();
+//            grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
+//            grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
+//            grid->attach(myPlot);
+//            myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
+//            myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
+//            myPlot->setAxisAutoScale(QwtPlot::yRight,true);
+//            myPlot->setAxisAutoScale(QwtPlot::xTop,true);
 
-            myPlot->mylegend->delete_legend();
-            myPlot->mylegend->add_graph();
+//            myPlot->mylegend->delete_legend();
+//            myPlot->mylegend->add_graph();
 
-        }
-    }
+//        }
+//    }
 
-    myPlot->replot();
+//    myPlot->replot();
 
-eSpecialMarker=active;
-}
+//    eSpecialMarker=active;
+//}
 void ZGraph::Cuda_draw_default_graph(QString way)
 {
 
     if (eRun==first)
     {
         graphs_count=1;
+        int nCol=2048;
+        int nRow=2048;
 
-        //zVector[0]->ReadAscii(way);
 
-        nCol=2048;
-        nRow=2048;
-        mas=new double2[nCol*nRow];
+        double2 *mas=new double2[nCol*nRow];
         for (int i=0;i<nCol;i++)
         {
             for (int j=0;j<nRow;j++)
-        {
-            int ind=i+j*nCol;
-            mas[ind].x=0.0;
-            mas[ind].y=0.0;
-        }
+            {
+                int ind=i+j*nCol;
+                mas[ind].x=qrand() % 50;
+                mas[ind].y=qrand() % 50;
+            }
         }
         for (int i=0;i<nCol/16;i++)
         {
             for (int j=0;j<nRow/16;j++)
-        {
-            int ind=i+j*nCol;
-            mas[ind].x=1.0;
-            mas[ind].y=0.0;
+            {
+                int ind=i+j*nCol;
+                mas[ind].x=1.0;
+                mas[ind].y=0.0;
+            }
         }
-        }
-//Transform_CUDA(nCol,nRow,(double*)mas);
-        clock_t t1 = clock(); // время до
-        //Transform_CUDA(nCol,nRow,(double*)mas);
-
-        clock_t t2 = clock(); // время после
-       emit signal_from_zGraph( (double) (t2-t1) / (double)CLOCKS_PER_SEC ); // время в секундах
         zVector[0]->start=1.0;
         zVector[0]->stop=10000.0;
-
 
         zVector[0]->resize(nRow);
         zVector[0]->zLenght=zVector[0]->size();
@@ -221,18 +223,15 @@ void ZGraph::Cuda_draw_default_graph(QString way)
         for (int i=0;i<nCol;i++)
         {
             for (int j=0;j<nRow;j++)
-        {
-                if (j==col_or_row_number)
+            {
+                if (j==0)
                 {
-                     int ind=i+j*nCol;
-                    //Complex C=(*zVector[0])[ind];
-                    //xs[q]=zVector[0]->start+ind*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
+                    int ind=i+j*nCol;
                     (*zVector[0])[q]=Complex(mas[ ind].x,mas[ ind].y);
-                    //ys[q]=10.0*log10(real(C)*real(C)+imag(C)*imag(C) +1.0e-20);
                     q++;
                 }
 
-        }
+            }
         }
 
         for (int i=0;i<zVector[0]->zLenght;i++)
@@ -244,10 +243,10 @@ void ZGraph::Cuda_draw_default_graph(QString way)
         }
 
 
-        QwtPointArrayData * const dataLin1 = new QwtPointArrayData(&xs[0],&ys[0],nRow);
+        QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
         myPlot->setCanvasBackground(Qt::white);
         curve[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
-        curve[0]->setData(dataLin1);
+        curve[0]->setData(dataLin);
         curve[0]->attach(myPlot);
         QwtPlotGrid *grid=new QwtPlotGrid();
         grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
@@ -262,6 +261,8 @@ void ZGraph::Cuda_draw_default_graph(QString way)
         myPlot->replot();
         delete xs;
         delete ys;
+        delete mas;
+        eRun=nonfirst;
 
     }
     else
@@ -286,95 +287,84 @@ void ZGraph::Cuda_draw_default_graph(QString way)
 
                 ys[i]=10.0*log10(real(C)*real(C)+imag(C)*imag(C)+ 1.0e-20);
             }
-            QwtPointArrayData * const dataLin1 = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
+            QwtPointArrayData *dataLin =new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
+            curve[0]->setData(dataLin);
             myPlot->setCanvasBackground(Qt::white);
             curve[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
-            curve[0]->setData(dataLin1);
+
             curve[0]->attach(myPlot);
-            QwtPlotGrid *grid=new QwtPlotGrid();
-            grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
-            grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
-            grid->attach(myPlot);
             myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
             myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
             myPlot->setAxisAutoScale(QwtPlot::yRight,true);
             myPlot->setAxisAutoScale(QwtPlot::xTop,true);
-
             myPlot->mylegend->delete_legend();
             myPlot->mylegend->add_graph();
-
         }
     }
-
     myPlot->replot();
+    eSpecialMarker=active;
+}
 
-eSpecialMarker=active;
-}
-void ZGraph::draw_test()
-{
-    emit signal_from_zGraph(12412);
-}
 bool ZGraph::eventFilter(QObject *target, QEvent *event)
- {
-
-   if (target == myPlot->canvas())
-   {
+{
+    if (target == myPlot->canvas())
+    {
         if (event->type() == QEvent::MouseMove)
         {
-        // emit signal_from_zGraph(myPlot->invTransform(QwtPlot::xBottom,((QMouseEvent*)event)->pos().x()));
-         show_special_marker(myPlot->invTransform(QwtPlot::xBottom,((QMouseEvent*)event)->pos().x()));
-         return false;
-         }
-    return false;
-  }
- }
+            show_special_marker(myPlot->invTransform(QwtPlot::xBottom,((QMouseEvent*)event)->pos().x()));
+            return false;
+        }
+        return false;
+    }
+}
 
 double ZGraph::getPointX(QwtPlotCurve* curveid,int Point)
 {
     int k=0;
     for (int i=0;i<N_GRAPHS_MAX;i++)
     {
-        if (curveid==curve[i])
-        {
-            k=i;
-        }
-    }
-            if (eType==Ampl)
+        if (curve[i]!=NULL)
+            if (curveid==curve[i])
             {
-                if (eAmplType==AmplLog)
-                {
-                    Complex C=(*zVector[k])[Point];
-                    double  xs=zVector[k]->start+(Point)*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
-                    return xs;
-                }
-
-                if (eAmplType==AmplLin)
-                {
-                    Complex C=(*zVector[k])[Point];
-                    double  xs=zVector[k]->start+Point*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
-                    return xs;
-                }
+                k=i;
+            }
+    }
+    if (zVector[k]!=NULL)
+        if (eType==Ampl)
+        {
+            if (eAmplType==AmplLog)
+            {
+                Complex C=(*zVector[k])[Point];
+                double xs=zVector[k]->start+(Point)*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
+                return xs;
             }
 
-        if (eType==Phase)
-        {
-            Complex C=(*zVector[k])[Point];
-            double  xs=zVector[k]->start+Point*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
-            return xs;
+            if (eAmplType==AmplLin)
+            {
+                Complex C=(*zVector[k])[Point];
+                double xs=zVector[k]->start+Point*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
+                return xs;
+            }
         }
-        if (eType==Real)
-        {
-            Complex C=(*zVector[k])[Point];
-            double xs=zVector[k]->start+Point*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
-            return xs;
-        }
-        if (eType==Imag)
-        {
-            Complex C=(*zVector[k])[Point];
-            double xs=zVector[k]->start+Point*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
-            return xs;
-        }
-
+    if (eType==Phase)
+    {
+        Complex C=(*zVector[k])[Point];
+        double  xs=zVector[k]->start+Point*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
+        return xs;
+    }
+    if (eType==Real)
+    {
+        Complex C=(*zVector[k])[Point];
+        double xs=zVector[k]->start+Point*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
+        return xs;
+    }
+    if (eType==Imag)
+    {
+        Complex C=(*zVector[k])[Point];
+        double xs=zVector[k]->start+Point*(zVector[k]->stop-zVector[k]->start)/(zVector[k]->zLenght-1);
+        return xs;
+    }
+    return 0;
 }
 
 double ZGraph::getPointY(QwtPlotCurve* curveid, int Point)
@@ -382,95 +372,109 @@ double ZGraph::getPointY(QwtPlotCurve* curveid, int Point)
     int k=0;
     for (int i=0;i<N_GRAPHS_MAX;i++)
     {
-        if (curveid==curve[i])
-            k=i;
+        if (curve[i]!=NULL)
+            if (curveid==curve[i])
+                k=i;
     }
-
-            if (eType==Ampl)
+    if (zVector[k]!=NULL)
+        if (eType==Ampl)
+        {
+            if (eAmplType==AmplLog)
             {
-                if (eAmplType==AmplLog)
-                {
-                    Complex C=(*zVector[k])[Point];
-                    double  ys=10.0*log10(real(C)*real(C)+imag(C)*imag(C)+ 1.0e-20);
-                    return ys;
-                }
-                if (eAmplType==AmplLin)
-                {
-                    Complex C=(*zVector[k])[Point];
-                    double  ys=sqrt(real(C)*real(C)+imag(C)*imag(C));
-                    return ys;
-                }
+
+                Complex C=(*zVector[k])[Point];
+                double  ys=10.0*log10(real(C)*real(C)+imag(C)*imag(C)+ 1.0e-20);
+                return ys;
+
             }
+            if (eAmplType==AmplLin)
+            {
 
-        if (eType==Phase)
-        {
-            Complex C=(*zVector[k])[Point];
-            double  ys=atan2(imag(C),real(C))*180.0/3.1415926;
-            return ys;
-        }
-        if (eType==Real)
-        {
-            Complex C=(*zVector[k])[Point];
-            double ys=real(C);
-            return ys;
-        }
-        if (eType==Imag)
-        {
-            Complex C=(*zVector[k])[Point];
-            double ys=imag(C);
-            return ys;
+                Complex C=(*zVector[k])[Point];
+                double  ys=sqrt(real(C)*real(C)+imag(C)*imag(C));
+                return ys;
+
+            }
         }
 
+    if (eType==Phase)
+    {
+
+        Complex C=(*zVector[k])[Point];
+        double  ys=atan2(imag(C),real(C))*180.0/3.1415926;
+        return ys;
+
+    }
+    if (eType==Real)
+    {
+
+        Complex C=(*zVector[k])[Point];
+        double ys=real(C);
+        return ys;
+
+    }
+    if (eType==Imag)
+    {
+
+        Complex C=(*zVector[k])[Point];
+        double ys=imag(C);
+        return ys;
+
+    }
+    return 0;
 }
 
+int ZGraph::z_getNumber(double x)
+{
+    if (zVector[0]==NULL)
+        return 0;
 
- int ZGraph::z_getNumber(double x)
- {
-     if (x<zVector[0]->start)
-     {
-         return 0;
-     }
-     if (x>zVector[0]->stop)
-     {
-         return zVector[0]->zLenght-1 ;
-     }
+    if (x<zVector[0]->start)
+    {
+        return 0;
+    }
+    if (x>zVector[0]->stop)
+    {
+        return zVector[0]->zLenght-1 ;
+    }
 
-       int i=int((x-zVector[0]->start)/(zVector[0]->stop-zVector[0]->start)*(zVector[0]->zLenght-1)+0.5);
-       return i;
-
- }
+    int i=int((x-zVector[0]->start)/(zVector[0]->stop-zVector[0]->start)*(zVector[0]->zLenght-1)+0.5);
+    return i;
+}
 void ZGraph::show_special_marker(double x)
 {
     if (eSpecialMarker==active)
     {
-    int number=z_getNumber(x);
+        int number=z_getNumber(x);
 
-    for (int i=0;i<graphs_count;i++)
-    {
-        if (line_marker[i]==NULL)
+        for (int i=0;i<graphs_count;i++)
         {
-            line_marker[i]=new QwtPlotMarker();
+            if (line_marker[i]==NULL)
+            {
+                if (line_marker[i]!=NULL)
+                    line_marker[i]=new QwtPlotMarker();
+            }
+            line_marker[i]->detach();
+            line_marker[i]->setValue( getPointX(curve[i],number), getPointY(curve[i],number));
+            line_marker[i]->setSymbol(line_symbol);
+            line_marker[i]->attach(myPlot);
         }
-        line_marker[i]->detach();
-        line_marker[i]->setValue( getPointX(curve[i],number), getPointY(curve[i],number));
-        line_marker[i]->setSymbol(line_symbol);
-        line_marker[i]->attach(myPlot);
     }
-}
     else
-    {}
-     myPlot->replot();
+    {
+    }
+    myPlot->replot();
 }
-void ZGraph::add_new_graph(QString way)
-{
-    if (graphs_count>N_GRAPHS_MAX-1)
-        return;
-    graphs_count++;
-    zVector[graphs_count-1]->ReadAscii(way);
-    myPlot->mylegend->add_graph();
-    reDraw();
+//void ZGraph::add_new_graph(QString way)
+//{
+//    if (graphs_count>N_GRAPHS_MAX-1)
+//        return;
+//    graphs_count++;
+//    zVector[graphs_count-1]->ReadAscii(way);
+//    myPlot->mylegend->add_graph();
+//    reDraw();
 
-}
+//}
 
 void ZGraph::redefine_type(QString type)
 {
@@ -482,28 +486,28 @@ void ZGraph::redefine_type(QString type)
     }
     if (type=="Phase")
     {
-         eType=Phase;
-         ePhaseScale=PhaseAutoscale;
+        eType=Phase;
+        ePhaseScale=PhaseAutoscale;
     }
     if (type=="Real")
     {
-       eType=Real;
-       eReImScale=ReAutoscale;
+        eType=Real;
+        eReImScale=ReAutoscale;
     }
     if (type=="Imag")
     {
-         eType=Imag;
-         eReImScale=ReAutoscale;
+        eType=Imag;
+        eReImScale=ReAutoscale;
     }
     if (type=="Lin")
     {
         eAmplType=AmplLin;
-         eAmplScale=AmplAutoscale;
+        eAmplScale=AmplAutoscale;
     }
     if (type=="Log")
     {
         eAmplType=AmplLog;
-         eAmplScale=AmplAutoscale;
+        eAmplScale=AmplAutoscale;
     }
     reDraw();
     reDrawScale(0,0);
@@ -515,6 +519,10 @@ void ZGraph::reDraw()
 
     for (int j=0;j<graphs_count;j++)
     {
+        if (zVector[j]==NULL)
+            continue;
+        if (curve[j]==NULL)
+            continue;
         if (eType==Ampl)
         {
             if (eAmplType==AmplLog)
@@ -527,10 +535,8 @@ void ZGraph::reDraw()
                     xs[i]=zVector[j]->start+i*(zVector[j]->stop-zVector[j]->start)/(zVector[j]->zLenght-1);
                     ys[i]=10.0*log10(real(C)*real(C)+imag(C)*imag(C)+ 1.0e-20);
                 }
-                QwtPointArrayData * const dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
+                QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
                 curve[j]->setData(dataLin);
-
-
             }
 
             if (eAmplType==AmplLin)
@@ -543,8 +549,8 @@ void ZGraph::reDraw()
                     xs[i]=zVector[j]->start+i*(zVector[j]->stop-zVector[j]->start)/(zVector[j]->zLenght-1);
                     ys[i]=sqrt(real(C)*real(C)+imag(C)*imag(C)+ 1.0e-20);
                 }
-                QwtPointArrayData * const dataLog = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
-                curve[j]->setData(dataLog);
+                QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
+                curve[j]->setData(dataLin);
             }
         }
         if (eType==Phase)
@@ -557,8 +563,9 @@ void ZGraph::reDraw()
                 xs[i]=zVector[j]->start+i*(zVector[j]->stop-zVector[j]->start)/(zVector[j]->zLenght-1);
                 ys[i]=atan2(imag(C),real(C))*180.0/3.1415926;
             }
-            QwtPointArrayData * const dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
+            QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
             curve[j]->setData(dataLin);
+
         }
         if (eType==Real)
         {
@@ -570,9 +577,8 @@ void ZGraph::reDraw()
                 xs[i]=zVector[j]->start+i*(zVector[j]->stop-zVector[j]->start)/(zVector[j]->zLenght-1);
                 ys[i]=real(C);
             }
-            QwtPointArrayData * const dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
+            QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
             curve[j]->setData(dataLin);
-
         }
         if (eType==Imag)
         {
@@ -583,21 +589,17 @@ void ZGraph::reDraw()
                 Complex C=(*zVector[j])[i];
                 xs[i]=zVector[j]->start+i*(zVector[j]->stop-zVector[j]->start)/(zVector[j]->zLenght-1);
                 ys[i]=imag(C);
-
-
             }
-            QwtPointArrayData * const dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
+            QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[j]->zLenght);
             curve[j]->setData(dataLin);
-
         }
-         curve[j]->attach(myPlot);
-   }
+        curve[j]->attach(myPlot);
+    }
     myPlot->replot();
 
 }
 QColor ZGraph::getRGB(EColor color)
 {
-
     if  (color==white)
     {
         return Qt::white;
@@ -634,40 +636,38 @@ QColor ZGraph::getRGB(EColor color)
     {
         return Qt::blue;
     }
-
-if  (color==darkGreen)
-{
-    return Qt::darkGreen;
-}
-if  (color==darkRed)
-{
-    return Qt::darkRed;
-}
-if  (color==darkBlue)
-{
-    return Qt::darkBlue;
-}
-if  (color==darkCyan)
-{
-    return Qt::darkCyan;
-}
-if  (color==darkMagenta)
-{
-    return Qt::darkMagenta;
-}
-if  (color==darkYellow)
-{
-    return Qt::darkYellow;
-}
-if  (color==darkGray)
-{
-    return Qt::darkGray;
-}
-if  (color==lightGray)
-{
-    return Qt::lightGray;
-}
-
+    if  (color==darkGreen)
+    {
+        return Qt::darkGreen;
+    }
+    if  (color==darkRed)
+    {
+        return Qt::darkRed;
+    }
+    if  (color==darkBlue)
+    {
+        return Qt::darkBlue;
+    }
+    if  (color==darkCyan)
+    {
+        return Qt::darkCyan;
+    }
+    if  (color==darkMagenta)
+    {
+        return Qt::darkMagenta;
+    }
+    if  (color==darkYellow)
+    {
+        return Qt::darkYellow;
+    }
+    if  (color==darkGray)
+    {
+        return Qt::darkGray;
+    }
+    if  (color==lightGray)
+    {
+        return Qt::lightGray;
+    }
 }
 
 Qt::PenStyle ZGraph::getPen(ECurveType type)
@@ -697,15 +697,14 @@ Qt::PenStyle ZGraph::getPen(ECurveType type)
     {
         return Qt::CustomDashLine;
     }
-
 }
 
 void ZGraph::change_graph_color(QColor color)
 {
     int k=myPlot->mylegend->active_graph;
+
     curve[k-1]->setPen(* new QPen(color,curve_width[k-1],getPen(eCurveType[k-1])));
     myPlot->mylegend->change_color(myPlot->mylegend->active_graph,color);
-    //написать eColor[k-1]=color;
     myPlot->replot();
 
     if  (color==Qt::white)
@@ -714,11 +713,11 @@ void ZGraph::change_graph_color(QColor color)
     }
     if  (color==Qt::red)
     {
-       eColor[k-1]=red;
+        eColor[k-1]=red;
     }
     if  (color==Qt::green)
     {
-       eColor[k-1]=green;
+        eColor[k-1]=green;
     }
     if  (color==Qt::cyan)
     {
@@ -726,7 +725,7 @@ void ZGraph::change_graph_color(QColor color)
     }
     if  (color==Qt::magenta)
     {
-       eColor[k-1]=magenta;
+        eColor[k-1]=magenta;
     }
     if  (color==Qt::yellow)
     {
@@ -738,45 +737,45 @@ void ZGraph::change_graph_color(QColor color)
     }
     if  (color==Qt::black)
     {
-       eColor[k-1]=black;
+        eColor[k-1]=black;
     }
     if  (color==Qt::blue)
     {
         eColor[k-1]=blue;
     }
 
-if  (color==Qt::darkGreen)
-{
-    eColor[k-1]=darkGreen;
-}
-if  (color==Qt::darkRed)
-{
-    eColor[k-1]=darkRed;
-}
-if  (color==Qt::darkBlue)
-{
-    eColor[k-1]=darkBlue;
-}
-if  (color==Qt::darkCyan)
-{
-    eColor[k-1]=darkCyan;
-}
-if  (color==Qt::darkMagenta)
-{
-    eColor[k-1]=darkMagenta;
-}
-if  (color==Qt::darkYellow)
-{
-    eColor[k-1]=darkYellow;
-}
-if  (color==Qt::darkGray)
-{
-    eColor[k-1]=darkGray;
-}
-if  (color==Qt::lightGray)
-{
-  eColor[k-1]=lightGray;
-}
+    if  (color==Qt::darkGreen)
+    {
+        eColor[k-1]=darkGreen;
+    }
+    if  (color==Qt::darkRed)
+    {
+        eColor[k-1]=darkRed;
+    }
+    if  (color==Qt::darkBlue)
+    {
+        eColor[k-1]=darkBlue;
+    }
+    if  (color==Qt::darkCyan)
+    {
+        eColor[k-1]=darkCyan;
+    }
+    if  (color==Qt::darkMagenta)
+    {
+        eColor[k-1]=darkMagenta;
+    }
+    if  (color==Qt::darkYellow)
+    {
+        eColor[k-1]=darkYellow;
+    }
+    if  (color==Qt::darkGray)
+    {
+        eColor[k-1]=darkGray;
+    }
+    if  (color==Qt::lightGray)
+    {
+        eColor[k-1]=lightGray;
+    }
 
 }
 void ZGraph::change_graph_style(Qt::PenStyle style)
@@ -799,11 +798,11 @@ void ZGraph::change_graph_style(Qt::PenStyle style)
     }
     if  (style==Qt::DashDotLine)
     {
-         eCurveType[k-1]=DashDotLine;
+        eCurveType[k-1]=DashDotLine;
     }
     if  (style==Qt::DashDotDotLine)
     {
-         eCurveType[k-1]=DashDotDotLine;
+        eCurveType[k-1]=DashDotDotLine;
     }
     if  (style==Qt::CustomDashLine)
     {
@@ -831,25 +830,26 @@ void ZGraph::delete_marker()
     {
         if (myPlot->mymarker->active_marker==-1)
         {
-        delete reference_marker;
-        reference_marker=NULL;
-        ref_curve_list.clear();
+            if (reference_marker!=NULL)
+                delete reference_marker;
+            reference_marker=NULL;
+            ref_curve_list.clear();
         }
         else
         {
             delete_marker1();
             myPlot->mymarker->markers_count=myPlot->mymarker->marker_list.size();
             myPlot->mymarker->repaint();
-             myPlot->replot();
+            myPlot->replot();
         }
     }
     if (myPlot->mymarker->markers_count==0)
     {
-        delete reference_marker;
+        if (reference_marker!=NULL)
+            delete reference_marker;
         reference_marker=NULL;
         ref_curve_list.clear();
     }
-
 }
 
 void ZGraph::select(const QPoint &pos)
@@ -888,7 +888,7 @@ void ZGraph::select(const QPoint &pos)
     }
     else
     {
-       // change_gate_marker(pos);
+        // change_gate_marker(pos);
     }
 }
 
@@ -916,16 +916,16 @@ void ZGraph::showCursor(bool showIt)
             myPlot->mymarker->ref_x=getPointX(d_selectedCurve,d_selectedPoint);
             myPlot->mymarker->ref_y=getPointY(d_selectedCurve,d_selectedPoint);
             QwtText text("R     ");
-           reference_marker->setLabel(text);
-           reference_marker->attach(myPlot);
+            reference_marker->setLabel(text);
+            reference_marker->attach(myPlot);
         }
         else
-          {
+        {
             marker_list[k]->detach();
             marker_list[k]->setSymbol(new QwtSymbol( QwtSymbol::Diamond, Qt::red, Qt::NoPen, QSize( 10, 10 ) ) );
             marker_list[k]->setValue( getPointX(d_selectedCurve,d_selectedPoint)    ,getPointY(d_selectedCurve,d_selectedPoint));
             QString info_2 = ":  x = "+ QString::number( getPointX(d_selectedCurve,d_selectedPoint) ,'f',3) +
-            "; y = " + QString::number(getPointY(d_selectedCurve,d_selectedPoint),'f',3);
+                    "; y = " + QString::number(getPointY(d_selectedCurve,d_selectedPoint),'f',3);
             myPlot->mymarker->xs[k]=getPointX(d_selectedCurve,d_selectedPoint);
             myPlot->mymarker->ys[k]=getPointY(d_selectedCurve,d_selectedPoint);
             curve_list[k]=d_selectedCurve;
@@ -933,7 +933,7 @@ void ZGraph::showCursor(bool showIt)
             marker_list[k]->attach(myPlot);
             myPlot->replot();
             myPlot->mymarker->repaint();
-         }
+        }
     }
 }
 
@@ -943,6 +943,7 @@ void ZGraph::click_on_canvas(const QPoint &pos)
 }
 void ZGraph::reference_marker_toggled(bool checked)
 {
+    if (myPlot->mymarker==NULL) return;
     if (checked==true)
     {
         myPlot->mymarker->reference_marker_mode=MyMarker::active;
@@ -967,9 +968,9 @@ void ZGraph::append_marker1()
     myPlot->mymarker->marker_list.append(str);
     myPlot->mymarker->active_marker=myPlot->mymarker->marker_list.size()-1;
     myPlot->mymarker->set_enable_delete_button(true);
-    display_numbers();   
+    display_numbers();
     curve_list.append(NULL);
-    myPlot->mymarker->repaint();   
+    myPlot->mymarker->repaint();
 }
 void ZGraph::delete_marker1()
 {
@@ -996,29 +997,29 @@ void ZGraph::display_numbers()
 }
 void ZGraph::change_markers()
 {
-if (marker_list.size()==0)
-    return;
+    if (marker_list.size()==0)
+        return;
     for (int i=0;i<marker_list.size();i++)
     {
-          marker_list[i]->detach();
+        marker_list[i]->detach();
         marker_list[i]->setValue(getPointX(curve_list[i],z_getNumber(myPlot->mymarker->xs[i])),getPointY(curve_list[i],z_getNumber(myPlot->mymarker->xs[i])));
         QString info = ":  x = "+ QString::number(getPointX(curve_list[i],z_getNumber(myPlot->mymarker->xs[i])) ,'f',3) +
-        "; y = " + QString::number(getPointY(curve_list[i],z_getNumber(myPlot->mymarker->xs[i])),'f',3);
+                "; y = " + QString::number(getPointY(curve_list[i],z_getNumber(myPlot->mymarker->xs[i])),'f',3);
         myPlot->mymarker->xs[i]=getPointX(curve_list[i],z_getNumber(myPlot->mymarker->xs[i]));
         myPlot->mymarker->ys[i]=getPointY(curve_list[i],z_getNumber(myPlot->mymarker->xs[i]));
         *(myPlot->mymarker->marker_list[i])=info;
         myPlot->mymarker->repaint();
-          marker_list[i]->attach(myPlot);
+        marker_list[i]->attach(myPlot);
     }
     if (ref_curve_list.size()!=0)
-            {
+    {
 
-      reference_marker->detach();
-      reference_marker->setValue(getPointX(ref_curve_list[0],z_getNumber(myPlot->mymarker->ref_x)),getPointY(ref_curve_list[0],z_getNumber(myPlot->mymarker->ref_x)));
-      myPlot->mymarker->ref_x=getPointX(ref_curve_list[0],z_getNumber(myPlot->mymarker->ref_x));
-      myPlot->mymarker->ref_y=getPointY(ref_curve_list[0],z_getNumber(myPlot->mymarker->ref_x));
-      myPlot->mymarker->repaint();
-      reference_marker->attach(myPlot);
+        reference_marker->detach();
+        reference_marker->setValue(getPointX(ref_curve_list[0],z_getNumber(myPlot->mymarker->ref_x)),getPointY(ref_curve_list[0],z_getNumber(myPlot->mymarker->ref_x)));
+        myPlot->mymarker->ref_x=getPointX(ref_curve_list[0],z_getNumber(myPlot->mymarker->ref_x));
+        myPlot->mymarker->ref_y=getPointY(ref_curve_list[0],z_getNumber(myPlot->mymarker->ref_x));
+        myPlot->mymarker->repaint();
+        reference_marker->attach(myPlot);
     }
     myPlot->replot();
 }
@@ -1027,176 +1028,188 @@ if (marker_list.size()==0)
 void ZGraph::reDrawScale(double Max,double Span)
 {
 
-        if (eType==Ampl)
+    if (eType==Ampl)
+    {
+        if (eAmplType==AmplLog)
         {
-            if (eAmplType==AmplLog)
-            {
-                if (eAmplScale==AmplAutoscale)
-                {
-                    myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
-                    myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
-                }
-                if (eAmplScale==AmplManual)
-                {
-                    myPlot->setAxisScale(QwtPlot::yLeft,(Max-Span),Max);
-                }
-                if (eAmplScale==AmplUp)
-                {
-                    double span1=20*log10(Span);
-                    double b=20*log10(get_max_compare());
-                    myPlot->setAxisScale(QwtPlot::yLeft,b-span1,b);
-                }
-            }
-            if (eAmplType==AmplLin)
-            {
-                if (eAmplScale==AmplAutoscale)
-                {
-                    myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
-                    myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
-                }
-                if (eAmplScale==AmplManual)
-                {
-                    double span11=20*log10(Span);
-                    double b1=20*log10(Max);
-                    myPlot->setAxisScale(QwtPlot::yLeft,(b1-span11),b1);
-                }
-                if (eAmplScale==AmplUp)  //не правильно работает
-                {
-                    myPlot->setAxisScale(QwtPlot::yLeft,0,get_max_compare());
-                }
-            }
-        }
-        if (eType==Phase)
-        {
-            if (ePhaseScale==PhaseAutoscale)
+            if (eAmplScale==AmplAutoscale)
             {
                 myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
                 myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
             }
-            if (ePhaseScale==PhaseManual)
+            if (eAmplScale==AmplManual)
             {
-                double tempSpan=Span;
-                double tempCenter=Max;
-                myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+                myPlot->setAxisScale(QwtPlot::yLeft,(Max-Span),Max);
             }
-            if (ePhaseScale==PhaseUp)
+            if (eAmplScale==AmplUp)
             {
-                double tempSpan=Span;
-                double tempCenter=Max;//вычислить максимальное
-                myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+                double span1=20*log10(Span);
+                double b=20*log10(get_max_compare());
+                myPlot->setAxisScale(QwtPlot::yLeft,b-span1,b);
             }
         }
-        if (eType==Real)
+        if (eAmplType==AmplLin)
         {
-            if (eReImScale==ReAutoscale)
+            if (eAmplScale==AmplAutoscale)
             {
                 myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
                 myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
             }
-            if (eReImScale==ReManual)
+            if (eAmplScale==AmplManual)
             {
-                double tempSpan=Span;
-                double tempCenter=Max;
-                myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+                double span11=20*log10(Span);
+                double b1=20*log10(Max);
+                myPlot->setAxisScale(QwtPlot::yLeft,(b1-span11),b1);
             }
-            if (eReImScale==ReUp)
+            if (eAmplScale==AmplUp)  //не правильно работает
             {
-                double tempSpan=Span;
-                double tempCenter=Max;
-                myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+                myPlot->setAxisScale(QwtPlot::yLeft,0,get_max_compare());
             }
         }
-        if (eType==Imag)
+    }
+    if (eType==Phase)
+    {
+        if (ePhaseScale==PhaseAutoscale)
         {
-            if (eReImScale==ReAutoscale)
-            {
-                myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
-                myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
-            }
-            if (eReImScale==ReManual)
-            {
-                double tempSpan=Span;
-                double tempCenter=Max;
-                myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
-            }
-            if (eReImScale==ReUp)
-            {
-                double tempSpan=Span;
-                double tempCenter=Max;
-                myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
-            }
+            myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
+            myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
         }
+        if (ePhaseScale==PhaseManual)
+        {
+            double tempSpan=Span;
+            double tempCenter=Max;
+            myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+        }
+        if (ePhaseScale==PhaseUp)
+        {
+            double tempSpan=Span;
+            double tempCenter=Max;//вычислить максимальное
+            myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+        }
+    }
+    if (eType==Real)
+    {
+        if (eReImScale==ReAutoscale)
+        {
+            myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
+            myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
+        }
+        if (eReImScale==ReManual)
+        {
+            double tempSpan=Span;
+            double tempCenter=Max;
+            myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+        }
+        if (eReImScale==ReUp)
+        {
+            double tempSpan=Span;
+            double tempCenter=Max;
+            myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+        }
+    }
+    if (eType==Imag)
+    {
+        if (eReImScale==ReAutoscale)
+        {
+            myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
+            myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
+        }
+        if (eReImScale==ReManual)
+        {
+            double tempSpan=Span;
+            double tempCenter=Max;
+            myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+        }
+        if (eReImScale==ReUp)
+        {
+            double tempSpan=Span;
+            double tempCenter=Max;
+            myPlot->setAxisScale(QwtPlot::yLeft,tempCenter-tempSpan/2,tempCenter+tempSpan/2);
+        }
+    }
     myPlot->replot();
 }
 double ZGraph::get_max_compare()
 {
     if (graphs_count!=0)
-       {
-    double max=-100000000000000;
-    for (int i=0;i<graphs_count;i++)
     {
-        if (max<zVector[i]->getMaxValue())
-            max=zVector[i]->getMaxValue();
-    }
-    return max;
+        double max=-100000000000000;
+        for (int i=0;i<graphs_count;i++)
+        {
+            if (max<zVector[i]->getMaxValue())
+                max=zVector[i]->getMaxValue();
+        }
+        return max;
     }
 }
 double ZGraph::get_min_compare()
 {
     if (graphs_count!=0)
     {
-
-
-    double min=10000000000000000;
-    for (int i=0;i<graphs_count;i++)
-    {
-        if (min>zVector[i]->getMinValue())
-            min=zVector[i]->getMinValue();
-    }
-    return min;
+        double min=10000000000000000;
+        for (int i=0;i<graphs_count;i++)
+        {
+            if (min>zVector[i]->getMinValue())
+                min=zVector[i]->getMinValue();
+        }
+        return min;
     }
 }
+
 void ZGraph::enable_xy_zoomer()
 {
+    if (zoomer!=NULL)
+        return;
     zoomer = new QwtPlotZoomer(QwtPlot::xBottom,QwtPlot::yLeft,myPlot->canvas(),false);
-
 }
+
 void ZGraph::delete_xy_zoomer()
 {
-  delete zoomer;
-
+    delete zoomer;
+    zoomer = NULL;
 }
+
 void ZGraph::enable_x_zoomer()
 {
+    if (zoomer!=NULL)
+        return;
     zoomer = new QwtPlotZoomer(QwtPlot::xBottom,QwtPlot::yRight,myPlot->canvas(),false);
-
 }
+
 void ZGraph::delete_x_zoomer()
 {
     delete zoomer;
-
+    zoomer = NULL;
 }
+
 void ZGraph::enable_y_zoomer()
 {
-
-     zoomer = new QwtPlotZoomer(QwtPlot::xTop,QwtPlot::yLeft,myPlot->canvas(),false);
+    if (zoomer!=NULL)
+        return;
+    zoomer = new QwtPlotZoomer(QwtPlot::xTop,QwtPlot::yLeft,myPlot->canvas(),false);
 }
+
 void ZGraph::delete_y_zoomer()
 {
     delete zoomer;
-
+    zoomer = NULL;
 }
+
 void ZGraph::enable_magnifier()
 {
-    magnifier =new QwtPlotMagnifier(myPlot->canvas());
-    scrollzoomer=new  ScrollZoomer(myPlot->canvas());
-   magnifier->setMouseButton(Qt::NoButton);
-   magnifier->setAxisEnabled(QwtPlot::yLeft,false);
+    if (magnifier==NULL)
+        magnifier =new QwtPlotMagnifier(myPlot->canvas());
+    if (scrollzoomer==NULL)
+        scrollzoomer=new  ScrollZoomer(myPlot->canvas());
+    magnifier->setMouseButton(Qt::NoButton);
+    magnifier->setAxisEnabled(QwtPlot::yLeft,false);
 }
 void ZGraph::delete_magnifier()
 {
     delete magnifier;
     delete scrollzoomer;
+    magnifier = NULL;
+    scrollzoomer = NULL;
 }
 
 void ZGraph::resizeMyPlot(int x, int y)
@@ -1205,76 +1218,85 @@ void ZGraph::resizeMyPlot(int x, int y)
     myPlot->mylegend->move(x-200,20);
 }
 
+//void  ZGraph::change_gate_marker(QPoint pos)
+//{
+//    if (((pos.x()-gate_pos_1)-(pos.x()-gate_pos_2))>=0)
+//    {
+//        gate_marker1->detach();
+//        gate_marker1->setValue( pos.x(),-100000000000000);
 
+//        gate_pos_1=pos.x();
+//        gate_marker1->attach(myPlot);
+//    }
+//    else
+//    {
+//        gate_marker2->detach();
+//        gate_marker2->setValue( pos.x(),-100000000000000);
+//        gate_marker2->setSymbol(line_symbol);
+//        gate_pos_2=pos.x();
+//        gate_marker2->attach(myPlot);
+//    }
+//}
 
-void  ZGraph::change_gate_marker(QPoint pos)
+void ZGraph::test_func_deprecated()
 {
-    if (((pos.x()-gate_pos_1)-(pos.x()-gate_pos_2))>=0)
-    {
-        gate_marker1->detach();
-       gate_marker1->setValue( pos.x(),-100000000000000);
-
-       gate_pos_1=pos.x();
-       gate_marker1->attach(myPlot);
-    }
-    else
-    {
-        gate_marker2->detach();
-       gate_marker2->setValue( pos.x(),-100000000000000);
-       gate_marker2->setSymbol(line_symbol);
-        gate_pos_2=pos.x();
-       gate_marker2->attach(myPlot);
-    }
-}
-void ZGraph::replot_test(int num)
-{
-    col_or_row_number=num;
-    if (is_rows==true)
-    {
-        zVector[0]->resize(nRow);
-        zVector[0]->zLenght=zVector[0]->size();
-        int q=0;
-        for (int i=0;i<nCol;i++)
-        {
-            for (int j=0;j<nRow;j++)
-        {
-                if (j==col_or_row_number)
-                {
-                     int ind=i+j*nCol;
-                    //Complex C=(*zVector[0])[ind];
-                    //xs[q]=zVector[0]->start+ind*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
-                    (*zVector[0])[q]=Complex(mas[ ind].x,mas[ ind].y);
-                    //ys[q]=10.0*log10(real(C)*real(C)+imag(C)*imag(C) +1.0e-20);
-                    q++;
-                }
-
-        }
-        }
-reDraw();
-
-    }
-    if (is_rows==false)
-    {
-
-    int q=0;
-    zVector[0]->resize(nCol);
-    zVector[0]->zLenght=zVector[0]->size();
+    qDebug() << "1";
+    int nCol=2048;
+    int nRow=2048;
+    double2  *mas=new double2[nCol*nRow];
     for (int i=0;i<nCol;i++)
     {
         for (int j=0;j<nRow;j++)
+        {
+            int ind=i+j*nCol;
+            mas[ind].x=qrand() % 50;
+            mas[ind].y=qrand() % 50;
+        }
+    }
+    for (int i=0;i<nCol/16;i++)
     {
-            if (i==col_or_row_number)
+        for (int j=0;j<nRow/16;j++)
+        {
+            int ind=i+j*nCol;
+            mas[ind].x=1.0;
+            mas[ind].y=0.0;
+        }
+    }
+    zVector[0]->start=1.0;
+    zVector[0]->stop=10000.0;
+
+    zVector[0]->resize(nRow);
+    zVector[0]->zLenght=zVector[0]->size();
+    double *xs = new double[nRow];
+    double *ys = new double[nRow];
+    int q=0;
+    qDebug() << "2";
+    for (int i=0;i<nCol;i++)
+    {
+        for (int j=0;j<nRow;j++)
+        {
+            if (j==0)
             {
-                 int ind=i+j*nCol;
-                //Complex C=(*zVector[0])[ind];
-                //xs[q]=zVector[0]->start+ind*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
+                int ind=i+j*nCol;
                 (*zVector[0])[q]=Complex(mas[ ind].x,mas[ ind].y);
-                //ys[q]=10.0*log10(real(C)*real(C)+imag(C)*imag(C) +1.0e-20);
                 q++;
             }
+        }
+    }
 
+    for (int i=0;i<zVector[0]->zLenght;i++)
+    {
+        Complex C=(*zVector[0])[i];
+        xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
+
+        ys[i]=10.0*log10(real(C)*real(C)+imag(C)*imag(C) + 1.0e-20);
     }
-    }
-    reDraw();
-    }
+
+    qDebug() << "3";
+    QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
+    curve[0]->setData(dataLin);
+    curve[0]->attach(myPlot);
+    myPlot->replot();
+    delete mas;
+    qDebug() << "4";
 }

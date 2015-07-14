@@ -14,7 +14,7 @@ class Form_Spectr;
 class Form_Spectr : public QWidget
 {
     Q_OBJECT
-class SpectrWidget;
+    class SpectrWidget;
 public:
 
     SpectrWidget *spectr;
@@ -48,33 +48,33 @@ signals:
     void signal_on_y_scale_lineEdit_textChanged(QString arg1);
     void signal_on_k_lineEdit_textChanged(QString arg1);
 
-     void change_FI0_cuda_test(int count);
+    void change_FI0_cuda_test(int count);
 private slots:
-//    QString get_x_y_scale_lineedit1();
-//    QString get_x_y_scale_lineedit2();
-//    QString get_x_scale_lineEdit();
-//    QString get_y_scale_lineEdit();
-//    QString get_angle_lineedit2();
-//    QString get_angle_lineedit1();
-//    QString get_fi_lineEdit();
+    //    QString get_x_y_scale_lineedit1();
+    //    QString get_x_y_scale_lineedit2();
+    //    QString get_x_scale_lineEdit();
+    //    QString get_y_scale_lineEdit();
+    //    QString get_angle_lineedit2();
+    //    QString get_angle_lineedit1();
+    //    QString get_fi_lineEdit();
 
-//    QString get_x_shift_lineedit1();
-//    QString get_x_shift_lineedit2();
-//    QString get_y_shift_lineedit2();
-//    QString get_y_shift_lineedit1();
+    //    QString get_x_shift_lineedit1();
+    //    QString get_x_shift_lineedit2();
+    //    QString get_y_shift_lineedit2();
+    //    QString get_y_shift_lineedit1();
 
 
-//    void set_x_y_scale_lineedit1(QString str);
-//     void set_x_y_scale_lineedit2(QString str);
-//     void set_x_scale_lineEdit(QString str);
-//    void set_y_scale_lineEdit(QString str);
-//     void set_angle_lineedit2(QString str);
-//   void set_angle_lineedit1(QString str);
-//    void set_fi_lineEdit(QString str);
-//    void set_x_shift_lineedit1(QString str);
-//      void set_x_shift_lineedit2(QString str);
-//      void set_y_shift_lineedit2(QString str);
-//      void set_y_shift_lineedit1(QString str);
+    //    void set_x_y_scale_lineedit1(QString str);
+    //     void set_x_y_scale_lineedit2(QString str);
+    //     void set_x_scale_lineEdit(QString str);
+    //    void set_y_scale_lineEdit(QString str);
+    //     void set_angle_lineedit2(QString str);
+    //   void set_angle_lineedit1(QString str);
+    //    void set_fi_lineEdit(QString str);
+    //    void set_x_shift_lineedit1(QString str);
+    //      void set_x_shift_lineedit2(QString str);
+    //      void set_y_shift_lineedit2(QString str);
+    //      void set_y_shift_lineedit1(QString str);
 
 
 
