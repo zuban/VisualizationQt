@@ -25,10 +25,7 @@ signals:
     void signal_on_test_row_radioButton_toggled(bool checked);
 private slots:
 
-
-
     void on_export_pushButton_clicked();
-
     void on_test_cuda_pushButton_clicked();
 
     //    void on_test_row_column_lineEdit_textChanged(const QString &arg1);

@@ -23,9 +23,6 @@ public:
     explicit Form_Spectr(QWidget *parent = 0);
     ~Form_Spectr();
 
-
-
-
 signals:
     void  signal_on_read_pushbutton_clicked();
     void  signal_on_cont_read_pushButton_clicked();
@@ -40,7 +37,6 @@ signals:
     void signal_on_x_y_shitft_pushButton_clicked();
     void signal_on_ok_x_y_shift_pushButton_clicked();
     void signal_on_x_y_shitft_pushButton_2_clicked();
-
     void signal_on_x_shift_lineEdit_textChanged(QString arg1);
     void signal_on_fi_lineEdit_textChanged(QString arg1);
     void signal_on_y_shift_lineEdit_textChanged(QString arg1);
@@ -76,55 +72,26 @@ private slots:
     //      void set_y_shift_lineedit2(QString str);
     //      void set_y_shift_lineedit1(QString str);
 
-
-
-
-
-
-
     void on_read_pushbutton_clicked();
-
-
     void on_cont_read_pushButton_clicked();
-
     void on_x_y_scale_pushButton_clicked();
-
     void on_ok_x_y_scale_pushButton_clicked();
-
     void on_x_y_scale_pushButton_2_clicked();
-
     void on_scale_checkBox_toggled(bool checked);
-
     void on_flip_checkBox_toggled(bool checked);
-
     void on_angle_pushbutton_clicked();
-
     void on_ok_angle_pushbutton_clicked();
-
     void on_angle_pushbutton_2_clicked();
-
     void on_x_y_shitft_pushButton_clicked();
-
     void on_ok_x_y_shift_pushButton_clicked();
-
     void on_x_y_shitft_pushButton_2_clicked();
-
-
-
     void on_x_shift_lineEdit_textChanged(const QString &arg1);
-
     void on_fi_lineEdit_textChanged(const QString &arg1);
-
     void on_y_shift_lineEdit_textChanged(const QString &arg1);
-
     void on_x_scale_lineEdit_textChanged(const QString &arg1);
-
     void on_y_scale_lineEdit_textChanged(const QString &arg1);
-
     void on_k_lineEdit_textChanged(const QString &arg1);
-
     void on_horizontalSlider_for_cuda_test_valueChanged(int value);
-
     void on_fi_shift_slider_valueChanged(int value);
 
 private:

@@ -26,7 +26,6 @@ signals:
 private:
     bool eventFilter(QObject *object, QEvent *event);
     void draw( QPainter  *painter);
-    QString mystring;
 protected:
     void paintEvent(QPaintEvent *);
 

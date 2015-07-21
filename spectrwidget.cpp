@@ -20,6 +20,7 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
     ui(new Ui::SpectrWidget)
 {
     ui->setupUi(this);
+    zoomer_mod = false;
     z2vector = new Z2Vector();
     sp_plot=new Spectro_Plot(this);
     sp_plot->setWindowOpacity(0.5);
@@ -47,20 +48,20 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
     connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale_point22(QPointF)),this,SLOT(slot_to_change_scale_point22(QPointF)));
     connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale_angle2(double,double)),this,SLOT(slot_to_change_scale_angle2(double,double)));
     connect(sp_plot->draw_widget,SIGNAL(signal_test(QString)),this,SLOT(slot_test(QString)));
-    connect(sp_plot->photo,SIGNAL(photo_signla_x_shift(double)),this,SLOT(photo_change_x_shift(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signla_y_shift(double)),this,SLOT(photo_change_y_shift(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signla_x_scale(double)),this,SLOT(photo_change_x_scale(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signla_y_scale(double)),this,SLOT(photo_change_y_scale(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signla_fi(double)),this,SLOT(photo_change_fi(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signla_k(double)),this,SLOT(photo_change_k(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signla_fi_shift(double)),this,SLOT(photo_change_fi_shift(double)));
-    //connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale(double)),this,SLOT(photo_slot_size(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_scale1(double)),this,SLOT(photo_slot_to_change_scale_scale1(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_scale2(double)),this,SLOT(photo_slot_to_change_scale_scale2(double)));
-    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_angle1(double,double)),this,SLOT(photo_slot_to_change_scale_angle1(double,double)));
-    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_point1(QPointF)),this,SLOT(photo_slot_to_change_scale_point1(QPointF)));
-    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_point22(QPointF)),this,SLOT(photo_slot_to_change_scale_point22(QPointF)));
-    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_angle2(double,double)),this,SLOT(photo_slot_to_change_scale_angle2(double,double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signla_x_shift(double)),this,SLOT(photo_change_x_shift(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signla_y_shift(double)),this,SLOT(photo_change_y_shift(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signla_x_scale(double)),this,SLOT(photo_change_x_scale(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signla_y_scale(double)),this,SLOT(photo_change_y_scale(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signla_fi(double)),this,SLOT(photo_change_fi(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signla_k(double)),this,SLOT(photo_change_k(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signla_fi_shift(double)),this,SLOT(photo_change_fi_shift(double)));
+//    //connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale(double)),this,SLOT(photo_slot_size(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_scale1(double)),this,SLOT(photo_slot_to_change_scale_scale1(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_scale2(double)),this,SLOT(photo_slot_to_change_scale_scale2(double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_angle1(double,double)),this,SLOT(photo_slot_to_change_scale_angle1(double,double)));
+//    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_point1(QPointF)),this,SLOT(photo_slot_to_change_scale_point1(QPointF)));
+//    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_point22(QPointF)),this,SLOT(photo_slot_to_change_scale_point22(QPointF)));
+//    connect(sp_plot->photo,SIGNAL(photo_signal_to_change_scale_angle2(double,double)),this,SLOT(photo_slot_to_change_scale_angle2(double,double)));
     this->showMaximized();
 
 }
@@ -141,7 +142,18 @@ void SpectrWidget::on_read_pushbutton_clicked()
             (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
         }
         ui->progressBar->setValue(90);
-        sp_plot->draw_spectr(*z2vector,get_xstart(),get_xstop(),get_zstart(),get_zstop(),-10.0,-60);
+
+        sp_plot->draw_spectr(*z2vector,get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),get_xstart(),get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+        z2vector->startx = get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble();
+        z2vector->stopx = get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble();
+        z2vector->starty = get_xstart();
+        z2vector->stopy = get_xstop();
+        double scale = max(fabs(get_xstart()-get_xstop()),fabs(get_zstart()-get_zstop()));
+        z2vector->scale = scale;
+            sp_plot->setAxisScale(QwtPlot::yLeft,-scale/2,scale/2);
+            sp_plot->setAxisScale(QwtPlot::xBottom,-scale/2,scale/2);
+
+        sp_plot->replot();
         ui->progressBar->setValue(100);
 
 
@@ -176,18 +188,22 @@ void SpectrWidget::on_read_pushbutton_clicked()
             (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
         }
         ui->progressBar->setValue(90);
-        sp_plot->draw_spectr(*z2vector,f_get_xstart(),f_get_xstop(),f_get_zstart(),f_get_zstop(),-10.0,-60);
+        sp_plot->draw_spectr(*z2vector,f_get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_xstart(),f_get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
         ui->progressBar->setValue(100);
         delete mas;
     }
     delete masin;
 }
 
+
+
+
+
+
+
 bool bInProgress = false;
 void SpectrWidget::change_FI0_cuda_test(int count)
 {
-
-
     bool is_double = true;
     if (is_double)
     {
@@ -220,7 +236,19 @@ void SpectrWidget::change_FI0_cuda_test(int count)
             }
             delete mas;
 
-            sp_plot->draw_spectr(*z2vector,get_xstart(),get_xstop(),get_zstart(),get_zstop(),-10.0,-60);
+           //sp_plot->draw_spectr(*z2vector,get_xstart(),get_xstop(),get_zstart(),get_zstop(),-10.0,-60);
+            sp_plot->draw_spectr(*z2vector,get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),get_xstart(),get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+            z2vector->startx = get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble();
+            z2vector->stopx = get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble();
+            z2vector->starty = get_xstart();
+            z2vector->stopy = get_xstop();
+
+           double scale = max(fabs(get_xstart()-get_xstop()),fabs(get_zstart()-get_zstop()));
+           z2vector->scale = scale;
+
+           sp_plot->setAxisScale(QwtPlot::yLeft,-scale/2,scale/2);
+           sp_plot->setAxisScale(QwtPlot::xBottom,-scale/2,scale/2);
+           sp_plot->replot();
             ui->progressBar->setValue(100);
             sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
                                                 control->ui->fi_lineEdit->text().toDouble(),control->ui->horizontalSlider_for_cuda_test->value(),control->ui->k_lineEdit->text().toDouble());
@@ -271,7 +299,7 @@ void SpectrWidget::change_FI0_cuda_test(int count)
 
             delete mas;
 
-            sp_plot->draw_spectr(*z2vector,f_get_xstart(),f_get_xstop(),f_get_zstart(),f_get_zstop(),-10.0,-60);
+            sp_plot->draw_spectr(*z2vector,f_get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_xstart(),f_get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
             ui->progressBar->setValue(100);
         }
         catch(...) {
@@ -289,22 +317,34 @@ void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
     if (arg1=="Ampl")
     {
         sp_plot->etype=Spectro_Plot::Ampl;
-        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toInt(),ui->min_spinbox->text().toInt());
+        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+        sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->replot();
     }
     if (arg1=="Phase")
     {
         sp_plot->etype=Spectro_Plot::Phase;
-        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toInt(),ui->min_spinbox->text().toInt());
+        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+        sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->replot();
     }
     if (arg1=="Re")
     {
         sp_plot->etype=Spectro_Plot::Re;
-        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toInt(),ui->min_spinbox->text().toInt());
+        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+        sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->replot();
     }
     if (arg1=="Im")
     {
         sp_plot->etype=Spectro_Plot::Im;
-        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toInt(),ui->min_spinbox->text().toInt());
+        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+        sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->replot();
     }
 //    clock_t t8 = clock();
 //    time("Changetime:"+QString::number((t8-t7))+" ");
@@ -313,12 +353,18 @@ void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
 
 void SpectrWidget::on_max_spinbox_valueChanged(int arg1)
 {
-    sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,arg1,ui->min_spinbox->text().toInt());
+    sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+    sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+    sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+    sp_plot->replot();
 }
 
 void SpectrWidget::on_min_spinbox_valueChanged(double arg1)
 {
-    sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toInt(),arg1);
+    sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+    sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+    sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+    sp_plot->replot();
 }
 
 //void SpectrWidget::time(QString a)
@@ -343,12 +389,18 @@ void SpectrWidget::on_spec_type_combobox_currentIndexChanged(const QString &arg1
     if (arg1=="Transparent")
     {
         sp_plot->is_transparent=true;
-        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->value(),ui->min_spinbox->value());
+        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+        sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->replot();
     }
     if (arg1=="Normal")
     {
         sp_plot->is_transparent=false;
-        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->value(),ui->min_spinbox->value());
+        sp_plot->draw_spectr(*z2vector,z2vector->startx,z2vector->stopx,z2vector->starty,z2vector->stopy,ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+        sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->replot();
     }
 }
 
@@ -586,7 +638,9 @@ void SpectrWidget::on_zoom_pushButton_toggled(bool checked)
         ui->polygon_pushButton->setEnabled(false);
         ui->rect_pushButton->setEnabled(false);
         ui->select_point_pushButton->setEnabled(false);
-        ui->zoom_pushButton->setEnabled(false);
+       // ui->zoom_pushButton->setEnabled(false);
+        zoomer_mod = true;
+
     }
     if (checked==false)
     {
@@ -597,8 +651,12 @@ void SpectrWidget::on_zoom_pushButton_toggled(bool checked)
         ui->rect_pushButton->setEnabled(true);
         ui->select_point_pushButton->setEnabled(true);
         ui->zoom_pushButton->setEnabled(true);
-        sp_plot->slot_for_zoomer_norm();
+
         sp_plot->draw_widget->is_zoom_mode_enable=false;
+        zoomer_mod = false;
+        sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
+        sp_plot->replot();
 
 
     }
@@ -871,19 +929,19 @@ void SpectrWidget::on_photo_enable_checkBox_toggled(bool checked)
     //
 }
 
-void SpectrWidget::on_tabWidget_currentChanged(int index)
-{
-    if (index==0)
-    {
-        sp_plot->draw_widget->show();
-        sp_plot->photo->hide();
-    }
-    else
-    {
-        sp_plot->draw_widget->hide();
-        sp_plot->photo->show();
-    }
-}
+//void SpectrWidget::on_tabWidget_currentChanged(int index)
+//{
+//    if (index==0)
+//    {
+//        sp_plot->draw_widget->show();
+//        sp_plot->photo->hide();
+//    }
+//    else
+//    {
+//        sp_plot->draw_widget->hide();
+//        sp_plot->photo->show();
+//    }
+//}
 
 
 void SpectrWidget::photo_change_x_shift(double a)
@@ -946,24 +1004,24 @@ void SpectrWidget::photo_slot_to_change_scale_point22(QPointF point)
 
 void SpectrWidget::on_photo_x_y_scale_pushButton_clicked()
 {
-    sp_plot->photo->is_scale_mode_scale1=true;
-    sp_plot->photo->is_scale_mode_angle1=false;
-    sp_plot->photo->is_scale_mode_point1=false;
+//    sp_plot->photo->is_scale_mode_scale1=true;
+//    sp_plot->photo->is_scale_mode_angle1=false;
+//    sp_plot->photo->is_scale_mode_point1=false;
 
-    sp_plot->photo->is_scale_mode_scale2=false;
-    sp_plot->photo->is_scale_mode_angle2=false;
-    sp_plot->photo->is_scale_mode_point2=false;
+//    sp_plot->photo->is_scale_mode_scale2=false;
+//    sp_plot->photo->is_scale_mode_angle2=false;
+//    sp_plot->photo->is_scale_mode_point2=false;
 }
 
 void SpectrWidget::on_photo_x_y_scale_pushButton_2_clicked()
 {
-    sp_plot->photo->is_scale_mode_scale1=false;
-    sp_plot->photo->is_scale_mode_angle1=false;
-    sp_plot->photo->is_scale_mode_point1=false;
+//    sp_plot->photo->is_scale_mode_scale1=false;
+//    sp_plot->photo->is_scale_mode_angle1=false;
+//    sp_plot->photo->is_scale_mode_point1=false;
 
-    sp_plot->photo->is_scale_mode_scale2=true;
-    sp_plot->photo->is_scale_mode_angle2=false;
-    sp_plot->photo->is_scale_mode_point2=false;
+//    sp_plot->photo->is_scale_mode_scale2=true;
+//    sp_plot->photo->is_scale_mode_angle2=false;
+//    sp_plot->photo->is_scale_mode_point2=false;
 }
 
 void SpectrWidget::on_photo_ok_x_y_scale_pushButton_clicked()
@@ -977,13 +1035,13 @@ void SpectrWidget::on_photo_ok_x_y_scale_pushButton_clicked()
 
 void SpectrWidget::on_photo_angle_pushbutton_clicked()
 {
-    sp_plot->photo->is_scale_mode_scale1=false;
-    sp_plot->photo->is_scale_mode_angle1=true;
-    sp_plot->photo->is_scale_mode_point1=false;
+//    sp_plot->photo->is_scale_mode_scale1=false;
+//    sp_plot->photo->is_scale_mode_angle1=true;
+//    sp_plot->photo->is_scale_mode_point1=false;
 
-    sp_plot->photo->is_scale_mode_scale2=false;
-    sp_plot->photo->is_scale_mode_angle2=false;
-    sp_plot->photo->is_scale_mode_point2=false;
+//    sp_plot->photo->is_scale_mode_scale2=false;
+//    sp_plot->photo->is_scale_mode_angle2=false;
+//    sp_plot->photo->is_scale_mode_point2=false;
 }
 
 void SpectrWidget::on_photo_ok_angle_pushbutton_clicked()
@@ -1005,24 +1063,24 @@ void SpectrWidget::on_photo_ok_angle_pushbutton_clicked()
 
 void SpectrWidget::on_photo_angle_pushbutton_2_clicked()
 {
-    sp_plot->photo->is_scale_mode_scale1=false;
-    sp_plot->photo->is_scale_mode_angle1=false;
-    sp_plot->photo->is_scale_mode_point1=false;
+//    sp_plot->photo->is_scale_mode_scale1=false;
+//    sp_plot->photo->is_scale_mode_angle1=false;
+//    sp_plot->photo->is_scale_mode_point1=false;
 
-    sp_plot->photo->is_scale_mode_scale2=false;
-    sp_plot->photo->is_scale_mode_angle2=true;
-    sp_plot->photo->is_scale_mode_point2=false;
+//    sp_plot->photo->is_scale_mode_scale2=false;
+//    sp_plot->photo->is_scale_mode_angle2=true;
+//    sp_plot->photo->is_scale_mode_point2=false;
 }
 
 void SpectrWidget::on_photo_x_y_shitft_pushButton_clicked()
 {
-    sp_plot->photo->is_scale_mode_scale1=false;
-    sp_plot->photo->is_scale_mode_angle1=false;
-    sp_plot->photo->is_scale_mode_point1=true;
+//    sp_plot->photo->is_scale_mode_scale1=false;
+//    sp_plot->photo->is_scale_mode_angle1=false;
+//    sp_plot->photo->is_scale_mode_point1=true;
 
-    sp_plot->photo->is_scale_mode_scale2=false;
-    sp_plot->photo->is_scale_mode_angle2=false;
-    sp_plot->photo->is_scale_mode_point2=false;
+//    sp_plot->photo->is_scale_mode_scale2=false;
+//    sp_plot->photo->is_scale_mode_angle2=false;
+//    sp_plot->photo->is_scale_mode_point2=false;
 }
 
 void SpectrWidget::on_photo_ok_x_y_shift_pushButton_clicked()
@@ -1038,45 +1096,45 @@ void SpectrWidget::on_photo_ok_x_y_shift_pushButton_clicked()
 
 void SpectrWidget::on_photo_x_y_shitft_pushButton_2_clicked()
 {
-    sp_plot->photo->is_scale_mode_scale1=false;
-    sp_plot->photo->is_scale_mode_angle1=false;
-    sp_plot->photo->is_scale_mode_point1=false;
+//    sp_plot->photo->is_scale_mode_scale1=false;
+//    sp_plot->photo->is_scale_mode_angle1=false;
+//    sp_plot->photo->is_scale_mode_point1=false;
 
-    sp_plot->photo->is_scale_mode_scale2=false;
-    sp_plot->photo->is_scale_mode_angle2=false;
-    sp_plot->photo->is_scale_mode_point2=true;
+//    sp_plot->photo->is_scale_mode_scale2=false;
+//    sp_plot->photo->is_scale_mode_angle2=false;
+//    sp_plot->photo->is_scale_mode_point2=true;
 }
 
-void SpectrWidget::on_photo_x_shift_lineEdit_textChanged(const QString &arg1)
-{
-    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
-                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());
-}
+//void SpectrWidget::on_photo_x_shift_lineEdit_textChanged(const QString &arg1)
+//{
+//    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
+//                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());
+//}
 
-void SpectrWidget::on_photo_y_shift_lineEdit_textChanged(const QString &arg1)
-{
-    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
-                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
+//void SpectrWidget::on_photo_y_shift_lineEdit_textChanged(const QString &arg1)
+//{
+//    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
+//                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
 
-void SpectrWidget::on_photo_x_scale_lineEdit_textChanged(const QString &arg1)
-{
-    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
-                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
+//void SpectrWidget::on_photo_x_scale_lineEdit_textChanged(const QString &arg1)
+//{
+//    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
+//                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
 
-void SpectrWidget::on_photo_y_scale_lineEdit_textChanged(const QString &arg1)
-{
-    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
-                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
+//void SpectrWidget::on_photo_y_scale_lineEdit_textChanged(const QString &arg1)
+//{
+//    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
+//                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
 
-void SpectrWidget::on_photo_fi_lineEdit_textChanged(const QString &arg1)
-{
-    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
-                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
+//void SpectrWidget::on_photo_fi_lineEdit_textChanged(const QString &arg1)
+//{
+//    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
+//                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
 
-void SpectrWidget::on_photo_fi_shift_slider_valueChanged(int value)
-{
-    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
-                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
+//void SpectrWidget::on_photo_fi_shift_slider_valueChanged(int value)
+//{
+//    sp_plot->photo->replot_sketch(control->ui->photo_x_shift_lineEdit->text().toDouble(),control->ui->photo_y_shift_lineEdit->text().toDouble(),control->ui->photo_x_scale_lineEdit->text().toDouble(),control->ui->photo_y_scale_lineEdit->text().toDouble(),
+//                                  control->ui->photo_fi_lineEdit->text().toDouble(),control->ui->photo_fi_shift_slider->value(),control->ui->photo_k_lineEdit->text().toDouble());}
 void SpectrWidget::resizeEvent ( QResizeEvent * event )
 {
     sp_plot->resize(this->width()-5,this->height()-60);

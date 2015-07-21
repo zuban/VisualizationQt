@@ -20,9 +20,6 @@ signals:
     void get_control(Form_Spectr  *control);
 private slots:
 
-
-
-
 private:
     Ui::MainWindow *ui;
 };

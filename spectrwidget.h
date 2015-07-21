@@ -31,6 +31,7 @@ public:
     Spectro_Plot* sp_plot;
     Z2Vector *z2vector;
     QVector<double_complex> arr;
+    bool zoomer_mod;
     explicit SpectrWidget(QWidget *parent = 0);
     ~SpectrWidget();
 
@@ -157,7 +158,7 @@ private slots:
 
     void on_photo_enable_checkBox_toggled(bool checked);
 
-    void on_tabWidget_currentChanged(int index);
+    //void on_tabWidget_currentChanged(int index);
 
     void on_photo_x_y_scale_pushButton_clicked();
 
@@ -177,17 +178,17 @@ private slots:
 
     void on_photo_x_y_shitft_pushButton_2_clicked();
 
-    void on_photo_x_shift_lineEdit_textChanged(const QString &arg1);
+//    void on_photo_x_shift_lineEdit_textChanged(const QString &arg1);
 
-    void on_photo_y_shift_lineEdit_textChanged(const QString &arg1);
+//    void on_photo_y_shift_lineEdit_textChanged(const QString &arg1);
 
-    void on_photo_x_scale_lineEdit_textChanged(const QString &arg1);
+//    void on_photo_x_scale_lineEdit_textChanged(const QString &arg1);
 
-    void on_photo_y_scale_lineEdit_textChanged(const QString &arg1);
+//    void on_photo_y_scale_lineEdit_textChanged(const QString &arg1);
 
-    void on_photo_fi_lineEdit_textChanged(const QString &arg1);
+//    void on_photo_fi_lineEdit_textChanged(const QString &arg1);
 
-    void on_photo_fi_shift_slider_valueChanged(int value);
+//    void on_photo_fi_shift_slider_valueChanged(int value);
 
 private:
     Ui::SpectrWidget *ui;

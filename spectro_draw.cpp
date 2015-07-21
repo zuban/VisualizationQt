@@ -5,6 +5,7 @@
 #include "math.h"
 #include "QFileDialog"
 #include "QTextStream"
+#include <QDebug>
 
 Spectro_draw::Spectro_draw(QWidget *parent) :
     QWidget(parent)
@@ -30,10 +31,14 @@ Spectro_draw::Spectro_draw(QWidget *parent) :
 }
 double Spectro_draw::calculate_const_x(double x,double y)
 {
+    if (x_scale==0) return -1;
+    if (y_scale==0) return -1;
     return ((x_shift+x/x_scale)*cos(fi)+(y_shift+y/y_scale)*sin(fi));//+this->width()/2);
 }
 double Spectro_draw::calculate_const_y(double x,double y)
 {
+    if (x_scale==0) return -1;
+    if (y_scale==0) return -1;
     return ((y_shift+y/y_scale)*cos(fi)-(x_shift+x/x_scale)*sin(fi));
 }
 
@@ -47,21 +52,24 @@ void Spectro_draw::draw( QPainter  *painter)
     painter->setOpacity(0.6);
     painter->setRenderHint(QPainter::Antialiasing,true);
     painter->setRenderHint(QPainter::Antialiasing,true);
-    if (list.size()!=0)
+    if (man_list.size()!=0)
     {
-        for (int i=0;i<list.size()-1;i++)
+        for (int i=0;i<man_list.size()-1;i++)
         {
-            QBrush *brush=new QBrush( ((Point)(list.at(i))).color );
+            QBrush *brush=new QBrush( ((Point)(man_list.at(i))).color );
             painter->setBrush(*brush);
-            painter->setPen(QPen(*brush,2));
-            if (list.size()>1)
+            //if (brush!=null)
+            QPen *setpen = new QPen(*brush,2);
+            painter->setPen(*setpen);
+            if (man_list.size()>1)
             {
-                if (((Point)(list.at(i))).updown==false)
+                if (((Point)(man_list.at(i))).updown==false)
                 {
-                    if (((Point)(list.at(i+1))).updown==false)
+                    if (((Point)(man_list.at(i+1))).updown==false)
                     {
-                        painter->drawLine(QPointF(signal_transform_x(((Point)(list.at(i))).point.x()),signal_transform_y(((Point)(list.at(i))).point.y())),
-                                          QPointF(signal_transform_x(((Point)(list.at(i+1))).point.x()),signal_transform_y(((Point)(list.at(i+1))).point.y())));
+                        painter->drawLine(QPointF(signal_transform_x(((Point)(man_list.at(i))).point.x()),signal_transform_y(((Point)(man_list.at(i))).point.y())),
+                                          QPointF(signal_transform_x(((Point)(man_list.at(i+1))).point.x()),signal_transform_y(((Point)(man_list.at(i+1))).point.y())));
+                        qDebug() << QPointF(signal_transform_x(((Point)(man_list.at(i))).point.x()),signal_transform_y(((Point)(man_list.at(i))).point.y()));
                     }
                     if(i>0)
                     {
@@ -69,8 +77,8 @@ void Spectro_draw::draw( QPainter  *painter)
                 }
                 else
                 {
-                    painter->drawLine(QPointF(signal_transform_x(((Point)(list.at(i))).point.x()),signal_transform_y(((Point)(list.at(i))).point.y())),
-                                      QPointF(signal_transform_x(((Point)(list.at(i+1))).point.x()),signal_transform_y(((Point)(list.at(i+1))).point.y())));
+                    painter->drawLine(QPointF(signal_transform_x(((Point)(man_list.at(i))).point.x()),signal_transform_y(((Point)(man_list.at(i))).point.y())),
+                                      QPointF(signal_transform_x(((Point)(man_list.at(i+1))).point.x()),signal_transform_y(((Point)(man_list.at(i+1))).point.y())));
                 }
             }
         }
@@ -81,13 +89,15 @@ void Spectro_draw::draw( QPainter  *painter)
         {
             QBrush *brush=new QBrush( ((Point)(sketch_list.at(i))).color );
             painter->setBrush(*brush);
-            painter->setPen(QPen(*brush,2));
+            QPen *setpen = new QPen(*brush,2);
+            painter->setPen(*setpen);
             if (sketch_list.size()>1)
             {
                 if (((Point)(sketch_list.at(i))).updown==false)
                 {
                     if (((Point)(sketch_list.at(i+1))).updown==false)
                     {
+
                         painter->drawLine(QPointF(signal_transform_x(((Point)(sketch_list.at(i))).point.x()),signal_transform_y(((Point)(sketch_list.at(i))).point.y())),
                                           QPointF(signal_transform_x(((Point)(sketch_list.at(i+1))).point.x()),signal_transform_y(((Point)(sketch_list.at(i+1))).point.y())));
                     }
@@ -110,12 +120,14 @@ void Spectro_draw::draw( QPainter  *painter)
     pen.setWidth(2);
     pen.setBrush(*brush);
     painter->setPen(pen);
+    int ll = man_list.length();
     if (left_select<right_select)
     {
         for (int i=left_select;i<right_select;i++)
         {
-            painter->drawLine(QPointF(signal_transform_x(((Point)(list.at(i))).point.x()),signal_transform_y(((Point)(list.at(i))).point.y())),
-                              QPointF(signal_transform_x(((Point)(list.at(i+1))).point.x()),signal_transform_y(((Point)(list.at(i+1))).point.y())));
+            if (ll>i+1)
+            painter->drawLine(QPointF(signal_transform_x(((Point)(man_list.at(i))).point.x()),signal_transform_y(((Point)(man_list.at(i))).point.y())),
+                              QPointF(signal_transform_x(((Point)(man_list.at(i+1))).point.x()),signal_transform_y(((Point)(man_list.at(i+1))).point.y())));
         }
     }
 
@@ -169,38 +181,34 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
                 {
                     if (eType==Polygon)
                     {
-                        if (list.size()==0)
+                        if (man_list.size()==0)
                         {
-                            list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Polygon));
+                            man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Polygon));
                             is_new_item=false;
                         }
                         else
                         {
                             if (is_new_item==false)
-                                list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),false,Polygon));
+                                man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),false,Polygon));
                             else
                             {
-                                list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Polygon));
+                                man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Polygon));
                                 is_new_item=false;
                             }
                         }
                     }
                     if (eType==Rect)
                     {
-                        if (list.size()==0)
+                        if (man_list.size()==0)
                         {
-                            list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Rect));
+                            man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Rect));
                             is_new_item=false;
                         }
                         else
                         {
-                            if (is_new_item==false)
+                            if (is_new_item!=false)
                             {
-
-                            }
-                            else
-                            {
-                                list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Rect));
+                                man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Rect));
                                 is_new_item=false;
                             }
                         }
@@ -211,19 +219,18 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
                 {
                     if (eType==Line)
                     {
-                        if (list.size()==0)
+                        if (man_list.size()==0)
                         {
-                            list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Line));
+                            man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Line));
                             is_new_item=false;
                         }
                         else
                         {
                             if (is_new_item==false)
-                                list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),false,Line));
+                                man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),false,Line));
                             else
                             {
-
-                                list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Line));
+                                man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),true,Line));
                                 is_new_item=false;
                             }
                         }
@@ -234,21 +241,21 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
                 {
                     if (eType==Polygon)
                     {
-                        list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),false,Polygon));
-                        int num=find_point(list.size()-1);
-                        QPointF po=((Point)(list.at(num))).point;
-                        QColor co=((Point)(list.at(num))).color;
-                        list.append( * new Point( po,co,false,Polygon));
+                        man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,getRGB(eColor),false,Polygon));
+                        int num=find_point(man_list.size()-1);
+                        QPointF po=((Point)(man_list.at(num))).point;
+                        QColor co=((Point)(man_list.at(num))).color;
+                        man_list.append( * new Point( po,co,false,Polygon));
                         is_new_item=true;
                     }
                     if (eType==Rect)
                     {
-                        list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),
-                                                        ((Point)(list.at(list.size()-1))).point.y()),getRGB(eColor),false,Rect));
-                        list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),getRGB(eColor),false,Rect));
-                        list.append(* new Point(QPointF(((Point)(list.at(list.size()-3))).point.x(),
+                        man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),
+                                                        ((Point)(man_list.at(man_list.size()-1))).point.y()),getRGB(eColor),false,Rect));
+                        man_list.append(* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),getRGB(eColor),false,Rect));
+                        man_list.append(* new Point(QPointF(((Point)(man_list.at(man_list.size()-3))).point.x(),
                                                         signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),getRGB(eColor),false,Rect));
-                        list.append(* new Point(((Point)(list.at(list.size()-4))).point,getRGB(eColor),false,Rect));
+                        man_list.append(* new Point(((Point)(man_list.at(man_list.size()-4))).point,getRGB(eColor),false,Rect));
                         is_new_item=true;
                     }
                 }
@@ -256,10 +263,10 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
                 {
                     if (eType==Line)
                     {
-                        int num1=find_point(list.size()-1);
-                        QPointF po1=((Point)(list.at(num1))).point;
-                        QColor co1=((Point)(list.at(num1))).color;
-                        list.append( * new Point( po1,co1,false,Line));
+                        int num1=find_point(man_list.size()-1);
+                        QPointF po1=((Point)(man_list.at(num1))).point;
+                        QColor co1=((Point)(man_list.at(num1))).color;
+                        man_list.append( * new Point( po1,co1,false,Line));
                         is_new_item=true;
                     }
                 }
@@ -282,134 +289,134 @@ bool Spectro_draw::eventFilter(QObject *object, QEvent *event)
                 {
                     if (eType==Line)
                     {
-                        if (list.size()==0)
+                        if (man_list.size()==0)
                             return false;
                         int p=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
                         int k=get_equal_point(p);
                         if (k==-1)
                         {
-                            bool a=((Point)(list.at(p))).updown;
-                            QColor r=((Point)(list.at(p))).color;
-                            list.replace(p,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r,a,Line));
+                            bool a=((Point)(man_list.at(p))).updown;
+                            QColor r=((Point)(man_list.at(p))).color;
+                            man_list.replace(p,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r,a,Line));
                         }
                         else
                         {
-                            bool a=((Point)(list.at(p))).updown;
-                            QColor r=((Point)(list.at(p))).color;
-                            list.replace(p,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r,a,Line));
-                            bool a1=((Point)(list.at(k))).updown;
-                            QColor r1=((Point)(list.at(k))).color;
-                            list.replace(k,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Line));
+                            bool a=((Point)(man_list.at(p))).updown;
+                            QColor r=((Point)(man_list.at(p))).color;
+                            man_list.replace(p,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r,a,Line));
+                            bool a1=((Point)(man_list.at(k))).updown;
+                            QColor r1=((Point)(man_list.at(k))).color;
+                            man_list.replace(k,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Line));
                         }
 
                     }
                     if (eType==Rect)
-                    {  if (list.size()==0)
+                    {  if (man_list.size()==0)
                             return false;
                         int p=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
-                        if (p+4>list.size()-1)
+                        if (p+4>man_list.size()-1)
                         {
-                            if (((Point)(list.at(p))).point==((Point)(list.at(p-4))).point)
+                            if (((Point)(man_list.at(p))).point==((Point)(man_list.at(p-4))).point)
                             {
                                 int p1=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
-                                bool a1=((Point)(list.at(p1))).updown;
-                                QColor r1=((Point)(list.at(p1))).color;
-                                list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
+                                bool a1=((Point)(man_list.at(p1))).updown;
+                                QColor r1=((Point)(man_list.at(p1))).color;
+                                man_list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
 
                                 int p2=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
                                 p2=p2-4;
-                                bool a2=((Point)(list.at(p2))).updown;
-                                QColor r2=((Point)(list.at(p2))).color;
-                                list.replace(p2,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r2,a2,Rect));
+                                bool a2=((Point)(man_list.at(p2))).updown;
+                                QColor r2=((Point)(man_list.at(p2))).color;
+                                man_list.replace(p2,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r2,a2,Rect));
                             }
                             else
                             {
                                 int p1=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
-                                bool a1=((Point)(list.at(p1))).updown;
-                                QColor r1=((Point)(list.at(p1))).color;
-                                list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),r1,a1,Rect));
+                                bool a1=((Point)(man_list.at(p1))).updown;
+                                QColor r1=((Point)(man_list.at(p1))).color;
+                                man_list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),r1,a1,Rect));
                             }
                         }
                         if (p-4<0)
                         {
-                            if (((Point)(list.at(p))).point==((Point)(list.at(p+4))).point)
+                            if (((Point)(man_list.at(p))).point==((Point)(man_list.at(p+4))).point)
                             {
                                 int p1=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
-                                bool a1=((Point)(list.at(p1))).updown;
-                                QColor r1=((Point)(list.at(p1))).color;
-                                list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
+                                bool a1=((Point)(man_list.at(p1))).updown;
+                                QColor r1=((Point)(man_list.at(p1))).color;
+                                man_list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
                                 int p2=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
                                 p2=p2+4;
-                                bool a2=((Point)(list.at(p2))).updown;
-                                QColor r2=((Point)(list.at(p2))).color;
-                                list.replace(p2,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r2,a2,Rect));
+                                bool a2=((Point)(man_list.at(p2))).updown;
+                                QColor r2=((Point)(man_list.at(p2))).color;
+                                man_list.replace(p2,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r2,a2,Rect));
                             }
                             else
                             {
                                 int p1=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
-                                bool a1=((Point)(list.at(p1))).updown;
-                                QColor r1=((Point)(list.at(p1))).color;
-                                list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
+                                bool a1=((Point)(man_list.at(p1))).updown;
+                                QColor r1=((Point)(man_list.at(p1))).color;
+                                man_list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
                             }
                         }
-                        if (p-4>=0 && p+4<=list.size()-1)
+                        if (p-4>=0 && p+4<=man_list.size()-1)
                         {
-                            if (((Point)(list.at(p))).point==((Point)(list.at(p+4))).point)
+                            if (((Point)(man_list.at(p))).point==((Point)(man_list.at(p+4))).point)
                             {
                                 int p1=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
-                                bool a1=((Point)(list.at(p1))).updown;
-                                QColor r1=((Point)(list.at(p1))).color;
-                                list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
+                                bool a1=((Point)(man_list.at(p1))).updown;
+                                QColor r1=((Point)(man_list.at(p1))).color;
+                                man_list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
                                 int p2=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
                                 p2=p2+4;
-                                bool a2=((Point)(list.at(p2))).updown;
-                                QColor r2=((Point)(list.at(p2))).color;
-                                list.replace(p2,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r2,a2,Rect));
+                                bool a2=((Point)(man_list.at(p2))).updown;
+                                QColor r2=((Point)(man_list.at(p2))).color;
+                                man_list.replace(p2,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r2,a2,Rect));
                             }
-                            if (((Point)(list.at(p))).point==((Point)(list.at(p-4))).point)
+                            if (((Point)(man_list.at(p))).point==((Point)(man_list.at(p-4))).point)
                             {
                                 int p1=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
-                                bool a1=((Point)(list.at(p1))).updown;
-                                QColor r1=((Point)(list.at(p1))).color;
-                                list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
+                                bool a1=((Point)(man_list.at(p1))).updown;
+                                QColor r1=((Point)(man_list.at(p1))).color;
+                                man_list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
                                 int p2=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
                                 p2=p2-4;
-                                bool a2=((Point)(list.at(p2))).updown;
-                                QColor r2=((Point)(list.at(p2))).color;
-                                list.replace(p2,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),r2,a2,Rect));
+                                bool a2=((Point)(man_list.at(p2))).updown;
+                                QColor r2=((Point)(man_list.at(p2))).color;
+                                man_list.replace(p2,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())),r2,a2,Rect));
                             }
-                            if (((Point)(list.at(p))).point!=((Point)(list.at(p-4))).point && (((Point)(list.at(p))).point!=((Point)(list.at(p+4))).point))
+                            if (((Point)(man_list.at(p))).point!=((Point)(man_list.at(p-4))).point && (((Point)(man_list.at(p))).point!=((Point)(man_list.at(p+4))).point))
                             {
                                 int p1=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
-                                bool a1=((Point)(list.at(p1))).updown;
-                                QColor r1=((Point)(list.at(p1))).color;
-                                list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
+                                bool a1=((Point)(man_list.at(p1))).updown;
+                                QColor r1=((Point)(man_list.at(p1))).color;
+                                man_list.replace(p1,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Rect));
                             }
                         }
                     }
 
                     if (eType==Polygon)
                     {
-                        if (list.size()==0)
+                        if (man_list.size()==0)
                             return false;
 
                         int p=find_closest_point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())));
                         int k=get_equal_point(p);
                         if (k==-1)
                         {
-                            bool a=((Point)(list.at(p))).updown;
-                            QColor r=((Point)(list.at(p))).color;
-                            list.replace(p,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r,a,Polygon));
+                            bool a=((Point)(man_list.at(p))).updown;
+                            QColor r=((Point)(man_list.at(p))).color;
+                            man_list.replace(p,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r,a,Polygon));
                         }
                         else
                         {
-                            bool a=((Point)(list.at(p))).updown;
-                            QColor r=((Point)(list.at(p))).color;
-                            list.replace(p,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r,a,Polygon));
+                            bool a=((Point)(man_list.at(p))).updown;
+                            QColor r=((Point)(man_list.at(p))).color;
+                            man_list.replace(p,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r,a,Polygon));
 
-                            bool a1=((Point)(list.at(k))).updown;
-                            QColor r1=((Point)(list.at(k))).color;
-                            list.replace(k,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Polygon));
+                            bool a1=((Point)(man_list.at(k))).updown;
+                            QColor r1=((Point)(man_list.at(k))).color;
+                            man_list.replace(k,* new Point(QPointF(signal_inv_transform_x(((QMouseEvent*)event)->posF().x()),signal_inv_transform_y(((QMouseEvent*)event)->posF().y())) ,r1,a1,Polygon));
                         }
                     }
                 }
@@ -545,11 +552,11 @@ int  Spectro_draw::find_closest_point(QPointF point)
 {
     int k=0;
     double a=10000;
-    for (int i=0;i<list.size();i++)
+    for (int i=0;i<man_list.size();i++)
     {
 
-        double bx=((Point)(list.at(i))).point.x();
-        double by=((Point)(list.at(i))).point.y();
+        double bx=((Point)(man_list.at(i))).point.x();
+        double by=((Point)(man_list.at(i))).point.y();
         if   ((bx-point.x())*(bx-point.x())+(by-point.y())*(by-point.y())<a)
         {
             k=i;
@@ -640,7 +647,7 @@ int Spectro_draw::find_point(int number)
         return 0;
     for (int i = number ;i>=0;i--)
     {
-        if ( ((Point)(list.at(i))).updown==true )
+        if ( ((Point)(man_list.at(i))).updown==true )
         {
             return (i);
         }
@@ -657,10 +664,10 @@ void Spectro_draw::change_color(QColor color)
         {
             for (int i=left_select;i<right_select;i++)
             {
-                QPointF p=(((Point)(list.at(i))).point);
-                bool a=((Point)(list.at(i))).updown;
-                EType type=((Point)(list.at(i))).type;
-                list.replace(i,* new Point(p ,color,a,type));
+                QPointF p=(((Point)(man_list.at(i))).point);
+                bool a=((Point)(man_list.at(i))).updown;
+                EType type=((Point)(man_list.at(i))).type;
+                man_list.replace(i,* new Point(p ,color,a,type));
             }
         }
     }
@@ -686,7 +693,7 @@ void Spectro_draw::delete_last()
     {
         for (int i=left_select;i<right_select+1;i++)
         {
-            list.removeAt(left_select);
+            man_list.removeAt(left_select);
         }
     }
     left_select=0;
@@ -696,13 +703,13 @@ void Spectro_draw::delete_last()
 }
 int Spectro_draw::get_equal_point(int num)
 {
-    for (int i=0;i<list.size();i++)
+    for (int i=0;i<man_list.size();i++)
     {
         if (i==num)
         {}
         else
         {
-            if (((Point)(list.at(i))).point==((Point)(list.at(num))).point)
+            if (((Point)(man_list.at(i))).point==((Point)(man_list.at(num))).point)
                 return i;
         }
     }
@@ -712,15 +719,15 @@ int Spectro_draw::get_equal_point(int num)
 void Spectro_draw::get_selected_area(int num)
 {
     left_select=find_point(num);
-    for (int i=num;i<list.size();i++)
+    for (int i=num;i<man_list.size();i++)
     {
-        if (((Point)(list.at(i+1))).updown==true)
+        if (((Point)(man_list.at(i+1))).updown==true)
         {
             right_select=i;
             return;
         }
     }
-    right_select=list.size()-1;
+    right_select=man_list.size()-1;
 }
 
 void Spectro_draw::read_from_file()
@@ -909,18 +916,18 @@ void Spectro_draw::read_from_file()
 void Spectro_draw::replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc,double fi0,double fi_shift,double k)
 {
     double fi_new=fi0+k*fi_shift;
-    if (list.size()>0)
-        for (int i=0;i<list.size();i++)
+    if (man_list.size()>0)
+        for (int i=0;i<man_list.size();i++)
         {
-            double x=((Point)(list.at(i))).point.x();
-            double y=((Point)(list.at(i))).point.y();
-            double a=(x*cos((fi_new-fi)*2*3.1415926/360)+y*sin((fi_new-fi)*2*3.1415926/360));
-            double b=(y*cos((fi_new-fi)*2*3.1415926/360)-x*sin((fi_new-fi)*2*3.1415926/360));
-            QColor color=((Point)(list.at(i))).color;
-            bool uppd=((Point)(list.at(i))).updown;
-            list.replace(i,(* new Point(QPointF( a,b) ,color,uppd,Line)));
+            double x=((Point)(man_list.at(i))).point.x();
+            double y=((Point)(man_list.at(i))).point.y();
+            double a=(x*cos((-fi_shift)*2*3.1415926/360)-y*sin((-fi_shift)*2*3.1415926/360));
+            double b=(y*cos((-fi_shift)*2*3.1415926/360)+x*sin((-fi_shift)*2*3.1415926/360));
+            QColor color=((Point)(man_list.at(i))).color;
+            bool uppd=((Point)(man_list.at(i))).updown;
+            man_list.replace(i , (* new Point(QPointF( a , b ) ,color,uppd,Line)));
         }
-    if (x_sh!=0 && y_sh!=0 && x_sc!=0 && y_sc!=0)
+    if (/*x_sh!=0 && y_sh!=0 &&*/ x_sc!=0 && y_sc!=0)
     {
         if (sketch_list.size()>0)
         {
@@ -935,11 +942,9 @@ void Spectro_draw::replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc
                 double a=(((x_sh)+x_old/x_sc)*cos(fi_new*2*3.1415926/360)+((y_sh)+y_old/y_sc)*sin(fi_new*2*3.1415926/360));
                 double b=(((y_sh)+y_old/y_sc)*cos(fi_new*2*3.1415926/360)-((x_sh)+x_old/x_sc)*sin(fi_new*2*3.1415926/360));
 
-                sketch_list.replace(i,(* new Point(QPointF( a,b) ,color,uppd,Line)));
+                sketch_list.replace(i , (* new Point(QPointF( a , b ) ,color,uppd,Line)));
             }
         }
-
-
 
         x_scale=x_sc;
         y_scale=y_sc;

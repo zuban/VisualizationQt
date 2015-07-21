@@ -23,18 +23,19 @@ public:
     EType etype;
     Spectro_Plot(QWidget * = NULL);
     void draw_spectr(Z2Vector z2vector,double intx1,double intx2,double inty1,double inty2,int colormax,double colormin);
-    QwtPlotGrid *grid;
     QwtPlot *plot;
     Spectro_draw *draw_widget;
+   // PhotoClass *photo;
+
+private:
+    QwtPlotSpectrogram *d_spectrogram;
+    QwtPlotGrid *grid;
     MyZoomer* zoomer;
-    PhotoClass *photo;
     QwtPlotPanner *panner;
-    ColorMap *color_map;
     ColorAlphamap *alpha_color_map;
     RasterData *raster;
     RasterData *data;
-//     QVector<double>  *vct;
-
+    ColorMap *color_map;
 
 
 
@@ -44,13 +45,12 @@ public:
 signals:
     void signal_from_vector(QString a);
 
-private:
-    QwtPlotSpectrogram *d_spectrogram;
+
 public slots:
     //  void resizeEvent ( QResizeEvent * event );
     void slot_for_spectr(QPointF pos);
     void slot_for_zoomer(QPointF p1,QPointF p2);
-    void slot_for_zoomer_norm();
+  //  void slot_for_zoomer_norm();
     double trans_x(double x);
     double trans_y(double y);
     double inv_trans_x(double x);

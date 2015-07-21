@@ -15,6 +15,7 @@ public:
     void d_readFile(QString path,int &N_k,int &N_fi,double &Fstart,double &Fstop,double &AzStart, double &AzStop,double_complex *array);
     void d_writeFile(QString path,int N_k,int N_fi,double Fstart,double Fstop,double AzStart, double AzStop,double_complex *array);
     void d_readmasSize(QString path,int &N_k,int &N_fi);
+
 signals:
     
 public slots:

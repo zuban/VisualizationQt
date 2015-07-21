@@ -18,6 +18,7 @@ public:
 //    void ReadAscii(QString line);
     double startx,starty,stopx,stopy;
     int nx,ny;
+    double scale;
     // void set_value(int a,int b,Complex c);
     //void get_value(int a,int b);
 };

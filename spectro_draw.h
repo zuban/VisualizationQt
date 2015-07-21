@@ -73,7 +73,7 @@ public:
     explicit Spectro_draw(QWidget *parent = 0);
     void draw( QPainter  *painter);
     void get_selected_area(int num);
-    QList<Point> list;
+    QList<Point> man_list;
 
     QList<Point> sketch_list;
 
