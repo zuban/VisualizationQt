@@ -3,7 +3,7 @@
 #include "QFile"
 #include "QTextStream"
 
-Z2Vector::Z2Vector() : QVector<Complex>()
+Z2Vector::Z2Vector() : QVector<double_complex>()
 {
 }
 void Z2Vector::set_zero_vector(int nX,int nY,double startX,double stopX,double startY,double stopY)
@@ -16,7 +16,10 @@ void Z2Vector::set_zero_vector(int nX,int nY,double startX,double stopX,double s
     nx=nX;
     ny=nY;
     for (int i=0;i<nx*ny-1;i++)
-        (*this)[i]=0;
+    {
+        (*this)[i].x =0.0;
+    (*this)[i].y =0.0;
+    }
 }
 //void Z2Vector::set_value(int a, int b,Complex c)
 //{

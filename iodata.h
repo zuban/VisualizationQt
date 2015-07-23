@@ -3,8 +3,7 @@
 
 #include <QObject>
 #include <w_wlib.h>
-struct double_complex {double x; double y;};
-struct float_complex {float x; float y;};
+#include "zcomplex.h"
 class IOData : public QObject
 {
 

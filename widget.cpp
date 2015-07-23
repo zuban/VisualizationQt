@@ -57,10 +57,21 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::get_data_2D(double set_datax,double set_datay, int len)
-{
+//void Widget::get_data_2D(QString str)
+//{
 
-}
+//    int N_k;
+//    int N_fi;
+//    double F_start,F_stop, AzStart,AzStop;
+
+//    cdata->d_readmasSize(str,N_k,N_fi);
+//    cuda_mas=new double_complex[N_k*N_fi];
+
+
+
+
+//    cdata->d_readFile(str,N_k,N_fi,F_start,F_stop,AzStart,AzStop,cuda_mas);
+//}
 //void Widget::slot_on_read_pushButton_clicked()
 //{
 //    QString way = QFileDialog::getOpenFileName(this, tr("Open File"), "",tr(".dat Files (*.dat)"));
@@ -712,12 +723,12 @@ void Widget::on_magnifier_pushButton_toggled(bool checked)
 //    zGraph->replot_test(arg1.toInt());
 //}
 
-void Widget::slot_on_test_cuda_pushButton_clicked(int num, bool row)
+void Widget::slot_on_test_cuda_pushButton_clicked(int num,int type)
 {
     qDebug() << QString::number(num);
     if (zGraph->eRun==ZGraph::first)
     {
-        zGraph->Cuda_draw_default_graph("");
+        zGraph->Cuda_draw_default_graph(num,type);
         ui->add_marker_pushButton->setEnabled(true);
         ui->delete_marker_pushButton->setEnabled(true);
         ui->reference_marker_pushButton->setEnabled(true);
@@ -739,7 +750,7 @@ void Widget::slot_on_test_cuda_pushButton_clicked(int num, bool row)
     }
     else
     {
-        zGraph->test_func_deprecated();
+        zGraph->Cuda_redraw_graph(num,type);
     }
 
 

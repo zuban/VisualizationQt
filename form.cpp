@@ -26,12 +26,12 @@ void Form::on_test_cuda_pushButton_clicked()
         if (ui->test_col_radioButton->isChecked() || ui->test_row_radioButton->isChecked())
             if (ui->test_col_radioButton->isChecked())
             {
-                emit signal_on_test_cuda_pushButton_clicked(ui->test_row_column_lineEdit->text().toInt(),true);
+                emit signal_on_test_cuda_pushButton_clicked(ui->test_row_column_lineEdit->text().toInt(),1);
                 return;
             }
             else
             {
-                emit signal_on_test_cuda_pushButton_clicked(ui->test_row_column_lineEdit->text().toInt(),false);
+                emit signal_on_test_cuda_pushButton_clicked(ui->test_row_column_lineEdit->text().toInt(),2);
                 return;
             }
     }

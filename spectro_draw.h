@@ -90,6 +90,7 @@ private:
 protected:
     void paintEvent(QPaintEvent *event);
 signals:
+
     void signal_form_canvas(QPointF pos);
     void signal_change_text(QString str);
     void signal_zoomer(QPointF p1,QPointF p2);
@@ -121,6 +122,7 @@ signals:
 
     void signal_to_zoom_norm();
 public slots:
+
 
 };
 

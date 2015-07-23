@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     spectrwidget.cpp \
     form_spectr.cpp \
     w_wlib.cpp \
-    iodata.cpp
+    iodata.cpp \
+    zcomplex.cpp
 
 HEADERS  += mainwindow.h \
     zvector.h \
@@ -55,7 +56,8 @@ HEADERS  += mainwindow.h \
     iodata.h \
     colormap.h \
     coloralphamap.h \
-    rasterdata.h
+    rasterdata.h \
+    zcomplex.h
 
 FORMS    += mainwindow.ui \
     widget.ui \

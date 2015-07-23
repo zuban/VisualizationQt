@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include "zgraph.h"
-//struct double2 {double x; double y;};
 namespace Ui {
 class Widget;
 }
@@ -17,13 +16,13 @@ public:
     ~Widget();
     ZGraph *zGraph;
 
+
     
 private slots:
 
     void resizeEvent ( QResizeEvent * event );
 
 
-    void get_data_2D(double set_datax,double set_datay,int len);
 
 
     void change_text(double text);
@@ -106,7 +105,7 @@ private slots:
 
     //  void on_test_row_column_lineEdit_textChanged(const QString &arg1);
 
-    void slot_on_test_cuda_pushButton_clicked(int num, bool row);
+    void slot_on_test_cuda_pushButton_clicked(int num, int type);
 
 private:
     Ui::Widget *ui;

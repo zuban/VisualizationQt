@@ -92,7 +92,11 @@ private slots:
     void on_y_scale_lineEdit_textChanged(const QString &arg1);
     void on_k_lineEdit_textChanged(const QString &arg1);
     void on_horizontalSlider_for_cuda_test_valueChanged(int value);
-    void on_fi_shift_slider_valueChanged(int value);
+//    void on_fi_shift_slider_valueChanged(int value);
+
+//    void on_horizontalSlider_for_cuda_test_sliderReleased();
+
+//    void on_horizontalSlider_for_cuda_test_sliderPressed();
 
 private:
 };

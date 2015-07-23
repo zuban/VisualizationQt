@@ -12,13 +12,17 @@
 #include "qwt_plot_magnifier.h"
 #include "scrollzoomer.h"
 #include "qwt_plot_panner.h"
-struct double2 {double x; double y;};
+#include "iodata.h"
+
 
 class ZGraph : public QWidget
 {
     Q_OBJECT
 public:
     explicit ZGraph(QWidget *parent = 0);
+
+    IOData *cdata;
+    double_complex *cuda_mas;
 
     const static int N_GRAPHS_MAX = 1;
     int graphs_count;
@@ -44,7 +48,9 @@ public:
     QwtPlotPicker *d_picker;
 
 
-
+    int N_k;
+    int N_fi;
+    double F_start,F_stop, AzStart,AzStop;
 
     enum ERun{first,nonfirst};
     ERun eRun;
@@ -68,7 +74,7 @@ public:
 
 
 
-    void Cuda_draw_default_graph(QString way);
+    void Cuda_draw_default_graph(int num, int type);
     void add_new_graph(QString way); //deprecated version 1.0
     void reDraw();
     void reDrawScale(double Max,double Span);
@@ -105,7 +111,7 @@ public:
     void showCursor(bool showIt);
     void reference_marker_toggled(bool checked);
     void change_markers();
-    void test_func_deprecated();
+    void Cuda_redraw_graph(int num,int type);
     //    void  change_gate_marker(QPoint pos);
     //    int gate_pos_1;
     //    int gate_pos_2;
@@ -115,6 +121,8 @@ public:
 signals:
     void signal_from_zGraph(double text);
 
+public slots:
+     void get_data_2D(QString str);
 public Q_SLOTS:
     void click_on_canvas(const QPoint &pos);
     

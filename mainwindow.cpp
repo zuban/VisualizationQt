@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(ui->widget_contr_2D,SIGNAL(signal_on_read_pushButton_clicked()),ui->widget_2D,SLOT(slot_on_read_pushButton_clicked()));
     connect(ui->widget_contr_2D,SIGNAL(signal_on_add_pushButton_clicked()),ui->widget_2D,SLOT(slot_on_add_pushButton_clicked()));
     connect(ui->widget_contr_2D,SIGNAL(signal_on_export_pushButton_clicked()),ui->widget_2D,SLOT(slot_on_export_pushButton_clicked()));
-    connect(ui->widget_contr_2D,SIGNAL(signal_on_test_cuda_pushButton_clicked(int,bool)),ui->widget_2D,SLOT(slot_on_test_cuda_pushButton_clicked(int,bool)));
+    connect(ui->widget_contr_2D,SIGNAL(signal_on_test_cuda_pushButton_clicked(int,int)),ui->widget_2D,SLOT(slot_on_test_cuda_pushButton_clicked(int,int)));
     //    connect(ui->widget_contr_2D,SIGNAL(signal_on_test_row_column_lineEdit_textChanged(QString)),ui->widget_2D,SLOT(slot_on_test_cuda_pushButton_clicked(QString)));
     //connect(ui->widget_contr_2D,SIGNAL(signal_on_test_col_radioButton_toggled(bool)),ui->widget_2D,SLOT(slot_on_test_col_radioButton_toggled(bool)));
     // connect(ui->widget_contr_2D,SIGNAL(signal_on_test_row_radioButton_toggled(bool)),ui->widget_2D,SLOT(slot_on_test_row_radioButton_toggled(bool)));
@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    connect(ui->widget_spectr,SIGNAL(set_data_2D(double,double,int)),ui->widget_2D,SLOT(get_data_2D(double,double,int)));
+    connect(ui->widget_spectr,SIGNAL(set_data_2D(QString)),ui->widget_2D->zGraph,SLOT(get_data_2D(QString)));
 }
 
 MainWindow::~MainWindow()

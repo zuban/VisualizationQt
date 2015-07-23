@@ -5,10 +5,11 @@
 #include <QVector>
 #include <complex>
 #include <QDialog>
-using namespace std;
-typedef complex<double> Complex;
+//using namespace std;
+//typedef complex<double> double_complex;
+#include "zcomplex.h"
 
-class ZVector : public QVector<Complex>
+class ZVector : public QVector<double_complex>
 {
 
 public:

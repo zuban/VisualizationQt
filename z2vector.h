@@ -3,12 +3,12 @@
 
 #include <complex>
 #include "QVector"
+#include "zcomplex.h"
 
+//using namespace std;
+//typedef complex<double> double_complex;
 
-using namespace std;
-typedef complex<double> Complex;
-
-class Z2Vector : public QVector<Complex>
+class Z2Vector : public QVector<double_complex>
 {
 
 public:

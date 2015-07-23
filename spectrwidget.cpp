@@ -13,7 +13,7 @@
 double GLOBAL_F_start;
 double GLOBAL_F_stop;
 //#include "H5Cpp.h"
-struct double2 {double x; double y;};
+//struct double2 {double x; double y;};
 
 SpectrWidget::SpectrWidget(QWidget *parent) :
     QWidget(parent),
@@ -96,11 +96,7 @@ void SpectrWidget::on_read_pushbutton_clicked()
     data->d_readmasSize(way,N_k,N_fi);
     double_complex *masin=new double_complex[N_k*N_fi];
 
-    arr.resize(N_k*N_fi);
-    for (int i=0;i<N_k*N_fi;i++)
-    {
-        arr[i]=masin[i];
-    }
+
 
     ui->progressBar->setValue(20);
     data->d_readFile(way,N_k,N_fi,F_start,F_stop,AzStart,AzStop,masin);
@@ -111,7 +107,7 @@ void SpectrWidget::on_read_pushbutton_clicked()
     control->ui->Azstart_lieedit_data->setText(QString::number(AzStart));
     control->ui->Azstop_lineedit_data->setText(QString::number(AzStop));
     ui->progressBar->setValue(50);
-
+    emit set_data_2D(way);
     bool is_double = true;
     if (is_double)
     {
@@ -139,7 +135,8 @@ void SpectrWidget::on_read_pushbutton_clicked()
         z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
         for (int i=0;i<z2vector->size()-1;i++)
         {
-            (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
+            (*z2vector)[i].x = mas[i].x;
+            (*z2vector)[i].y = mas[i].y;
         }
         ui->progressBar->setValue(90);
 
@@ -153,7 +150,10 @@ void SpectrWidget::on_read_pushbutton_clicked()
             sp_plot->setAxisScale(QwtPlot::yLeft,-scale/2,scale/2);
             sp_plot->setAxisScale(QwtPlot::xBottom,-scale/2,scale/2);
 
+
         sp_plot->replot();
+        if (zoomer_mod)
+            sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
         ui->progressBar->setValue(100);
 
 
@@ -185,7 +185,8 @@ void SpectrWidget::on_read_pushbutton_clicked()
         z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
         for (int i=0;i<z2vector->size()-1;i++)
         {
-            (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
+            (*z2vector)[i].x = mas[i].x;
+            (*z2vector)[i].y = mas[i].y;
         }
         ui->progressBar->setValue(90);
         sp_plot->draw_spectr(*z2vector,f_get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_xstart(),f_get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
@@ -213,8 +214,8 @@ void SpectrWidget::change_FI0_cuda_test(int count)
         int NEWCOL=2048;
         int NEWROW=1024;
         double_complex *mas=new double_complex[NEWCOL*NEWROW];
-        double dAzStart = (double)count - 10.0;
-        double dAzStop = (double)count + 10.0;
+        double dAzStart = (double)count - control->ui->dAzStart_lineEdit->text().toDouble();
+        double dAzStop = (double)count + control->ui->dAzStop_lineEdit->text().toDouble();
         try{
             bool b = CalcZ2Z(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(double*)mas);
         }
@@ -232,7 +233,8 @@ void SpectrWidget::change_FI0_cuda_test(int count)
 
             for (int i=0;i<z2vector->size()-1;i++)
             {
-                (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
+                (*z2vector)[i].x = mas[i].x;
+                (*z2vector)[i].y = mas[i].y;
             }
             delete mas;
 
@@ -248,7 +250,13 @@ void SpectrWidget::change_FI0_cuda_test(int count)
 
            sp_plot->setAxisScale(QwtPlot::yLeft,-scale/2,scale/2);
            sp_plot->setAxisScale(QwtPlot::xBottom,-scale/2,scale/2);
+           if (zoomer_mod)
+           {
+               sp_plot->setAxisScale(QwtPlot::yLeft,sp_plot->trans_y(sp_plot->point_for_zoomer1.y()),sp_plot->trans_y(sp_plot->point_for_zoomer2.y()));
+               sp_plot->setAxisScale(QwtPlot::xBottom,sp_plot->trans_x(sp_plot->point_for_zoomer1.x()),sp_plot->trans_x(sp_plot->point_for_zoomer2.x()));
+           }
            sp_plot->replot();
+
             ui->progressBar->setValue(100);
             sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
                                                 control->ui->fi_lineEdit->text().toDouble(),control->ui->horizontalSlider_for_cuda_test->value(),control->ui->k_lineEdit->text().toDouble());
@@ -275,8 +283,8 @@ void SpectrWidget::change_FI0_cuda_test(int count)
         int NEWCOL=2048;
         int NEWROW=1024;
         float_complex *mas=new float_complex[NEWCOL*NEWROW];
-        float dAzStart = (float)count - 10;
-        float dAzStop = (float)count + 10;
+        float dAzStart = (float)count - control->ui->dAzStart_lineEdit->text().toFloat();
+        float dAzStop = (float)count + control->ui->dAzStop_lineEdit->text().toFloat();
         try{
             bool b = CalcC2C(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(float*)mas);
         }
@@ -294,7 +302,8 @@ void SpectrWidget::change_FI0_cuda_test(int count)
 
             for (int i=0;i<z2vector->size()-1;i++)
             {
-                (*z2vector)[i]=Complex(mas[i].x,mas[i].y);
+                (*z2vector)[i].x = mas[i].x;
+                (*z2vector)[i].y = mas[i].y;
             }
 
             delete mas;
@@ -321,6 +330,8 @@ void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
         sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->replot();
+        if (zoomer_mod)
+            sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
     }
     if (arg1=="Phase")
     {
@@ -329,6 +340,8 @@ void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
         sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->replot();
+        if (zoomer_mod)
+            sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
     }
     if (arg1=="Re")
     {
@@ -337,6 +350,8 @@ void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
         sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->replot();
+        if (zoomer_mod)
+            sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
     }
     if (arg1=="Im")
     {
@@ -345,6 +360,8 @@ void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
         sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->replot();
+        if (zoomer_mod)
+            sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
     }
 //    clock_t t8 = clock();
 //    time("Changetime:"+QString::number((t8-t7))+" ");
@@ -357,6 +374,8 @@ void SpectrWidget::on_max_spinbox_valueChanged(int arg1)
     sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
     sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
     sp_plot->replot();
+    if (zoomer_mod)
+        sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
 }
 
 void SpectrWidget::on_min_spinbox_valueChanged(double arg1)
@@ -365,6 +384,8 @@ void SpectrWidget::on_min_spinbox_valueChanged(double arg1)
     sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
     sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
     sp_plot->replot();
+    if (zoomer_mod)
+        sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
 }
 
 //void SpectrWidget::time(QString a)
@@ -393,6 +414,8 @@ void SpectrWidget::on_spec_type_combobox_currentIndexChanged(const QString &arg1
         sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->replot();
+        if (zoomer_mod)
+            sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
     }
     if (arg1=="Normal")
     {
@@ -401,6 +424,8 @@ void SpectrWidget::on_spec_type_combobox_currentIndexChanged(const QString &arg1
         sp_plot->setAxisScale(QwtPlot::yLeft,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->setAxisScale(QwtPlot::xBottom,-z2vector->scale/2,z2vector->scale/2);
         sp_plot->replot();
+        if (zoomer_mod)
+            sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
     }
 }
 
@@ -616,6 +641,7 @@ void SpectrWidget::on_select_point_pushButton_toggled(bool checked)
 void SpectrWidget::on_cont_read_pushButton_clicked()
 {
     sp_plot->draw_widget->read_from_file();
+
 }
 
 
@@ -695,25 +721,27 @@ void SpectrWidget::change_k(double a)
 void SpectrWidget::on_x_scale_lineEdit_textChanged(const QString &arg1)
 {
     sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
-                                        control->ui->fi_lineEdit->text().toDouble(),control->ui->fi_shift_slider->value(),control->ui->k_lineEdit->text().toDouble());
+                                        control->ui->fi_lineEdit->text().toDouble(),0.0,control->ui->k_lineEdit->text().toDouble());
+
+
 }
 
 void SpectrWidget::on_x_shift_lineEdit_textChanged(const QString &arg1)
 {
     sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
-                                        control->ui->fi_lineEdit->text().toDouble(),control->ui->fi_shift_slider->value(),control->ui->k_lineEdit->text().toDouble());
+                                        control->ui->fi_lineEdit->text().toDouble(),0.0,control->ui->k_lineEdit->text().toDouble());
 }
 
 void SpectrWidget::on_y_shift_lineEdit_textChanged(const QString &arg1)
 {
     sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
-                                        control->ui->fi_lineEdit->text().toDouble(),control->ui->fi_shift_slider->value(),control->ui->k_lineEdit->text().toDouble());
+                                        control->ui->fi_lineEdit->text().toDouble(),0.0,control->ui->k_lineEdit->text().toDouble());
 }
 
 void SpectrWidget::on_y_scale_lineEdit_textChanged(const QString &arg1)
 {
     sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
-                                        control->ui->fi_lineEdit->text().toDouble(),control->ui->fi_shift_slider->value(),control->ui->k_lineEdit->text().toDouble());
+                                        control->ui->fi_lineEdit->text().toDouble(),0.0,control->ui->k_lineEdit->text().toDouble());
 }
 
 void SpectrWidget::on_delete_sketch_pushButton_clicked()
@@ -728,7 +756,7 @@ void SpectrWidget::on_delete_sketch_pushButton_clicked()
 void SpectrWidget::on_fi_shift_lineEdit_textChanged(const QString &arg1)
 {
     sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
-                                        control->ui->fi_lineEdit->text().toDouble(),control->ui->fi_shift_slider->value(),control->ui->k_lineEdit->text().toDouble());
+                                        control->ui->fi_lineEdit->text().toDouble(),0.0,control->ui->k_lineEdit->text().toDouble());
 }
 void SpectrWidget::change_fi_shift(double a)
 {
@@ -738,7 +766,7 @@ void SpectrWidget::change_fi_shift(double a)
 void SpectrWidget::on_fi_lineEdit_textChanged(const QString &arg1)
 {
     sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
-                                        control->ui->fi_lineEdit->text().toDouble(),control->ui->fi_shift_slider->value(),control->ui->k_lineEdit->text().toDouble());
+                                        control->ui->fi_lineEdit->text().toDouble(),0.0,control->ui->k_lineEdit->text().toDouble());
 }
 
 
@@ -777,7 +805,7 @@ void SpectrWidget::on_fi_shift_slider_sliderMoved(int position)
 {
 
     sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
-                                        control->ui->fi_lineEdit->text().toDouble(),control->ui->fi_shift_slider->value(),control->ui->k_lineEdit->text().toDouble());
+                                        control->ui->fi_lineEdit->text().toDouble(),0.0,control->ui->k_lineEdit->text().toDouble());
 }
 
 void SpectrWidget::slot_to_change_scale_scale1(double a)
@@ -913,10 +941,6 @@ void SpectrWidget::on_x_y_shitft_pushButton_2_clicked()
     sp_plot->draw_widget->is_scale_mode_scale2=false;
     sp_plot->draw_widget->is_scale_mode_angle2=false;
     sp_plot->draw_widget->is_scale_mode_point2=true;
-}
-void SpectrWidget::slot_test(QString str)
-{
-    ui->lineEdit->setText(ui->lineEdit->text()+" "+str);
 }
 
 
@@ -1160,4 +1184,5 @@ float_complex SpectrWidget::fMakeComplex(float x,float y)
     c.y = y;
     return c;
 }
+
 

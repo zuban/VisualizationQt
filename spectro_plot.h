@@ -27,6 +27,9 @@ public:
     Spectro_draw *draw_widget;
    // PhotoClass *photo;
 
+    QPointF point_for_zoomer1;
+    QPointF point_for_zoomer2;
+
 private:
     QwtPlotSpectrogram *d_spectrogram;
     QwtPlotGrid *grid;
@@ -36,6 +39,8 @@ private:
     RasterData *raster;
     RasterData *data;
     ColorMap *color_map;
+
+
 
 
 

@@ -62,7 +62,7 @@
          <string>Sketch</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="1" column="0">
+         <item row="2" column="0">
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -258,6 +258,9 @@
                  <height>15</height>
                 </size>
                </property>
+               <property name="text">
+                <string>0</string>
+               </property>
               </widget>
              </item>
              <item row="1" column="0">
@@ -282,7 +285,7 @@
                 </size>
                </property>
                <property name="text">
-                <string/>
+                <string>0</string>
                </property>
               </widget>
              </item>
@@ -307,6 +310,9 @@
                  <height>15</height>
                 </size>
                </property>
+               <property name="text">
+                <string>1</string>
+               </property>
               </widget>
              </item>
              <item row="3" column="0">
@@ -329,6 +335,9 @@
                  <width>0</width>
                  <height>15</height>
                 </size>
+               </property>
+               <property name="text">
+                <string>1</string>
                </property>
               </widget>
              </item>
@@ -353,6 +362,9 @@
                  <height>15</height>
                 </size>
                </property>
+               <property name="text">
+                <string>1</string>
+               </property>
               </widget>
              </item>
              <item row="5" column="0">
@@ -375,6 +387,9 @@
                  <width>0</width>
                  <height>15</height>
                 </size>
+               </property>
+               <property name="text">
+                <string>0</string>
                </property>
               </widget>
              </item>
@@ -405,18 +420,29 @@
            </item>
           </layout>
          </item>
-         <item row="0" column="0">
-          <widget class="QSlider" name="horizontalSlider_for_cuda_test">
-           <property name="maximum">
-            <number>360</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="tickInterval">
-            <number>0</number>
-           </property>
-          </widget>
+         <item row="1" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_12">
+           <item>
+            <widget class="QSlider" name="horizontalSlider_for_cuda_test">
+             <property name="maximum">
+              <number>360</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickInterval">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="horizontalSlider_for_cuda_test_label">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -926,7 +952,7 @@
            </item>
           </layout>
          </item>
-         <item row="1" column="0">
+         <item row="3" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_9">
            <item>
             <widget class="QLabel" name="spectr_shift">
@@ -939,6 +965,42 @@
             <widget class="QLineEdit" name="spectr_shift_lineedit">
              <property name="text">
               <string>0.15</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QLabel" name="labeldAzStart">
+             <property name="text">
+              <string>dAzStart</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="dAzStart_lineEdit">
+             <property name="text">
+              <string>10.0</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QLabel" name="labeldAzStop">
+             <property name="text">
+              <string>dAzStop</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="dAzStop_lineEdit">
+             <property name="text">
+              <string>10.0</string>
              </property>
             </widget>
            </item>

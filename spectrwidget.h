@@ -30,13 +30,14 @@ public:
     float_complex fMakeComplex(float x,float y);
     Spectro_Plot* sp_plot;
     Z2Vector *z2vector;
-    QVector<double_complex> arr;
+
     bool zoomer_mod;
+
     explicit SpectrWidget(QWidget *parent = 0);
     ~SpectrWidget();
 
 signals:
-    void set_data_2D(double set_datax,double set_datay,int len);
+    void set_data_2D(QString str);
 
 
 private slots:
@@ -74,7 +75,7 @@ private slots:
     void photo_slot_to_change_scale_point1(QPointF point);
     void photo_slot_to_change_scale_point22(QPointF point);
 
-    void slot_test(QString str);
+
 
     void on_read_pushbutton_clicked();
 
@@ -189,6 +190,8 @@ private slots:
 //    void on_photo_fi_lineEdit_textChanged(const QString &arg1);
 
 //    void on_photo_fi_shift_slider_valueChanged(int value);
+
+
 
 private:
     Ui::SpectrWidget *ui;
