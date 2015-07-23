@@ -98,6 +98,12 @@ private slots:
 
 //    void on_horizontalSlider_for_cuda_test_sliderPressed();
 
+    void on_Azstart_lieedit_data_textChanged(const QString &arg1);
+
+    void on_Azstop_lineedit_data_textChanged(const QString &arg1);
+
+    void on_Az_span_lineEdit_textChanged(const QString &arg1);
+
 private:
 };
 

@@ -34,6 +34,10 @@ private slots:
 
     //    void on_test_row_radioButton_toggled(bool checked);
 
+    void on_average_freq_radioButton_toggled(bool checked);
+
+    void on_average_angle_radioButton_toggled(bool checked);
+
 private:
     Ui::Form *ui;
 };

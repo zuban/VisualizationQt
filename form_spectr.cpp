@@ -258,3 +258,21 @@ void Form_Spectr::on_horizontalSlider_for_cuda_test_valueChanged(int value)
     ui->horizontalSlider_for_cuda_test_label->setText(QString::number(value));
 }
 
+
+void Form_Spectr::on_Azstart_lieedit_data_textChanged(const QString &arg1)
+{
+     ui->horizontalSlider_for_cuda_test->setMinimum(static_cast<int>(ui->Azstart_lieedit_data->text().toDouble())+ui->Az_span_lineEdit->text().toInt()/2);
+     ui->horizontalSlider_for_cuda_test->setMaximum(static_cast<int>(ui->Azstop_lineedit_data->text().toDouble())-ui->Az_span_lineEdit->text().toInt()/2);
+}
+
+void Form_Spectr::on_Azstop_lineedit_data_textChanged(const QString &arg1)
+{
+    ui->horizontalSlider_for_cuda_test->setMinimum(static_cast<int>(ui->Azstart_lieedit_data->text().toDouble())+ui->Az_span_lineEdit->text().toInt()/2);
+    ui->horizontalSlider_for_cuda_test->setMaximum(static_cast<int>(ui->Azstop_lineedit_data->text().toDouble())-ui->Az_span_lineEdit->text().toInt()/2);
+}
+
+void Form_Spectr::on_Az_span_lineEdit_textChanged(const QString &arg1)
+{
+    ui->horizontalSlider_for_cuda_test->setMinimum(static_cast<int>(ui->Azstart_lieedit_data->text().toDouble())+ui->Az_span_lineEdit->text().toInt()/2);
+    ui->horizontalSlider_for_cuda_test->setMaximum(static_cast<int>(ui->Azstop_lineedit_data->text().toDouble())-ui->Az_span_lineEdit->text().toInt()/2);
+}

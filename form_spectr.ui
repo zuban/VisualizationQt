@@ -952,7 +952,7 @@
            </item>
           </layout>
          </item>
-         <item row="3" column="0">
+         <item row="2" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_9">
            <item>
             <widget class="QLabel" name="spectr_shift">
@@ -971,36 +971,18 @@
           </layout>
          </item>
          <item row="1" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_10">
-           <item>
-            <widget class="QLabel" name="labeldAzStart">
-             <property name="text">
-              <string>dAzStart</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="dAzStart_lineEdit">
-             <property name="text">
-              <string>10.0</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_11">
            <item>
             <widget class="QLabel" name="labeldAzStop">
              <property name="text">
-              <string>dAzStop</string>
+              <string>Az spanp</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="dAzStop_lineEdit">
+            <widget class="QLineEdit" name="Az_span_lineEdit">
              <property name="text">
-              <string>10.0</string>
+              <string>20</string>
              </property>
             </widget>
            </item>

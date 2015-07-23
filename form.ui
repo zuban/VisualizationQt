@@ -73,7 +73,7 @@
              </size>
             </property>
             <property name="text">
-             <string>Columns</string>
+             <string>Frequency</string>
             </property>
            </widget>
           </item>
@@ -86,7 +86,21 @@
              </size>
             </property>
             <property name="text">
-             <string>Rows</string>
+             <string>Angle</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="average_freq_radioButton">
+            <property name="text">
+             <string>Average frequency</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="average_angle_radioButton">
+            <property name="text">
+             <string>Average angle</string>
             </property>
            </widget>
           </item>

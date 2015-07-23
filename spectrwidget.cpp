@@ -107,6 +107,7 @@ void SpectrWidget::on_read_pushbutton_clicked()
     control->ui->Azstart_lieedit_data->setText(QString::number(AzStart));
     control->ui->Azstop_lineedit_data->setText(QString::number(AzStop));
     ui->progressBar->setValue(50);
+
     emit set_data_2D(way);
     bool is_double = true;
     if (is_double)
@@ -214,8 +215,8 @@ void SpectrWidget::change_FI0_cuda_test(int count)
         int NEWCOL=2048;
         int NEWROW=1024;
         double_complex *mas=new double_complex[NEWCOL*NEWROW];
-        double dAzStart = (double)count - control->ui->dAzStart_lineEdit->text().toDouble();
-        double dAzStop = (double)count + control->ui->dAzStop_lineEdit->text().toDouble();
+        double dAzStart = (double)count - control->ui->Az_span_lineEdit->text().toDouble()/2;
+        double dAzStop = (double)count + control->ui->Az_span_lineEdit->text().toDouble()/2;
         try{
             bool b = CalcZ2Z(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(double*)mas);
         }
@@ -283,8 +284,8 @@ void SpectrWidget::change_FI0_cuda_test(int count)
         int NEWCOL=2048;
         int NEWROW=1024;
         float_complex *mas=new float_complex[NEWCOL*NEWROW];
-        float dAzStart = (float)count - control->ui->dAzStart_lineEdit->text().toFloat();
-        float dAzStop = (float)count + control->ui->dAzStop_lineEdit->text().toFloat();
+        float dAzStart = (float)count - control->ui->Az_span_lineEdit->text().toDouble()/2;
+        float dAzStop = (float)count + control->ui->Az_span_lineEdit->text().toDouble()/2;
         try{
             bool b = CalcC2C(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(float*)mas);
         }
