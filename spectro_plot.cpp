@@ -74,10 +74,10 @@ Spectro_Plot::Spectro_Plot(QWidget *parent):
     //                label->setWindowOpacity(0.1);
     //                label->setPixmap(*image);
 
-//    photo=new PhotoClass(this);
-//    photo->move(40,0);
-//    photo->resize(this->width()-100,this->height()-25);
-//    photo->hide();
+    //    photo=new PhotoClass(this);
+    //    photo->move(40,0);
+    //    photo->resize(this->width()-100,this->height()-25);
+    //    photo->hide();
     d_spectrogram->setRenderThreadCount(0); // use system specific thread count
     draw_widget=new Spectro_draw(this);
 
@@ -90,16 +90,16 @@ Spectro_Plot::Spectro_Plot(QWidget *parent):
 
     connect(draw_widget,SIGNAL(signal_form_canvas(QPointF)),this,SLOT(slot_for_spectr(QPointF)));
     connect(draw_widget,SIGNAL(signal_zoomer(QPointF,QPointF)),this,SLOT(slot_for_zoomer(QPointF,QPointF)));
-   // connect(draw_widget,SIGNAL(signal_to_zoom_norm()),this,SLOT(slot_for_zoomer_norm()));
+    // connect(draw_widget,SIGNAL(signal_to_zoom_norm()),this,SLOT(slot_for_zoomer_norm()));
     connect(draw_widget,SIGNAL(signal_transform_x(double)),this,SLOT(trans_x(double)));
     connect(draw_widget,SIGNAL(signal_transform_y(double)),this,SLOT(trans_y(double)));
     connect(draw_widget,SIGNAL(signal_inv_transform_x(double)),this,SLOT(inv_trans_x(double)));
     connect(draw_widget,SIGNAL(signal_inv_transform_y(double)),this,SLOT(inv_trans_y(double)));
 
-//    connect(photo,SIGNAL(photo_signal_transform_x(double)),this,SLOT(trans_x(double)));
-//    connect(photo,SIGNAL(photo_signal_transform_y(double)),this,SLOT(trans_y(double)));
-//    connect(photo,SIGNAL(photo_signal_inv_transform_x(double)),this,SLOT(inv_trans_x(double)));
-//    connect(photo,SIGNAL(photo_signal_inv_transform_y(double)),this,SLOT(inv_trans_y(double)));
+    //    connect(photo,SIGNAL(photo_signal_transform_x(double)),this,SLOT(trans_x(double)));
+    //    connect(photo,SIGNAL(photo_signal_transform_y(double)),this,SLOT(trans_y(double)));
+    //    connect(photo,SIGNAL(photo_signal_inv_transform_x(double)),this,SLOT(inv_trans_x(double)));
+    //    connect(photo,SIGNAL(photo_signal_inv_transform_y(double)),this,SLOT(inv_trans_y(double)));
 
     //   d_spectrogram->setAlpha(200);
 
@@ -114,21 +114,21 @@ void Spectro_Plot::draw_spectr(Z2Vector z2vector,double intx1,double intx2,doubl
         for ( int i = 0; i < vct->size(); i++ )
         {
 
-             (*vct)[i] = 10.0*log10((z2vector.at(i)).x*(z2vector.at(i)).x+(z2vector.at(i)).y*(z2vector.at(i)).y+1e-20);
+            (*vct)[i] = 10.0*log10((z2vector.at(i)).x*(z2vector.at(i)).x+(z2vector.at(i)).y*(z2vector.at(i)).y+1e-20);
         }
     }
     if (etype==Phase)
     {
         for ( int i = 0; i < vct->size(); i++ )
         {
-             (*vct)[i]=atan2((z2vector.at(i)).y,(z2vector.at(i)).x)*180.0/3.1415926;
+            (*vct)[i]=atan2((z2vector.at(i)).y,(z2vector.at(i)).x)*180.0/3.1415926;
         }
     }
     if (etype==Re)
     {
         for ( int i = 0; i < vct->size(); i++ )
         {
-             (*vct)[i]=(z2vector.at(i)).x;
+            (*vct)[i]=(z2vector.at(i)).x;
         }
     }
     if (etype==Im)
@@ -146,8 +146,8 @@ void Spectro_Plot::draw_spectr(Z2Vector z2vector,double intx1,double intx2,doubl
     setAxisScale(QwtPlot::yLeft, inty1,inty2);
     d_spectrogram->attach(this);
 
-//    RasterData *data = (RasterData *)d_spectrogram->data();
-//    data->setResampleMode( (QwtMatrixRasterData::ResampleMode) QwtMatrixRasterData::BilinearInterpolation);
+    //    RasterData *data = (RasterData *)d_spectrogram->data();
+    //    data->setResampleMode( (QwtMatrixRasterData::ResampleMode) QwtMatrixRasterData::BilinearInterpolation);
     const QwtInterval zInterval = d_spectrogram->data()->interval( Qt::ZAxis );
     // A color bar on the right axis
     QwtScaleWidget *rightAxis = axisWidget(QwtPlot::yRight);
@@ -185,7 +185,7 @@ void Spectro_Plot::draw_spectr(Z2Vector z2vector,double intx1,double intx2,doubl
     rightAxis->setColorBarWidth(25);
     setAxisScale(QwtPlot::yRight, zInterval.minValue(), zInterval.maxValue() );
     enableAxis(QwtPlot::yRight);
-//    replot();
+    //    replot();
     delete vct;
 
 }
@@ -199,8 +199,8 @@ void Spectro_Plot::slot_for_zoomer(QPointF p1,QPointF p2)
     {
         zoomer->zoom(QRectF(QPointF(invTransform(QwtPlot::xBottom,p1.x()),invTransform(QwtPlot::yLeft,p1.y())),
                             QPointF(invTransform(QwtPlot::xBottom,p2.x()),invTransform(QwtPlot::yLeft,p2.y())) ));
-       point_for_zoomer1 = p1;
-       point_for_zoomer2 = p2;
+        point_for_zoomer1 = p1;
+        point_for_zoomer2 = p2;
     }
 }
 

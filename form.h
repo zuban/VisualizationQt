@@ -23,6 +23,9 @@ signals:
     void signal_on_test_row_column_lineEdit_textChanged(QString str);
     void signal_on_test_col_radioButton_toggled(bool checked);
     void signal_on_test_row_radioButton_toggled(bool checked);
+
+
+     void enable_gate_marker(bool en);
 private slots:
 
     void on_export_pushButton_clicked();

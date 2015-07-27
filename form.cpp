@@ -27,11 +27,13 @@ void Form::on_test_cuda_pushButton_clicked()
             if (ui->test_col_radioButton->isChecked())
             {
                 emit signal_on_test_cuda_pushButton_clicked(ui->test_row_column_lineEdit->text().toInt(),1);
+                emit enable_gate_marker(true);
                 return;
             }
             if (ui->test_row_radioButton->isChecked())
             {
                 emit signal_on_test_cuda_pushButton_clicked(ui->test_row_column_lineEdit->text().toInt(),2);
+                emit enable_gate_marker(false);
                 return;
             }
 
@@ -39,11 +41,13 @@ void Form::on_test_cuda_pushButton_clicked()
     if (ui->average_freq_radioButton->isChecked())
     {
         emit signal_on_test_cuda_pushButton_clicked(ui->test_row_column_lineEdit->text().toInt(),3);
+
         return;
     }
     if (ui->average_angle_radioButton->isChecked())
     {
         emit signal_on_test_cuda_pushButton_clicked(ui->test_row_column_lineEdit->text().toInt(),4);
+
         return;
     }
     QMessageBox msgBox;
@@ -73,6 +77,7 @@ void Form::on_average_freq_radioButton_toggled(bool checked)
     {
      ui->test_row_column_lineEdit->setEnabled(false);
      emit signal_on_test_cuda_pushButton_clicked(0,3);
+       emit enable_gate_marker(true);
     }
     else
          ui->test_row_column_lineEdit->setEnabled(true);
@@ -84,6 +89,7 @@ void Form::on_average_angle_radioButton_toggled(bool checked)
     {
      ui->test_row_column_lineEdit->setEnabled(false);
      emit signal_on_test_cuda_pushButton_clicked(0,4);
+     emit enable_gate_marker(false);
     }
     else
          ui->test_row_column_lineEdit->setEnabled(true);

@@ -46,9 +46,9 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(ui->widget_spectr_contr,SIGNAL(signal_on_k_lineEdit_textChanged(QString)),ui->widget_spectr,SLOT(on_k_lineEdit_textChanged(QString)));
 
     connect(ui->widget_spectr_contr,SIGNAL(change_FI0_cuda_test(int)),ui->widget_spectr,SLOT(change_FI0_cuda_test(int)));
-
-
-
+    connect(ui->widget_contr_2D,SIGNAL(enable_gate_marker(bool)),ui->widget_2D->zGraph,SLOT(enable_gate_marker(bool)));
+    connect(ui->widget_spectr_contr,SIGNAL(signal_on_export_spectr_pushbutton_clicked()),ui->widget_spectr,SLOT(export_spectr_pushbutton()));
+connect(ui->widget_spectr,SIGNAL(set_gate_marker(double,double)),ui->widget_2D->zGraph,SLOT(set_gate_marker(double,double)));
     connect(ui->widget_spectr,SIGNAL(set_data_2D(QString)),ui->widget_2D->zGraph,SLOT(get_data_2D(QString)));
 }
 

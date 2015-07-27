@@ -36,10 +36,12 @@ public:
     explicit SpectrWidget(QWidget *parent = 0);
     ~SpectrWidget();
 
+
 signals:
     void set_data_2D(QString str);
-
-
+void set_gate_marker(double l_angl, double r_angl);
+public slots:
+ void export_spectr_pushbutton();
 private slots:
 
     void change_FI0_cuda_test(int count);
@@ -51,7 +53,7 @@ private slots:
     void change_y_scale(double a);
     void change_fi(double a);
     void change_k(double a);
-    void change_fi_shift(double a);
+ //   void change_fi_shift(double a);
 
     void slot_to_change_scale_scale1(double a);
     void slot_to_change_scale_scale2(double a);

@@ -16,7 +16,6 @@ public:
     ~Widget();
     ZGraph *zGraph;
 
-
     
 private slots:
 

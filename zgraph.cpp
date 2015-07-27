@@ -33,7 +33,8 @@ ZGraph::ZGraph(QWidget *parent) :
     markers_count=0;
     eRun=first;
     graphs_count=0;
-
+gate_pos1 = 0.0;
+gate_pos2 = 0.0;
     //lines color
     eColor[0]=black;
     eColor[1]=gray;
@@ -47,16 +48,7 @@ ZGraph::ZGraph(QWidget *parent) :
         eColor[i]=black;
     }
 
-    //    gate_marker1=new QwtPlotMarker();
-    //    gate_marker2=new QwtPlotMarker();
-
-    //    gate_marker1->setLineStyle(QwtPlotMarker::VLine );
-    //    gate_marker1->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
-    //    gate_marker1->setLinePen(QPen(Qt::black, 1.5, Qt::DashLine));
-    //    gate_marker1->setSymbol(line_symbol);
-    //    gate_marker2->setLabelAlignment(Qt::AlignRight | Qt::AlignBottom);
-    //    gate_marker2->setLinePen(QPen(Qt::black, 1.5, Qt::DashLine));
-    //    gate_marker2->setSymbol(line_symbol);
+    gate_marker1 = NULL;
 
 
     reference_marker=new QwtPlotMarker();
@@ -74,7 +66,7 @@ ZGraph::ZGraph(QWidget *parent) :
         curve[i]=new QwtPlotCurve();
         curve[i]->setPen(* new QPen(getRGB(eColor[i]),curve_width[i],getPen(eCurveType[i])));
         basic_marker[i]=new QwtPlotMarker();
-//        QwtSymbol *basic_symbol[N_GRAPHS_MAX];
+        //        QwtSymbol *basic_symbol[N_GRAPHS_MAX];
 
 
 
@@ -93,77 +85,131 @@ ZGraph::ZGraph(QWidget *parent) :
     myPlot->canvas()->setMouseTracking(true);
     myPlot->canvas()->installEventFilter(this);
 
-}
+    gate_enable = false;
 
+}
+void ZGraph::set_gate_marker(double l_angl, double r_angl)
+{
+    if (gate_enable==true)
+    {
+        if (gate_marker1==NULL)
+        {
+            gate_marker1 =new QwtPlotMarker();
+            gate_marker1->setLineStyle(QwtPlotMarker::VLine );
+            gate_marker1->setLinePen(QPen(QColor(0, 226, 83, 0x80),r_angl-l_angl, Qt::SolidLine));
+            gate_marker1->setValue( (r_angl+l_angl)/2,-100000000000000);
+            gate_marker1->attach(myPlot);
+            gate_pos1=l_angl;
+            gate_pos2 = r_angl;
+        }
+        else
+        {
+            delete gate_marker1;
+            gate_marker1 = NULL;
+            gate_marker1 =new QwtPlotMarker();
+            gate_marker1->setLineStyle(QwtPlotMarker::VLine );
+            gate_marker1->setLinePen(QPen(QColor(0, 226, 83, 0x80),r_angl-l_angl, Qt::SolidLine));
+            gate_marker1->setValue( (r_angl+l_angl)/2,-100000000000000);
+            gate_marker1->attach(myPlot);
+            gate_pos1=l_angl;
+            gate_pos2 = r_angl;
+        }
+        myPlot->replot();
+    }
+    else
+    {
+        if (gate_marker1!=NULL)
+        {
+            delete gate_marker1;
+            gate_marker1 = NULL;
+        }
+    }
+}
+void ZGraph::enable_gate_marker(bool en)
+{
+    gate_enable = en;
+    if (en==false)
+    {
+        if (gate_marker1!=NULL)
+        {
+            delete gate_marker1;
+            gate_marker1 = NULL;
+        }
+    }
+    else
+    {
+        set_gate_marker(gate_pos1,gate_pos2);
+    }
+}
 void ZGraph::Cuda_draw_default_graph(int num,int type)
 {
-if (cuda_mas==NULL)
-{
-   QMessageBox::information(0,"error","Set array");
-   return;
-}
+    if (cuda_mas==NULL)
+    {
+        QMessageBox::information(0,"error","Set array");
+        return;
+    }
     if (eRun==first)
     {
         if (type==1)
         {
             if (num>N_k)
             {
-               QMessageBox::information(0,"error","invalid row or col number");
-               return;
+                QMessageBox::information(0,"error","invalid row or col number");
+                return;
             }
-        graphs_count=1;
-        zVector[0]->start=F_start;
-        zVector[0]->stop=F_stop;
+            graphs_count=1;
+            zVector[0]->start=F_start;
+            zVector[0]->stop=F_stop;
 
-        zVector[0]->resize(N_k);
-        zVector[0]->zLenght=zVector[0]->size();
-        double *xs = new double[N_k];
-        double *ys = new double[N_k];
-        for (int i=0;i<N_k;i++)
-        {
-            for (int j=0;j<N_fi;j++)
+            zVector[0]->resize(N_k);
+            zVector[0]->zLenght=zVector[0]->size();
+            double *xs = new double[N_k];
+            double *ys = new double[N_k];
+            for (int i=0;i<N_k;i++)
             {
-                if (j==num)
+                for (int j=0;j<N_fi;j++)
                 {
-                    int ind=i+j*N_k;
-                    (*zVector[0])[i].x = cuda_mas[ind].x;
-                    (*zVector[0])[i].y = cuda_mas[ind].y;
+                    if (j==num)
+                    {
+                        int ind=i+j*N_k;
+                        (*zVector[0])[i].x = cuda_mas[ind].x;
+                        (*zVector[0])[i].y = cuda_mas[ind].y;
+                    }
                 }
             }
-        }
 
-        for (int i=0;i<zVector[0]->zLenght;i++)
-        {
-            double_complex C=(*zVector[0])[i];
-            xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
-            ys[i]=10.0*log10(C.x*C.x+C.y*C.y + 1.0e-20);
-        }
-        QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
-        myPlot->setCanvasBackground(Qt::white);
-        curve[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
-        curve[0]->setData(dataLin);
-        curve[0]->attach(myPlot);
-        QwtPlotGrid *grid=new QwtPlotGrid();
-        grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
-        grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
-        grid->attach(myPlot);
-        myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
-        myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
-        myPlot->setAxisAutoScale(QwtPlot::yRight,true);
-        myPlot->setAxisAutoScale(QwtPlot::xTop,true);
+            for (int i=0;i<zVector[0]->zLenght;i++)
+            {
+                double_complex C=(*zVector[0])[i];
+                xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
+                ys[i]=10.0*log10(C.x*C.x+C.y*C.y + 1.0e-20);
+            }
+            QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
+            myPlot->setCanvasBackground(Qt::white);
+            curve[0]->setRenderHint(QwtPlotItem::RenderAntialiased);
+            curve[0]->setData(dataLin);
+            curve[0]->attach(myPlot);
+            QwtPlotGrid *grid=new QwtPlotGrid();
+            grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
+            grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
+            grid->attach(myPlot);
+            myPlot->setAxisAutoScale(QwtPlot::xBottom,true);
+            myPlot->setAxisAutoScale(QwtPlot::yLeft,true);
+            myPlot->setAxisAutoScale(QwtPlot::yRight,true);
+            myPlot->setAxisAutoScale(QwtPlot::xTop,true);
 
-        myPlot->mylegend->add_graph();
-        myPlot->replot();
-        delete xs;
-        delete ys;
-        eRun=nonfirst;
+            myPlot->mylegend->add_graph();
+            myPlot->replot();
+            delete xs;
+            delete ys;
+            eRun=nonfirst;
         }
         if (type==2)
         {
             if (num>N_fi)
             {
-               QMessageBox::information(0,"error","invalid row or col number");
-               return;
+                QMessageBox::information(0,"error","invalid row or col number");
+                return;
             }
             graphs_count=1;
             zVector[0]->start=AzStart;
@@ -228,9 +274,9 @@ if (cuda_mas==NULL)
                 (*zVector[0])[j].y = 0.0;
                 for (int i=0;i<N_k;i++)
                 {
-                        int ind=i+j*N_k;
-                        double A =  cuda_mas[ind].x* cuda_mas[ind].x+ cuda_mas[ind].y* cuda_mas[ind].y;
-                        (*zVector[0])[j].x += A;
+                    int ind=i+j*N_k;
+                    double A =  cuda_mas[ind].x* cuda_mas[ind].x+ cuda_mas[ind].y* cuda_mas[ind].y;
+                    (*zVector[0])[j].x += A;
                 }
                 (*zVector[0])[j].x = sqrt((*zVector[0])[j].x / N_k);
             }
@@ -277,9 +323,9 @@ if (cuda_mas==NULL)
                 (*zVector[0])[i].y = 0.0;
                 for (int j=0;j<N_fi;j++)
                 {
-                        int ind=i+j*N_k;
-                        double A =  cuda_mas[ind].x* cuda_mas[ind].x+ cuda_mas[ind].y* cuda_mas[ind].y;
-                        (*zVector[0])[i].x += A;
+                    int ind=i+j*N_k;
+                    double A =  cuda_mas[ind].x* cuda_mas[ind].x+ cuda_mas[ind].y* cuda_mas[ind].y;
+                    (*zVector[0])[i].x += A;
                 }
                 (*zVector[0])[i].x = sqrt((*zVector[0])[i].x / N_fi);
             }
@@ -1230,57 +1276,57 @@ void ZGraph::Cuda_redraw_graph(int num,int type)
 {
     if (cuda_mas==NULL)
     {
-       QMessageBox::information(0,"error","Set array");
-       return;
+        QMessageBox::information(0,"error","Set array");
+        return;
     }
     if (type==1)
     {
         if (num>N_k)
         {
-           QMessageBox::information(0,"error","invalid row or col number");
-           return;
+            QMessageBox::information(0,"error","invalid row or col number");
+            return;
         }
-    zVector[0]->start=F_start;
-    zVector[0]->stop=F_stop;
+        zVector[0]->start=F_start;
+        zVector[0]->stop=F_stop;
 
-    zVector[0]->resize(N_k);
-    zVector[0]->zLenght=zVector[0]->size();
-    double *xs = new double[N_k];
-    double *ys = new double[N_k];
-    for (int i=0;i<N_k;i++)
-    {
-        for (int j=0;j<N_fi;j++)
+        zVector[0]->resize(N_k);
+        zVector[0]->zLenght=zVector[0]->size();
+        double *xs = new double[N_k];
+        double *ys = new double[N_k];
+        for (int i=0;i<N_k;i++)
         {
-            if (j==num)
+            for (int j=0;j<N_fi;j++)
             {
-                int ind=i+j*N_k;
-                (*zVector[0])[i].x = cuda_mas[ind].x;
-                (*zVector[0])[i].y = cuda_mas[ind].y;
+                if (j==num)
+                {
+                    int ind=i+j*N_k;
+                    (*zVector[0])[i].x = cuda_mas[ind].x;
+                    (*zVector[0])[i].y = cuda_mas[ind].y;
+                }
+
             }
-
         }
-    }
 
-    for (int i=0;i<zVector[0]->zLenght;i++)
-    {
-        double_complex C=(*zVector[0])[i];
-        xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
-        ys[i]=10.0*log10(C.x*C.x+C.y*C.y + 1.0e-20);
-    }
+        for (int i=0;i<zVector[0]->zLenght;i++)
+        {
+            double_complex C=(*zVector[0])[i];
+            xs[i]=zVector[0]->start+i*(zVector[0]->stop-zVector[0]->start)/(zVector[0]->zLenght-1);
+            ys[i]=10.0*log10(C.x*C.x+C.y*C.y + 1.0e-20);
+        }
 
-    QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
-    curve[0]->setData(dataLin);
-    curve[0]->attach(myPlot);
-    myPlot->replot();
-    delete xs;
-    delete ys;
+        QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[0]->zLenght);
+        curve[0]->setData(dataLin);
+        curve[0]->attach(myPlot);
+        myPlot->replot();
+        delete xs;
+        delete ys;
     }
     if (type==2)
     {
         if (num>N_fi)
         {
-           QMessageBox::information(0,"error","invalid row or col number");
-           return;
+            QMessageBox::information(0,"error","invalid row or col number");
+            return;
         }
         zVector[0]->start=AzStart;
         zVector[0]->stop=AzStop;
@@ -1334,9 +1380,9 @@ void ZGraph::Cuda_redraw_graph(int num,int type)
             (*zVector[0])[j].y = 0.0;
             for (int i=0;i<N_k;i++)
             {
-                    int ind=i+j*N_k;
-                    double A =  cuda_mas[ind].x* cuda_mas[ind].x+ cuda_mas[ind].y* cuda_mas[ind].y;
-                    (*zVector[0])[j].x += A;
+                int ind=i+j*N_k;
+                double A =  cuda_mas[ind].x* cuda_mas[ind].x+ cuda_mas[ind].y* cuda_mas[ind].y;
+                (*zVector[0])[j].x += A;
             }
             (*zVector[0])[j].x = sqrt((*zVector[0])[j].x / N_k);
         }
@@ -1371,9 +1417,9 @@ void ZGraph::Cuda_redraw_graph(int num,int type)
             (*zVector[0])[i].y = 0.0;
             for (int j=0;j<N_fi;j++)
             {
-                    int ind=i+j*N_k;
-                    double A =  cuda_mas[ind].x* cuda_mas[ind].x+ cuda_mas[ind].y* cuda_mas[ind].y;
-                    (*zVector[0])[i].x += A;
+                int ind=i+j*N_k;
+                double A =  cuda_mas[ind].x* cuda_mas[ind].x+ cuda_mas[ind].y* cuda_mas[ind].y;
+                (*zVector[0])[i].x += A;
             }
             (*zVector[0])[i].x = sqrt((*zVector[0])[i].x / N_fi);
         }
@@ -1397,7 +1443,7 @@ void ZGraph::Cuda_redraw_graph(int num,int type)
 void ZGraph::get_data_2D(QString str)
 {
     if (cuda_mas!=NULL)
-            return;
+        return;
     cdata->d_readmasSize(str,N_k,N_fi);
     cuda_mas=new double_complex[N_k*N_fi];
     cdata->d_readFile(str,N_k,N_fi,F_start,F_stop,AzStart,AzStop,cuda_mas);

@@ -24,6 +24,7 @@ public:
     ~Form_Spectr();
 
 signals:
+    void signal_on_export_spectr_pushbutton_clicked();
     void  signal_on_read_pushbutton_clicked();
     void  signal_on_cont_read_pushButton_clicked();
     void signal_on_x_y_scale_pushButton_clicked();
@@ -103,6 +104,10 @@ private slots:
     void on_Azstop_lineedit_data_textChanged(const QString &arg1);
 
     void on_Az_span_lineEdit_textChanged(const QString &arg1);
+
+
+
+    void on_export_spectr_pushbutton_clicked();
 
 private:
 };

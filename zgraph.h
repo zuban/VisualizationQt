@@ -115,13 +115,17 @@ public:
     //    void  change_gate_marker(QPoint pos);
     //    int gate_pos_1;
     //    int gate_pos_2;
-    //    QwtPlotMarker *gate_marker1;
-    //    QwtPlotMarker *gate_marker2;
-    
+        QwtPlotMarker *gate_marker1;
+        QwtPlotMarker *gate_marker2;
+        bool gate_enable;
+        double gate_pos1;
+        double gate_pos2;
 signals:
     void signal_from_zGraph(double text);
 
 public slots:
+    void set_gate_marker(double l_angl, double r_angl);
+   void enable_gate_marker(bool en);
      void get_data_2D(QString str);
 public Q_SLOTS:
     void click_on_canvas(const QPoint &pos);

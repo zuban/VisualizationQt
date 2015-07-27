@@ -8,6 +8,8 @@
 #include "ui_form_spectr.h"
 #include "form_spectr.h"
 #include <QMessageBox>
+#include "QImageWriter"
+#include "qwt_plot_renderer.h"
 
 
 double GLOBAL_F_start;
@@ -39,7 +41,7 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
     connect(sp_plot->draw_widget,SIGNAL(signla_y_scale(double)),this,SLOT(change_y_scale(double)));
     connect(sp_plot->draw_widget,SIGNAL(signla_fi(double)),this,SLOT(change_fi(double)));
     connect(sp_plot->draw_widget,SIGNAL(signla_k(double)),this,SLOT(change_k(double)));
-    connect(sp_plot->draw_widget,SIGNAL(signla_fi_shift(double)),this,SLOT(change_fi_shift(double)));
+    //connect(sp_plot->draw_widget,SIGNAL(signla_fi_shift(double)),this,SLOT(change_fi_shift(double)));
     //connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale(double)),this,SLOT(slot_size(double)));
     connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale_scale1(double)),this,SLOT(slot_to_change_scale_scale1(double)));
     connect(sp_plot->draw_widget,SIGNAL(signal_to_change_scale_scale2(double)),this,SLOT(slot_to_change_scale_scale2(double)));
@@ -195,6 +197,12 @@ void SpectrWidget::on_read_pushbutton_clicked()
         delete mas;
     }
     delete masin;
+
+
+
+
+emit set_gate_marker(-control->ui->Az_span_lineEdit->text().toDouble()/2,control->ui->Az_span_lineEdit->text().toDouble()/2);
+ // emit set_gate_marker(-10.2,30.43);
 }
 
 
@@ -273,6 +281,18 @@ void SpectrWidget::change_FI0_cuda_test(int count)
             return;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
         bInProgress = false;
     }
     else {
@@ -320,6 +340,7 @@ void SpectrWidget::change_FI0_cuda_test(int count)
         printf ("count exit\n");
         bInProgress = false;
     }
+    emit set_gate_marker(count-control->ui->Az_span_lineEdit->text().toDouble()/2,count+control->ui->Az_span_lineEdit->text().toDouble()/2);
 }
 void SpectrWidget::on_type_combobox_currentIndexChanged(const QString &arg1)
 {
@@ -759,10 +780,7 @@ void SpectrWidget::on_fi_shift_lineEdit_textChanged(const QString &arg1)
     sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toDouble(),control->ui->y_shift_lineEdit->text().toDouble(),control->ui->x_scale_lineEdit->text().toDouble(),control->ui->y_scale_lineEdit->text().toDouble(),
                                         control->ui->fi_lineEdit->text().toDouble(),0.0,control->ui->k_lineEdit->text().toDouble());
 }
-void SpectrWidget::change_fi_shift(double a)
-{
-    control->ui->fi_shift_slider->setValue(a);
-}
+
 
 void SpectrWidget::on_fi_lineEdit_textChanged(const QString &arg1)
 {
@@ -1170,6 +1188,54 @@ void SpectrWidget::resizeEvent ( QResizeEvent * event )
 void SpectrWidget::get_control(Form_Spectr* control1)
 {
     control = control1;
+}
+void SpectrWidget::export_spectr_pushbutton()
+{
+#ifndef QT_NO_PRINTER
+        QString fileName = "plot.pdf";
+#else
+        QString fileName = "plot.png";
+#endif
+
+#ifndef QT_NO_FILEDIALOG
+        const QList<QByteArray> imageFormats =
+                QImageWriter::supportedImageFormats();
+
+        QStringList filter;
+        filter += "PDF Documents (*.pdf)";
+#ifndef QWT_NO_SVG
+        filter += "SVG Documents (*.svg)";
+#endif
+        filter += "Postscript Documents (*.ps)";
+
+        if ( imageFormats.size() > 0 )
+        {
+            QString imageFilter("Images (");
+            for ( int i = 0; i < imageFormats.size(); i++ )
+            {
+                if ( i > 0 )
+                    imageFilter += " ";
+                imageFilter += "*.";
+                imageFilter += imageFormats[i];
+            }
+            imageFilter += ")";
+
+            filter += imageFilter;
+        }
+
+        fileName = QFileDialog::getSaveFileName(
+                    this, "Export File Name", fileName,
+                    filter.join(";;"), NULL, QFileDialog::DontConfirmOverwrite);
+#endif
+        if ( !fileName.isEmpty() )
+        {
+            QwtPlotRenderer renderer;
+            // renderer.setDiscardFlag(QwtPlotRenderer::DiscardBackground, false);
+
+            renderer.renderDocument(sp_plot, fileName, QSizeF(300, 200), 85);
+            QMessageBox::information(0,"information","Operation Complete");
+        }
+
 }
 double_complex SpectrWidget::MakeComplex(double x,double y)
 {
