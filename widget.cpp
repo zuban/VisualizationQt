@@ -10,7 +10,6 @@
 #include "QDesktopWidget"
 #include "cuda_dll_module.h"
 #include "qwt_plot_grid.h"
-//struct double2 {double x; double y;};
 #include <QtDebug>
 
 
@@ -26,16 +25,12 @@ Widget::Widget(QWidget *parent) :
     zGraph->resize(a.width()-40,a.height()-20);
     zGraph->resizeMyPlot(a.width()-45,a.height()-30);
     this->showMaximized();
-    connect(zGraph,SIGNAL(signal_from_zGraph(double)),this,SLOT(change_text(double)));
-    // connect(zGraph->myPlot->mylegend,SIGNAL(signal_from_legend(double)),this,SLOT(change_text(double)));
     connect(zGraph->myPlot->mymarker,SIGNAL(enable_delete_button(bool)),this,SLOT(enable_delete_pushbutton(bool)));
 
     ui->add_marker_pushButton->setEnabled(false);
     ui->delete_marker_pushButton->setEnabled(false);
     ui->reference_marker_pushButton->setEnabled(false);
     ui->show_marker_pushButton->setEnabled(false);
-    //TODOui->add_pushButton->setEnabled(false);
-    //TODOui->export_pushButton->setEnabled(false);
     ui->graph_color_comboBox->setEnabled(false);
     ui->graph_lin_log_type_comboBox->setEnabled(false);
     ui->graph_style_comboBox->setEnabled(false);
@@ -48,72 +43,12 @@ Widget::Widget(QWidget *parent) :
     ui->Y_scale_pushButton->setEnabled(false);
     ui->XY_scale_pushButton->setEnabled(false);
     ui->magnifier_pushButton->setEnabled(false);
-    //TODOui->test_row_radioButton->setChecked(true);
 }
 
 Widget::~Widget()
 {
     delete zGraph;
     delete ui;
-}
-
-//void Widget::get_data_2D(QString str)
-//{
-
-//    int N_k;
-//    int N_fi;
-//    double F_start,F_stop, AzStart,AzStop;
-
-//    cdata->d_readmasSize(str,N_k,N_fi);
-//    cuda_mas=new double_complex[N_k*N_fi];
-
-
-
-
-//    cdata->d_readFile(str,N_k,N_fi,F_start,F_stop,AzStart,AzStop,cuda_mas);
-//}
-//void Widget::slot_on_read_pushButton_clicked()
-//{
-//    QString way = QFileDialog::getOpenFileName(this, tr("Open File"), "",tr(".dat Files (*.dat)"));
-//     if (way==0)
-//     {
-//         return;
-//     }
-//    zGraph->draw_default_graph(way);
-//    ui->add_marker_pushButton->setEnabled(true);
-//    ui->delete_marker_pushButton->setEnabled(true);
-//    ui->reference_marker_pushButton->setEnabled(true);
-//    ui->show_marker_pushButton->setEnabled(true);
-//    //TODOui->add_pushButton->setEnabled(true);
-
-//    //TODOui->export_pushButton->setEnabled(true);
-//    ui->graph_color_comboBox->setEnabled(true);
-//    ui->graph_lin_log_type_comboBox->setEnabled(true);
-//    ui->graph_style_comboBox->setEnabled(true);
-//    ui->graph_type_comboBox->setEnabled(true);
-//    ui->graph_wight_spinBox->setEnabled(true);
-//    ui->stackedWidget->setEnabled(true);
-
-//    ui->X_scale_pushButton->setEnabled(true);
-//    ui->Y_scale_pushButton->setEnabled(true);
-//    ui->XY_scale_pushButton->setEnabled(true);
-//    ui->magnifier_pushButton->setEnabled(true);
-//}
-
-//void Widget::slot_on_add_pushButton_clicked()
-//{
-//    QString way = QFileDialog::getOpenFileName(this, tr("Open File"), "",tr(".dat Files (*.dat)"));
-//     if (way==0)
-//     {
-//         return;
-//     }
-//     zGraph->add_new_graph(way);
-//}
-void Widget::change_text(double text)
-{
-    //text//ui->textEdit->setText(QString::number(text));
-    //  ui->textEdit->setText(QString::number(text));
-    ui->lineEdit->setText(QString::number(text));
 }
 
 void Widget::on_graph_type_comboBox_currentIndexChanged(const QString &arg1)
@@ -306,27 +241,6 @@ void Widget::on_reference_marker_pushButton_toggled(bool checked)
 
 void Widget::slot_on_export_pushButton_clicked()
 {
-
-    //    int w = zGraph->myPlot->width();
-    //    int h = zGraph->myPlot->height();
-    //    QPixmap pixmap(w, h);
-    //    zGraph->myPlot->print(pixmap);
-
-    //    static QByteArray bytes;
-    //    QBuffer buffer(&bytes);
-    //    buffer.open(QIODevice::WriteOnly);
-    //    pixmap.save(&buffer, "png");
-    //    // or save as a file
-    //    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-    //                               "/home/jana/untitled.png",
-    //                               tr("Images (*.png)"));
-
-    //    QFile file(fileName);
-    //      if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    //          return;
-
-    //      QTextStream out(&file);
-    //      out << bytes;
     {
 
 #ifndef QT_NO_PRINTER
@@ -699,30 +613,6 @@ void Widget::on_magnifier_pushButton_toggled(bool checked)
     }
 }
 
-//void Widget::slot_on_test_col_radioButton_toggled(bool checked)
-//{
-//    if (checked==true)
-//    {
-//        zGraph->is_rows=false;
-//        //TODOui->test_row_radioButton->setChecked(false);
-//    }
-//}
-
-//void Widget::slot_on_test_row_radioButton_toggled(bool checked)
-//{
-//    if (checked==true)
-//    {
-//        zGraph->is_rows=true;
-//        //TODOui->test_col_radioButton->setChecked(false);
-//    }
-//}
-
-//void Widget::on_test_row_column_lineEdit_textChanged(const QString &arg1)
-//{
-//    zGraph->col_or_row_number=arg1.toInt();
-//    zGraph->replot_test(arg1.toInt());
-//}
-
 void Widget::slot_on_test_cuda_pushButton_clicked(int num,int type)
 {
     qDebug() << QString::number(num);
@@ -733,9 +623,7 @@ void Widget::slot_on_test_cuda_pushButton_clicked(int num,int type)
         ui->delete_marker_pushButton->setEnabled(true);
         ui->reference_marker_pushButton->setEnabled(true);
         ui->show_marker_pushButton->setEnabled(true);
-        //TODOui->add_pushButton->setEnabled(true);
 
-        //TODOui->export_pushButton->setEnabled(true);
         ui->graph_color_comboBox->setEnabled(true);
         ui->graph_lin_log_type_comboBox->setEnabled(true);
         ui->graph_style_comboBox->setEnabled(true);

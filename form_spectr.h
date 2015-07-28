@@ -46,6 +46,7 @@ signals:
     void signal_on_k_lineEdit_textChanged(QString arg1);
 
     void change_FI0_cuda_test(int count);
+    void signal_on_pushButton_clicked();
 private slots:
     //    QString get_x_y_scale_lineedit1();
     //    QString get_x_y_scale_lineedit2();
@@ -108,6 +109,8 @@ private slots:
 
 
     void on_export_spectr_pushbutton_clicked();
+
+    void on_pushButton_clicked();
 
 private:
 };

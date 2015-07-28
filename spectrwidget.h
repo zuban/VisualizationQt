@@ -42,6 +42,7 @@ signals:
 void set_gate_marker(double l_angl, double r_angl);
 public slots:
  void export_spectr_pushbutton();
+ void signal_on_pushButton_clicked();
 private slots:
 
     void change_FI0_cuda_test(int count);
@@ -62,20 +63,20 @@ private slots:
     void slot_to_change_scale_point1(QPointF point);
     void slot_to_change_scale_point22(QPointF point);
 
-    void photo_change_x_shift(double a);
-    void photo_change_y_shift(double a);
-    void photo_change_x_scale(double a);
-    void photo_change_y_scale(double a);
-    void photo_change_fi(double a);
-    void photo_change_k(double a);
-    void photo_change_fi_shift(double a);
+//    void photo_change_x_shift(double a);
+//    void photo_change_y_shift(double a);
+//    void photo_change_x_scale(double a);
+//    void photo_change_y_scale(double a);
+//    void photo_change_fi(double a);
+//    void photo_change_k(double a);
+//    void photo_change_fi_shift(double a);
 
-    void photo_slot_to_change_scale_scale1(double a);
-    void photo_slot_to_change_scale_scale2(double a);
-    void photo_slot_to_change_scale_angle1(double a,double b);
-    void photo_slot_to_change_scale_angle2(double a,double b);
-    void photo_slot_to_change_scale_point1(QPointF point);
-    void photo_slot_to_change_scale_point22(QPointF point);
+//    void photo_slot_to_change_scale_scale1(double a);
+//    void photo_slot_to_change_scale_scale2(double a);
+//    void photo_slot_to_change_scale_angle1(double a,double b);
+//    void photo_slot_to_change_scale_angle2(double a,double b);
+//    void photo_slot_to_change_scale_point1(QPointF point);
+//    void photo_slot_to_change_scale_point22(QPointF point);
 
 
 
@@ -159,27 +160,27 @@ private slots:
 
     void on_x_y_shitft_pushButton_2_clicked();
 
-    void on_photo_enable_checkBox_toggled(bool checked);
+//    void on_photo_enable_checkBox_toggled(bool checked);
 
-    //void on_tabWidget_currentChanged(int index);
+//    //void on_tabWidget_currentChanged(int index);
 
-    void on_photo_x_y_scale_pushButton_clicked();
+//    void on_photo_x_y_scale_pushButton_clicked();
 
-    void on_photo_x_y_scale_pushButton_2_clicked();
+//    void on_photo_x_y_scale_pushButton_2_clicked();
 
-    void on_photo_ok_x_y_scale_pushButton_clicked();
+//    void on_photo_ok_x_y_scale_pushButton_clicked();
 
-    void on_photo_angle_pushbutton_clicked();
+//    void on_photo_angle_pushbutton_clicked();
 
-    void on_photo_ok_angle_pushbutton_clicked();
+//    void on_photo_ok_angle_pushbutton_clicked();
 
-    void on_photo_angle_pushbutton_2_clicked();
+//    void on_photo_angle_pushbutton_2_clicked();
 
-    void on_photo_x_y_shitft_pushButton_clicked();
+//    void on_photo_x_y_shitft_pushButton_clicked();
 
-    void on_photo_ok_x_y_shift_pushButton_clicked();
+//    void on_photo_ok_x_y_shift_pushButton_clicked();
 
-    void on_photo_x_y_shitft_pushButton_2_clicked();
+//    void on_photo_x_y_shitft_pushButton_2_clicked();
 
 //    void on_photo_x_shift_lineEdit_textChanged(const QString &arg1);
 

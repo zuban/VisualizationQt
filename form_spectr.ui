@@ -33,7 +33,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Cont read</string>
+          <string>Sketch read</string>
          </property>
         </widget>
        </item>
@@ -46,7 +46,14 @@
           </size>
          </property>
          <property name="text">
-          <string>Read</string>
+          <string>Read data from file</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Delete data</string>
          </property>
         </widget>
        </item>
@@ -55,7 +62,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab_3">
         <attribute name="title">
@@ -75,7 +82,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Scale</string>
+                <string>Change sketch properties</string>
                </property>
               </widget>
              </item>
@@ -88,7 +95,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Flip</string>
+                <string>Flip sketch</string>
                </property>
               </widget>
              </item>
@@ -105,14 +112,14 @@
              <item row="0" column="0" colspan="2">
               <widget class="QLabel" name="x_y_scale_label">
                <property name="text">
-                <string>Scale X Y</string>
+                <string>Scale sketch</string>
                </property>
               </widget>
              </item>
              <item row="3" column="0" colspan="2">
               <widget class="QPushButton" name="x_y_scale_pushButton">
                <property name="text">
-                <string>Select 1</string>
+                <string>Select the first part</string>
                </property>
               </widget>
              </item>
@@ -126,14 +133,14 @@
              <item row="1" column="2">
               <widget class="QPushButton" name="ok_x_y_scale_pushButton">
                <property name="text">
-                <string>&lt;&lt;OK</string>
+                <string>&lt;&lt; OK</string>
                </property>
               </widget>
              </item>
              <item row="3" column="3">
               <widget class="QPushButton" name="x_y_scale_pushButton_2">
                <property name="text">
-                <string>Select 1</string>
+                <string>Select the second part</string>
                </property>
               </widget>
              </item>
@@ -150,14 +157,14 @@
              <item row="0" column="0" colspan="2">
               <widget class="QLabel" name="angle_label">
                <property name="text">
-                <string>Angle</string>
+                <string>Change sketch direction</string>
                </property>
               </widget>
              </item>
              <item row="3" column="0" colspan="2">
               <widget class="QPushButton" name="angle_pushbutton">
                <property name="text">
-                <string>Select</string>
+                <string>Select the first angle</string>
                </property>
               </widget>
              </item>
@@ -171,14 +178,14 @@
              <item row="1" column="2">
               <widget class="QPushButton" name="ok_angle_pushbutton">
                <property name="text">
-                <string>&lt;&lt;OK</string>
+                <string>&lt;&lt; OK</string>
                </property>
               </widget>
              </item>
              <item row="3" column="3">
               <widget class="QPushButton" name="angle_pushbutton_2">
                <property name="text">
-                <string>Select</string>
+                <string>Select the second angle</string>
                </property>
               </widget>
              </item>
@@ -195,14 +202,14 @@
              <item row="0" column="0" colspan="2">
               <widget class="QLabel" name="angle_label_2">
                <property name="text">
-                <string>X Y shift</string>
+                <string>Change sketch shift</string>
                </property>
               </widget>
              </item>
              <item row="4" column="0" colspan="2">
               <widget class="QPushButton" name="x_y_shitft_pushButton">
                <property name="text">
-                <string>Select</string>
+                <string>Select the first point</string>
                </property>
               </widget>
              </item>
@@ -222,14 +229,14 @@
              <item row="1" column="2">
               <widget class="QPushButton" name="ok_x_y_shift_pushButton">
                <property name="text">
-                <string>&lt;&lt;OK</string>
+                <string>&lt;&lt; OK</string>
                </property>
               </widget>
              </item>
              <item row="4" column="3">
               <widget class="QPushButton" name="x_y_shitft_pushButton_2">
                <property name="text">
-                <string>Select</string>
+                <string>Select the second point</string>
                </property>
               </widget>
              </item>
@@ -246,7 +253,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>X  Shift</string>
+                <string>Sketch x axis shift</string>
                </property>
               </widget>
              </item>
@@ -272,7 +279,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Y  Shift</string>
+                <string>Sketch y axis shift</string>
                </property>
               </widget>
              </item>
@@ -298,7 +305,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>X  Scale</string>
+                <string>Sketch x axis scale</string>
                </property>
               </widget>
              </item>
@@ -324,7 +331,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Y  Scale</string>
+                <string>Sketch y axis scale</string>
                </property>
               </widget>
              </item>
@@ -350,7 +357,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>K (+1,-1)</string>
+                <string>Rotation direction(+1,-1)</string>
                </property>
               </widget>
              </item>
@@ -376,7 +383,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Fi 0</string>
+                <string>Default angle</string>
                </property>
               </widget>
              </item>
@@ -420,6 +427,16 @@
             </widget>
            </item>
           </layout>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Change fi angle and rotate sketch</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -974,7 +991,7 @@
    <item row="1" column="0">
     <widget class="QPushButton" name="export_spectr_pushbutton">
      <property name="text">
-      <string>Export</string>
+      <string>Export pdf</string>
      </property>
     </widget>
    </item>

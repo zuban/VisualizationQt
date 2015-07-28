@@ -1290,9 +1290,6 @@
    <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
-     </item>
-     <item>
       <widget class="QPushButton" name="add_marker_pushButton">
        <property name="minimumSize">
         <size>
@@ -1301,7 +1298,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Add Marker</string>
+        <string>Add</string>
        </property>
       </widget>
      </item>
@@ -1314,7 +1311,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Delete Marker</string>
+        <string>Delete</string>
        </property>
       </widget>
      </item>
@@ -1327,7 +1324,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Ref Marker</string>
+        <string>Ref</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -1343,7 +1340,7 @@
         </size>
        </property>
        <property name="text">
-        <string>Show Marker</string>
+        <string>Show</string>
        </property>
       </widget>
      </item>
@@ -1377,7 +1374,7 @@ p, li { white-space: pre-wrap; }
          </property>
          <item>
           <property name="text">
-           <string>Amplitude</string>
+           <string>Ampl</string>
           </property>
          </item>
          <item>

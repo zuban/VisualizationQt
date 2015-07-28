@@ -17,13 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(get_control(Form_Spectr*)),ui->widget_spectr,SLOT(get_control(Form_Spectr*)));
     emit get_control(ui->widget_spectr_contr);
 
-    //connect(ui->widget_contr_2D,SIGNAL(signal_on_read_pushButton_clicked()),ui->widget_2D,SLOT(slot_on_read_pushButton_clicked()));
+
     connect(ui->widget_contr_2D,SIGNAL(signal_on_add_pushButton_clicked()),ui->widget_2D,SLOT(slot_on_add_pushButton_clicked()));
     connect(ui->widget_contr_2D,SIGNAL(signal_on_export_pushButton_clicked()),ui->widget_2D,SLOT(slot_on_export_pushButton_clicked()));
     connect(ui->widget_contr_2D,SIGNAL(signal_on_test_cuda_pushButton_clicked(int,int)),ui->widget_2D,SLOT(slot_on_test_cuda_pushButton_clicked(int,int)));
-    //    connect(ui->widget_contr_2D,SIGNAL(signal_on_test_row_column_lineEdit_textChanged(QString)),ui->widget_2D,SLOT(slot_on_test_cuda_pushButton_clicked(QString)));
-    //connect(ui->widget_contr_2D,SIGNAL(signal_on_test_col_radioButton_toggled(bool)),ui->widget_2D,SLOT(slot_on_test_col_radioButton_toggled(bool)));
-    // connect(ui->widget_contr_2D,SIGNAL(signal_on_test_row_radioButton_toggled(bool)),ui->widget_2D,SLOT(slot_on_test_row_radioButton_toggled(bool)));
 
     connect(ui->widget_spectr_contr,SIGNAL(signal_on_read_pushbutton_clicked()),ui->widget_spectr,SLOT(on_read_pushbutton_clicked()));
     connect(ui->widget_spectr_contr,SIGNAL(signal_on_cont_read_pushButton_clicked()),ui->widget_spectr,SLOT(on_cont_read_pushButton_clicked()));
@@ -43,13 +40,20 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->widget_spectr_contr,SIGNAL(signal_on_y_shift_lineEdit_textChanged(QString)),ui->widget_spectr,SLOT(on_y_shift_lineEdit_textChanged(QString)));
     connect(ui->widget_spectr_contr,SIGNAL(signal_on_x_scale_lineEdit_textChanged(QString)),ui->widget_spectr,SLOT(on_x_scale_lineEdit_textChanged(QString)));
     connect(ui->widget_spectr_contr,SIGNAL(signal_on_y_scale_lineEdit_textChanged(QString)),ui->widget_spectr,SLOT(on_y_scale_lineEdit_textChanged(QString)));
-    //connect(ui->widget_spectr_contr,SIGNAL(signal_on_k_lineEdit_textChanged(QString)),ui->widget_spectr,SLOT(on_k_lineEdit_textChanged(QString)));
 
     connect(ui->widget_spectr_contr,SIGNAL(change_FI0_cuda_test(int)),ui->widget_spectr,SLOT(change_FI0_cuda_test(int)));
     connect(ui->widget_contr_2D,SIGNAL(enable_gate_marker(bool)),ui->widget_2D->zGraph,SLOT(enable_gate_marker(bool)));
     connect(ui->widget_spectr_contr,SIGNAL(signal_on_export_spectr_pushbutton_clicked()),ui->widget_spectr,SLOT(export_spectr_pushbutton()));
-connect(ui->widget_spectr,SIGNAL(set_gate_marker(double,double)),ui->widget_2D->zGraph,SLOT(set_gate_marker(double,double)));
+    connect(ui->widget_spectr,SIGNAL(set_gate_marker(double,double)),ui->widget_2D->zGraph,SLOT(set_gate_marker(double,double)));
     connect(ui->widget_spectr,SIGNAL(set_data_2D(QString)),ui->widget_2D->zGraph,SLOT(get_data_2D(QString)));
+    connect(ui->widget_contr_2D,SIGNAL(signal_on_copy_pushButton_clicked()),ui->widget_2D->zGraph,SLOT(signal_on_copy_pushButton_clicked()));
+    connect(ui->widget_contr_2D,SIGNAL(signal_on_clear_pushButton_clicked()),ui->widget_2D->zGraph,SLOT(signal_on_clear_pushButton_clicked()));
+    connect(ui->widget_spectr_contr,SIGNAL(signal_on_pushButton_clicked()),ui->widget_spectr,SLOT(signal_on_pushButton_clicked()));
+    connect(ui->widget_2D->zGraph,SIGNAL(replot_2d()),ui->widget_contr_2D,SLOT(replot_2d()));
+
+    connect(ui->widget_2D->zGraph,SIGNAL(change_value_freq(double)),ui->widget_contr_2D,SLOT(change_value_freq(double)));
+      connect(ui->widget_2D->zGraph,SIGNAL(change_value_angle(double)),ui->widget_contr_2D,SLOT(change_value_angle(double)));
+
 }
 
 MainWindow::~MainWindow()

@@ -19,6 +19,13 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Spectrum type:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QComboBox" name="type_combobox">
          <property name="minimumSize">
           <size>
@@ -28,7 +35,7 @@
          </property>
          <item>
           <property name="text">
-           <string>Ampl</string>
+           <string>Amplitude</string>
           </property>
          </item>
          <item>
@@ -49,6 +56,20 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Spectrum view:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QComboBox" name="spec_type_combobox">
          <property name="minimumSize">
           <size>
@@ -58,7 +79,7 @@
          </property>
          <item>
           <property name="text">
-           <string>Normal</string>
+           <string>Colored</string>
           </property>
          </item>
          <item>
@@ -90,7 +111,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Rect</string>
+          <string>Rectangle</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -106,7 +127,7 @@
           </size>
          </property>
          <property name="text">
-          <string>Polygon</string>
+          <string>Polyline</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -126,6 +147,20 @@
          </property>
          <property name="checkable">
           <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Color:</string>
          </property>
         </widget>
        </item>
@@ -291,11 +326,18 @@
         </widget>
        </item>
        <item>
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="0" column="0">
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Spectr</string>
+            <string>Spectrum supremum </string>
            </property>
           </widget>
          </item>
@@ -331,7 +373,7 @@
          <item row="1" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
-            <string>Spectr</string>
+            <string>Spectrum infimum</string>
            </property>
           </widget>
          </item>

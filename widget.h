@@ -24,7 +24,7 @@ private slots:
 
 
 
-    void change_text(double text);
+    //void change_text(double text);
 
     void enable_delete_pushbutton(bool a);
 

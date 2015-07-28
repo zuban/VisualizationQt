@@ -122,8 +122,13 @@ public:
         double gate_pos2;
 signals:
     void signal_from_zGraph(double text);
+    void replot_2d();
+    void change_value_freq(double val);
+    void change_value_angle(double val);
 
 public slots:
+    void signal_on_copy_pushButton_clicked();
+    void signal_on_clear_pushButton_clicked();
     void set_gate_marker(double l_angl, double r_angl);
    void enable_gate_marker(bool en);
      void get_data_2D(QString str);

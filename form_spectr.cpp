@@ -28,11 +28,12 @@ Form_Spectr::Form_Spectr(QWidget *parent) :
     ui->ok_x_y_scale_pushButton->setEnabled(false);
     ui->ok_x_y_shift_pushButton->setEnabled(false);
 
-   // ui->y_shift_lineEdit->setEnabled(false);
+    // ui->y_shift_lineEdit->setEnabled(false);
     ui->x_shift_lineedit2->setEnabled(false);
 
     ui->y_shift_lineedit1->setEnabled(false);
     ui->flip_checkBox->setEnabled(false);
+    ui->pushButton->setEnabled(false);
 }
 
 Form_Spectr::~Form_Spectr()
@@ -44,6 +45,7 @@ void Form_Spectr::on_read_pushbutton_clicked()
 {
     emit signal_on_read_pushbutton_clicked();
     ui->horizontalSlider_for_cuda_test->setValue(0.0);
+    ui->pushButton->setEnabled(true);
 }
 
 
@@ -61,52 +63,6 @@ void Form_Spectr::on_ok_x_y_scale_pushButton_clicked()
 {
     emit signal_on_ok_x_y_scale_pushButton_clicked();
 }
-//QString Form_Spectr::get_x_y_scale_lineedit1()
-//{
-//    return ui->x_y_scale_lineedit1->text();
-//}
-//QString Form_Spectr::get_x_y_scale_lineedit2()
-//{
-//    return ui->x_y_scale_lineedit2->text();
-//}
-//QString Form_Spectr::get_x_scale_lineEdit()
-//{
-//    return ui->x_scale_lineEdit->text();
-//}
-//QString Form_Spectr::get_y_scale_lineEdit()
-//{
-//    return ui->y_scale_lineEdit->text();
-//}
-//QString Form_Spectr::get_angle_lineedit2()
-//{
-//    return ui->angle_lineedit2->text();
-//}
-//QString Form_Spectr::get_angle_lineedit1()
-//{
-//    return ui->angle_lineedit1->text();
-//}
-//QString Form_Spectr::get_fi_lineEdit()
-//{
-//    return ui->fi_lineEdit->text();
-//}
-
-//QString Form_Spectr::get_x_shift_lineedit1()
-//{
-//    return ui->x_shift_lineedit1->text();
-//}
-//QString Form_Spectr::get_x_shift_lineedit2()
-//{
-//    return ui->x_shift_lineedit2->text();
-//}
-//QString Form_Spectr::get_y_shift_lineedit2()
-//{
-//    return ui->y_shift_lineedit2->text();
-//}
-//QString Form_Spectr::get_y_shift_lineedit1()
-//{
-//    return ui->y_shift_lineedit1->text();
-//}
-
 void Form_Spectr::on_x_y_scale_pushButton_2_clicked()
 {
     emit signal_on_x_y_scale_pushButton_2_clicked();
@@ -135,7 +91,6 @@ void Form_Spectr::on_scale_checkBox_toggled(bool checked)
         ui->ok_x_y_scale_pushButton->setEnabled(true);
         ui->ok_x_y_shift_pushButton->setEnabled(true);
 
-        //ui->y_shift_lineEdit->setEnabled(true);
         ui->x_shift_lineedit2->setEnabled(true);
         ui->y_shift_lineedit1->setEnabled(true);
         ui->flip_checkBox->setEnabled(true);
@@ -160,7 +115,6 @@ void Form_Spectr::on_scale_checkBox_toggled(bool checked)
         ui->ok_x_y_scale_pushButton->setEnabled(false);
         ui->ok_x_y_shift_pushButton->setEnabled(false);
 
-        //ui->y_shift_lineEdit->setEnabled(false);
         ui->x_shift_lineedit2->setEnabled(false);
         ui->y_shift_lineedit1->setEnabled(false);
         ui->flip_checkBox->setEnabled(false);
@@ -201,54 +155,6 @@ void Form_Spectr::on_x_y_shitft_pushButton_2_clicked()
 {
     emit signal_on_x_y_shitft_pushButton_2_clicked();
 }
-
-
-
-//void Form_Spectr::set_x_y_scale_lineedit1(QString str)
-//{
-//    ui->x_y_scale_lineedit1->setText(str);
-//}
-//void Form_Spectr::set_x_y_scale_lineedit2(QString str)
-//{
-//    ui->x_y_scale_lineedit2->setText(str);
-//}
-//void Form_Spectr::set_x_scale_lineEdit(QString str)
-//{
-//    ui->x_scale_lineEdit->setText(str);
-//}
-//void Form_Spectr::set_y_scale_lineEdit(QString str)
-//{
-//    ui->y_scale_lineEdit->setText(str);
-//}
-//void Form_Spectr::set_angle_lineedit2(QString str)
-//{
-//    ui->angle_lineedit2->setText(str);
-//}
-//void Form_Spectr::set_angle_lineedit1(QString str)
-//{
-//    ui->angle_lineedit1->setText(str);
-//}
-//void Form_Spectr::set_fi_lineEdit(QString str)
-//{
-//    ui->fi_lineEdit->setText(str);
-//}
-//void Form_Spectr::set_x_shift_lineedit1(QString str)
-//{
-//    ui->x_shift_lineedit1->setText(str);
-//}
-
-//void Form_Spectr::set_x_shift_lineedit2(QString str)
-//{
-//    ui->x_shift_lineedit2->setText(str);
-//}
-//void Form_Spectr::set_y_shift_lineedit2(QString str)
-//{
-//    ui->y_shift_lineedit2->setText(str);
-//}
-//void Form_Spectr::set_y_shift_lineedit1(QString str)
-//{
-//    ui->y_shift_lineedit1->setText(str);
-//}
 
 void Form_Spectr::on_x_shift_lineEdit_textChanged(const QString &arg1)
 {
@@ -350,4 +256,9 @@ void Form_Spectr::on_Az_span_lineEdit_textChanged(const QString &arg1)
 void Form_Spectr::on_export_spectr_pushbutton_clicked()
 {
     emit signal_on_export_spectr_pushbutton_clicked();
+}
+
+void Form_Spectr::on_pushButton_clicked()
+{
+    emit signal_on_pushButton_clicked();
 }
