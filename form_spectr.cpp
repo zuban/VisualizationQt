@@ -1,9 +1,14 @@
 #include "form_spectr.h"
 #include "ui_form_spectr.h"
 #include <QMessageBox>
+#include <QTimer>
+#include "qmath.h"
 
 #include "spectrwidget.h"
 
+
+bool TEST_FLAG = true;
+int test_var =0;
 Form_Spectr::Form_Spectr(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Form_Spectr)
@@ -232,6 +237,18 @@ void Form_Spectr::on_horizontalSlider_for_cuda_test_valueChanged(int value)
 {
     emit change_FI0_cuda_test(value);
     ui->horizontalSlider_for_cuda_test_label->setText(QString::number(value));
+//     test_var = test_var + 1;
+//     if (test_var<4)
+//         return;
+//    while(TEST_FLAG)
+//    {
+//        QApplication::processEvents();
+//        int variable = qrand() % 140;
+//        ui->horizontalSlider_for_cuda_test_label->setText(QString::number(variable));
+//        emit change_FI0_cuda_test(variable);
+
+//        printf("exec");
+//    }
 }
 
 
@@ -255,6 +272,7 @@ void Form_Spectr::on_Az_span_lineEdit_textChanged(const QString &arg1)
 
 void Form_Spectr::on_export_spectr_pushbutton_clicked()
 {
+    TEST_FLAG = false;
     emit signal_on_export_spectr_pushbutton_clicked();
 }
 

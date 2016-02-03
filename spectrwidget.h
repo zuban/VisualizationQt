@@ -39,10 +39,10 @@ public:
 
 signals:
     void set_data_2D(QString str);
-void set_gate_marker(double l_angl, double r_angl);
+    void set_gate_marker(double l_angl, double r_angl);
 public slots:
- void export_spectr_pushbutton();
- void signal_on_pushButton_clicked();
+    void export_spectr_pushbutton();
+    void signal_on_pushButton_clicked();
 private slots:
 
     void change_FI0_cuda_test(int count);
@@ -54,31 +54,12 @@ private slots:
     void change_y_scale(double a);
     void change_fi(double a);
     void change_k(double a);
- //   void change_fi_shift(double a);
-
     void slot_to_change_scale_scale1(double a);
     void slot_to_change_scale_scale2(double a);
     void slot_to_change_scale_angle1(double a,double b);
     void slot_to_change_scale_angle2(double a,double b);
     void slot_to_change_scale_point1(QPointF point);
     void slot_to_change_scale_point22(QPointF point);
-
-//    void photo_change_x_shift(double a);
-//    void photo_change_y_shift(double a);
-//    void photo_change_x_scale(double a);
-//    void photo_change_y_scale(double a);
-//    void photo_change_fi(double a);
-//    void photo_change_k(double a);
-//    void photo_change_fi_shift(double a);
-
-//    void photo_slot_to_change_scale_scale1(double a);
-//    void photo_slot_to_change_scale_scale2(double a);
-//    void photo_slot_to_change_scale_angle1(double a,double b);
-//    void photo_slot_to_change_scale_angle2(double a,double b);
-//    void photo_slot_to_change_scale_point1(QPointF point);
-//    void photo_slot_to_change_scale_point22(QPointF point);
-
-
 
     void on_read_pushbutton_clicked();
 
@@ -87,8 +68,6 @@ private slots:
     void on_max_spinbox_valueChanged(int arg1);
 
     void on_min_spinbox_valueChanged(double arg1);
-
-   // void time(QString a);
 
     void on_rect_pushButton_clicked();
 
@@ -117,8 +96,6 @@ private slots:
     void on_cont_read_pushButton_clicked();
 
     void on_zoom_pushButton_toggled(bool checked);
-
-    //void on_horizontalSlider_actionTriggered(int action);
 
     void on_x_scale_lineEdit_textChanged(const QString &arg1);
 
@@ -159,41 +136,6 @@ private slots:
     void on_angle_pushbutton_2_clicked();
 
     void on_x_y_shitft_pushButton_2_clicked();
-
-//    void on_photo_enable_checkBox_toggled(bool checked);
-
-//    //void on_tabWidget_currentChanged(int index);
-
-//    void on_photo_x_y_scale_pushButton_clicked();
-
-//    void on_photo_x_y_scale_pushButton_2_clicked();
-
-//    void on_photo_ok_x_y_scale_pushButton_clicked();
-
-//    void on_photo_angle_pushbutton_clicked();
-
-//    void on_photo_ok_angle_pushbutton_clicked();
-
-//    void on_photo_angle_pushbutton_2_clicked();
-
-//    void on_photo_x_y_shitft_pushButton_clicked();
-
-//    void on_photo_ok_x_y_shift_pushButton_clicked();
-
-//    void on_photo_x_y_shitft_pushButton_2_clicked();
-
-//    void on_photo_x_shift_lineEdit_textChanged(const QString &arg1);
-
-//    void on_photo_y_shift_lineEdit_textChanged(const QString &arg1);
-
-//    void on_photo_x_scale_lineEdit_textChanged(const QString &arg1);
-
-//    void on_photo_y_scale_lineEdit_textChanged(const QString &arg1);
-
-//    void on_photo_fi_lineEdit_textChanged(const QString &arg1);
-
-//    void on_photo_fi_shift_slider_valueChanged(int value);
-
 
 
 private:

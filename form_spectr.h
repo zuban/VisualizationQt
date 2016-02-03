@@ -44,36 +44,9 @@ signals:
     void signal_on_x_scale_lineEdit_textChanged(QString arg1);
     void signal_on_y_scale_lineEdit_textChanged(QString arg1);
     void signal_on_k_lineEdit_textChanged(QString arg1);
-
     void change_FI0_cuda_test(int count);
     void signal_on_pushButton_clicked();
 private slots:
-    //    QString get_x_y_scale_lineedit1();
-    //    QString get_x_y_scale_lineedit2();
-    //    QString get_x_scale_lineEdit();
-    //    QString get_y_scale_lineEdit();
-    //    QString get_angle_lineedit2();
-    //    QString get_angle_lineedit1();
-    //    QString get_fi_lineEdit();
-
-    //    QString get_x_shift_lineedit1();
-    //    QString get_x_shift_lineedit2();
-    //    QString get_y_shift_lineedit2();
-    //    QString get_y_shift_lineedit1();
-
-
-    //    void set_x_y_scale_lineedit1(QString str);
-    //     void set_x_y_scale_lineedit2(QString str);
-    //     void set_x_scale_lineEdit(QString str);
-    //    void set_y_scale_lineEdit(QString str);
-    //     void set_angle_lineedit2(QString str);
-    //   void set_angle_lineedit1(QString str);
-    //    void set_fi_lineEdit(QString str);
-    //    void set_x_shift_lineedit1(QString str);
-    //      void set_x_shift_lineedit2(QString str);
-    //      void set_y_shift_lineedit2(QString str);
-    //      void set_y_shift_lineedit1(QString str);
-
     void on_read_pushbutton_clicked();
     void on_cont_read_pushButton_clicked();
     void on_x_y_scale_pushButton_clicked();
@@ -94,22 +67,10 @@ private slots:
     void on_y_scale_lineEdit_textChanged(const QString &arg1);
     void on_k_lineEdit_textChanged(const QString &arg1);
     void on_horizontalSlider_for_cuda_test_valueChanged(int value);
-//    void on_fi_shift_slider_valueChanged(int value);
-
-//    void on_horizontalSlider_for_cuda_test_sliderReleased();
-
-//    void on_horizontalSlider_for_cuda_test_sliderPressed();
-
     void on_Azstart_lieedit_data_textChanged(const QString &arg1);
-
     void on_Azstop_lineedit_data_textChanged(const QString &arg1);
-
     void on_Az_span_lineEdit_textChanged(const QString &arg1);
-
-
-
     void on_export_spectr_pushbutton_clicked();
-
     void on_pushButton_clicked();
 
 private:

@@ -37,10 +37,10 @@ gate_pos1 = 0.0;
 gate_pos2 = 0.0;
     //lines color
     eColor[0]=black;
-    eColor[1]=gray;
-    eColor[2]=darkGreen;
+    eColor[1]=darkGreen;
+    eColor[2]=darkCyan;
     eColor[3]=darkGray;
-    eColor[4]=darkCyan;
+    eColor[4]=gray;
     eColor[5]=black;
     eColor[6]=darkYellow;
     for (int i=7;i<N_GRAPHS_MAX;i++)
@@ -58,11 +58,12 @@ gate_pos2 = 0.0;
         eCurveType[i]=SolidLine;
         curve_width[i]=1.5;
     }
-
+ zVector[0]=new ZVector();
     line_symbol=new QwtSymbol( QwtSymbol::Diamond, Qt::green, Qt::NoPen, QSize( 10,10 ));
     for (int i=0;i<N_GRAPHS_MAX;i++)
     {
-        zVector[i]=new ZVector();
+        if (i!=0)
+            zVector[i]=NULL;
         curve[i]=new QwtPlotCurve();
         curve[i]->setPen(* new QPen(getRGB(eColor[i]),curve_width[i],getPen(eCurveType[i])));
         basic_marker[i]=new QwtPlotMarker();
@@ -468,6 +469,7 @@ void ZGraph::Cuda_draw_default_graph(int num,int type)
         }
 
     }
+
     myPlot->replot();
     eSpecialMarker=active;
 }
@@ -1379,6 +1381,7 @@ void ZGraph::Cuda_redraw_graph(int num,int type)
             QMessageBox::information(0,"error","invalid row or col number");
             return;
         }
+
         zVector[0]->start=F_start;
         zVector[0]->stop=F_stop;
 
@@ -1619,6 +1622,7 @@ void ZGraph::Cuda_redraw_graph(int num,int type)
         delete xs;
         delete ys;
     }
+
 }
 
 void ZGraph::get_data_2D(QString str)
@@ -1644,9 +1648,66 @@ void ZGraph::get_data_2D(QString str)
 }
 void ZGraph::signal_on_copy_pushButton_clicked()
 {
+    for (int i=1;i<N_GRAPHS_MAX;i++)
+    {
+        if (zVector[i]!=NULL)
+            continue;
+        else
+        {
+            zVector[i] = new ZVector();
+            zVector[i]->resize(zVector[0]->zLenght);
+            zVector[i]->start = zVector[0]->start;
+            zVector[i]->stop = zVector[0]->stop;
+            zVector[i]->zLenght = zVector[0]->zLenght;
+            for (int j=0;j<zVector[i]->zLenght;j++)
+            {
+                (*zVector[i])[j]= (*zVector[0])[j];
+            }
+            double *xs = new double[zVector[i]->zLenght];
+            double *ys = new double[zVector[i]->zLenght];
 
+
+            for (int k=0;k<zVector[i]->zLenght;k++)
+            {
+                double_complex C=(*zVector[i])[k];
+                xs[k]=zVector[i]->start+k*(zVector[i]->stop-zVector[i]->start)/(zVector[i]->zLenght-1);
+                ys[k]=10.0*log10(C.x*C.x+C.y*C.y + 1.0e-20);
+            }
+
+            QwtPointArrayData *dataLin = new QwtPointArrayData(&xs[0],&ys[0],zVector[i]->zLenght);
+            curve[i]->setData(dataLin);
+            curve[i]->attach(myPlot);
+            myPlot->replot();
+
+            delete xs;
+            delete ys;
+            graphs_count++;
+            myPlot->mylegend->add_graph();
+            return;
+        }
+    }
 }
 void ZGraph::signal_on_clear_pushButton_clicked()
 {
+    for (int i=1;i<N_GRAPHS_MAX;i++)
+    {
+        if (zVector[i]==NULL)
+            continue;
+        else
+        {
+            delete zVector[i];
+            zVector[i] = NULL;
 
+            if (curve[i]!=NULL)
+            {
+            delete curve[i];
+            curve[i]=new QwtPlotCurve();
+            curve[i]->setPen(* new QPen(getRGB(eColor[i]),curve_width[i],getPen(eCurveType[i])));
+            }
+            myPlot->mylegend->delete_legend();
+            myPlot->mylegend->add_graph();
+        }
+    }
+    myPlot->replot();
 }
+

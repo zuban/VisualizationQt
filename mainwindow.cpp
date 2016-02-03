@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->widget_2D->zGraph,SIGNAL(replot_2d()),ui->widget_contr_2D,SLOT(replot_2d()));
 
     connect(ui->widget_2D->zGraph,SIGNAL(change_value_freq(double)),ui->widget_contr_2D,SLOT(change_value_freq(double)));
-      connect(ui->widget_2D->zGraph,SIGNAL(change_value_angle(double)),ui->widget_contr_2D,SLOT(change_value_angle(double)));
+    connect(ui->widget_2D->zGraph,SIGNAL(change_value_angle(double)),ui->widget_contr_2D,SLOT(change_value_angle(double)));
 
 }
 
@@ -60,5 +60,10 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::closing(){
+    QCoreApplication::quit();
+}
+
 
 

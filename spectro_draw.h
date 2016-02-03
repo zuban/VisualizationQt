@@ -35,10 +35,6 @@ public:
     bool is_scale_mode_point2;
     QList<QPointF> scale_mode_point_list1;
     QList<QPointF> scale_mode_point_list2;
-    //   QPointF scale_point1;//for size mode
-    //   QPointF scale_point2;
-
-
     int left_select;
     int right_select;
     double angle_rotate,x_shift,y_shift,fi,x_scale,y_scale,points_count,_k;
@@ -47,12 +43,9 @@ public:
     void replot_sketch(double x_sh,double y_sh,double x_sc,double y_sc, double fi0, double fi_shift, double k);
     void flip();
 
-
-
     bool is_new_point;
     QPointF point1;
     QPointF point2;
-
 
     struct Point  {
     public:

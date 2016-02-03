@@ -52,15 +52,20 @@ double Spectro_draw::calculate_const_y(double x,double y)
 
 void Spectro_draw::paintEvent(QPaintEvent *  )
 {
-    QPainter  painter(this);
-   // if (painter!=NULL)
-    draw(&painter);
+    try {
+        QPainter  painter;
+            painter.begin(this);
+            draw(&painter);
+    } catch (const std::bad_alloc &) {
+        printf("error in painter usage");
+    }
+
 }
 void Spectro_draw::draw( QPainter  *painter)
 {
     painter->setOpacity(0.6);
     painter->setRenderHint(QPainter::Antialiasing,true);
-    painter->setRenderHint(QPainter::Antialiasing,true);
+
     if (man_list.size()!=0)
     {
         for (int i=0;i<man_list.size()-1;i++)
@@ -88,6 +93,8 @@ void Spectro_draw::draw( QPainter  *painter)
                                       QPointF(signal_transform_x(((Point)(man_list.at(i+1))).point.x()),signal_transform_y(((Point)(man_list.at(i+1))).point.y())));
                 }
             }
+            delete brush;
+            delete setpen;
         }
     }
     if (sketch_list.size()>0)
@@ -118,6 +125,8 @@ void Spectro_draw::draw( QPainter  *painter)
                                       QPointF(signal_transform_x(((Point)(sketch_list.at(i+1))).point.x()),signal_transform_y(((Point)(sketch_list.at(i+1))).point.y())));
                 }
             }
+            delete brush;
+            delete setpen;
         }
     }
     QBrush *brush=new QBrush( Qt::yellow );
@@ -171,7 +180,7 @@ void Spectro_draw::draw( QPainter  *painter)
         if (scale_mode_point_list2.size()==1)
             painter->drawPoint(scale_mode_point_list2.at(0));
     }
-
+delete brush;
 
 }
 

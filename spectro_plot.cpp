@@ -107,6 +107,7 @@ Spectro_Plot::Spectro_Plot(QWidget *parent):
 
 void Spectro_Plot::draw_spectr(Z2Vector z2vector,double intx1,double intx2,double inty1,double inty2,int colormax,double colormin)
 {
+
     QVector<double>  *vct= new QVector<double>(z2vector.size());
 
     if (etype==Ampl)
@@ -186,6 +187,7 @@ void Spectro_Plot::draw_spectr(Z2Vector z2vector,double intx1,double intx2,doubl
     setAxisScale(QwtPlot::yRight, zInterval.minValue(), zInterval.maxValue() );
     enableAxis(QwtPlot::yRight);
     //    replot();
+    //raster delete in another place
     delete vct;
 
 }

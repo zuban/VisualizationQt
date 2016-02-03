@@ -12,10 +12,10 @@ QtLegend::QtLegend(QWidget *parent) :
     graphs_legend_count=0;
     active_graph=1;
     color[0]=black;
-    color[1]=gray;
-    color[2]=darkGreen;
+    color[1]=darkGreen;
+    color[2]=darkCyan;
     color[3]=darkGray;
-    color[4]=darkCyan;
+    color[4]=gray;
     color[5]=black;
     color[6]=darkYellow;
     if (point[0]!=NULL)
@@ -46,8 +46,14 @@ void QtLegend::delete_legend()
 
 void QtLegend::paintEvent(QPaintEvent *  )
 {
-    QPainter  painter(this);
-    draw(&painter);
+    try {
+        QPainter  painter;
+            painter.begin(this);
+            draw(&painter);
+            painter.end();
+    } catch (const std::bad_alloc &) {
+        printf("error in painter usage");
+    }
 }
 
 void QtLegend::draw( QPainter  *painter)

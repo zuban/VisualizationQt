@@ -24,7 +24,7 @@ public:
     IOData *cdata;
     double_complex *cuda_mas;
 
-    const static int N_GRAPHS_MAX = 1;
+    const static int N_GRAPHS_MAX = 4;
     int graphs_count;
     int markers_count;
     int d_selectedPoint;
@@ -46,7 +46,6 @@ public:
     QwtPlotZoomer *zoomer;
     QwtPlotCurve *d_selectedCurve;
     QwtPlotPicker *d_picker;
-
 
     int N_k;
     int N_fi;
@@ -112,14 +111,11 @@ public:
     void reference_marker_toggled(bool checked);
     void change_markers();
     void Cuda_redraw_graph(int num,int type);
-    //    void  change_gate_marker(QPoint pos);
-    //    int gate_pos_1;
-    //    int gate_pos_2;
-        QwtPlotMarker *gate_marker1;
-        QwtPlotMarker *gate_marker2;
-        bool gate_enable;
-        double gate_pos1;
-        double gate_pos2;
+    QwtPlotMarker *gate_marker1;
+    QwtPlotMarker *gate_marker2;
+    bool gate_enable;
+    double gate_pos1;
+    double gate_pos2;
 signals:
     void signal_from_zGraph(double text);
     void replot_2d();
@@ -130,8 +126,8 @@ public slots:
     void signal_on_copy_pushButton_clicked();
     void signal_on_clear_pushButton_clicked();
     void set_gate_marker(double l_angl, double r_angl);
-   void enable_gate_marker(bool en);
-     void get_data_2D(QString str);
+    void enable_gate_marker(bool en);
+    void get_data_2D(QString str);
 public Q_SLOTS:
     void click_on_canvas(const QPoint &pos);
     

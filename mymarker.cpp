@@ -16,9 +16,14 @@ MyMarker::MyMarker(QWidget *parent) :
 }
 void MyMarker::paintEvent(QPaintEvent *)
 {
-    QPainter  painter(this);
-    draw(&painter);
-
+    try {
+        QPainter  painter;
+            painter.begin(this);
+            draw(&painter);
+            painter.end();
+    } catch (const std::bad_alloc &) {
+        printf("error in painter usage");
+    }
 }
 int MyMarker::get_string_lenght()
 {
@@ -31,6 +36,8 @@ int MyMarker::get_string_lenght()
     return a;
 }
 
+
+//TODO сделать рефакторинг
 void MyMarker::draw(QPainter *painter)
 {
 
@@ -57,6 +64,7 @@ void MyMarker::draw(QPainter *painter)
             {
                 this->resize(150+lenght*3,35);
                 //add resize
+
                 painter->setRenderHint(QPainter::Antialiasing,true);
                 painter->setBrush(QBrush(Qt::white));
                 painter->setPen(QPen(Qt::black));

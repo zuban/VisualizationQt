@@ -4,6 +4,7 @@
 #include "time.h"
 #include "QLabel"
 #include "QGraphicsScene"
+#include "QCoreApplication"
 #include "cuda_dll_module.h"
 #include "ui_form_spectr.h"
 #include "form_spectr.h"
@@ -14,6 +15,11 @@
 
 double GLOBAL_F_start;
 double GLOBAL_F_stop;
+
+bool IS_DOUBLE = true;
+
+float FLOAT_GLOBAL_F_start;
+float FLOAT_GLOBAL_F_stop;
 //#include "H5Cpp.h"
 //struct double2 {double x; double y;};
 
@@ -32,6 +38,8 @@ SpectrWidget::SpectrWidget(QWidget *parent) :
     data=NULL;
     ui->progressBar->setValue(0);
     ui->polygon_pushButton->setChecked(true);
+
+//    connect(this, SIGNAL(QCoreApplication::aboutToQuit()), this, SLOT(closing()));
 
 
     connect(sp_plot->draw_widget,SIGNAL(signla_x_shift(double)),this,SLOT(change_x_shift(double)));
@@ -59,6 +67,12 @@ SpectrWidget::~SpectrWidget()
     delete data;
     delete ui;
 }
+
+//void SpectrWidget::closing()
+//{
+//    printf("clllose");
+//    QApplication::quit();
+//}
 
 void SpectrWidget::on_read_pushbutton_clicked()
 {
@@ -95,8 +109,8 @@ void SpectrWidget::on_read_pushbutton_clicked()
     ui->progressBar->setValue(50);
 
     emit set_data_2D(way);
-    bool is_double = true;
-    if (is_double)
+
+    if (IS_DOUBLE)
     {
         double pi = 3.1415926;
         bool bWhole = true;
@@ -146,21 +160,59 @@ void SpectrWidget::on_read_pushbutton_clicked()
     }
     else {
 
+//        bool bWhole = true;
+//        int NEWCOL=2048;
+//        int NEWROW=1024;
+//        float fi_degspan = 20.0;
+//        if(bWhole){
+//            fi_degspan = 360.0;
+//            //N_fi = 15000;
+//        }
+//        float_complex *mas=new float_complex[NEWCOL*NEWROW];
+//        bool a = SetArrayC2C(N_k,N_fi,F_start,F_stop,AzStart,AzStop,(float*)masin,true);
+//        float dAzStart =  40;
+//        float dAzStop =  60;
+//        bool b = CalcC2C(NEWCOL,NEWROW,F_start,F_stop,dAzStart,dAzStop,(float*)mas);
+//        GLOBAL_F_start = F_start;
+//        GLOBAL_F_stop  = F_stop;
+//        z2vector->resize(NEWCOL*NEWROW);
+//        z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
+//        for (int i=0;i<z2vector->size()-1;i++)
+//        {
+//            (*z2vector)[i].x = mas[i].x;
+//            (*z2vector)[i].y = mas[i].y;
+//        }
+//        ui->progressBar->setValue(90);
+//        sp_plot->draw_spectr(*z2vector,f_get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_xstart(),f_get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+//        ui->progressBar->setValue(100);
+//        delete mas;
+
+
+
+
+
+
+
+        float pi = 3.1415926;
         bool bWhole = true;
-        int NEWCOL=2048;
+        int NEWCOL=2048;// int NEWCOL=2048;
         int NEWROW=1024;
         float fi_degspan = 20.0;
         if(bWhole){
             fi_degspan = 360.0;
-            //N_fi = 15000;
+            // N_fi = 15000;
         }
         float_complex *mas=new float_complex[NEWCOL*NEWROW];
-        bool a = SetArrayC2C(N_k,N_fi,F_start,F_stop,AzStart,AzStop,(float*)masin,true);
+        bool a = SetArrayC2C(N_k,N_fi,(float)F_start,(float)F_stop,(float)AzStart,(float)AzStop,(float*)masin,true);
+        ui->progressBar->setValue(60);
+
         float dAzStart =  40;
         float dAzStop =  60;
-        bool b = CalcC2C(NEWCOL,NEWROW,F_start,F_stop,dAzStart,dAzStop,(float*)mas);
-        GLOBAL_F_start = F_start;
-        GLOBAL_F_stop  = F_stop;
+        bool b = CalcC2C(NEWCOL,NEWROW,(float)F_start,(float)F_stop,(float)dAzStart,(float)dAzStop,(float*)mas);
+        ui->progressBar->setValue(70);
+
+        FLOAT_GLOBAL_F_start = (float)F_start;
+        FLOAT_GLOBAL_F_stop  = (float)F_stop;
         z2vector->resize(NEWCOL*NEWROW);
         z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
         for (int i=0;i<z2vector->size()-1;i++)
@@ -169,12 +221,27 @@ void SpectrWidget::on_read_pushbutton_clicked()
             (*z2vector)[i].y = mas[i].y;
         }
         ui->progressBar->setValue(90);
-        sp_plot->draw_spectr(*z2vector,f_get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_xstart(),f_get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+
+        sp_plot->draw_spectr(*z2vector,f_get_zstart()+control->ui->spectr_shift_lineedit->text().toFloat(),f_get_zstop()+control->ui->spectr_shift_lineedit->text().toFloat(),f_get_xstart(),f_get_xstop(),ui->max_spinbox->text().toFloat(),ui->min_spinbox->text().toFloat());
+        z2vector->startx = f_get_zstart()+control->ui->spectr_shift_lineedit->text().toFloat();
+        z2vector->stopx = f_get_zstop()+control->ui->spectr_shift_lineedit->text().toFloat();
+        z2vector->starty = f_get_xstart();
+        z2vector->stopy = f_get_xstop();
+        double scale = max(fabs(f_get_xstart()-f_get_xstop()),fabs(f_get_zstart()-f_get_zstop()));
+        z2vector->scale = scale;
+            sp_plot->setAxisScale(QwtPlot::yLeft,-scale/2,scale/2);
+            sp_plot->setAxisScale(QwtPlot::xBottom,-scale/2,scale/2);
+
+
+        sp_plot->replot();
+        if (zoomer_mod)
+            sp_plot->slot_for_zoomer(sp_plot->point_for_zoomer1,sp_plot->point_for_zoomer1);
         ui->progressBar->setValue(100);
         delete mas;
     }
     delete masin;
 emit set_gate_marker(-control->ui->Az_span_lineEdit->text().toDouble()/2,control->ui->Az_span_lineEdit->text().toDouble()/2);
+delete data;
 }
 
 
@@ -186,8 +253,8 @@ emit set_gate_marker(-control->ui->Az_span_lineEdit->text().toDouble()/2,control
 bool bInProgress = false;
 void SpectrWidget::change_FI0_cuda_test(int count)
 {
-    bool is_double = true;
-    if (is_double)
+
+    if (IS_DOUBLE)
     {
         ui->progressBar->setValue(50);
         if(bInProgress) return;
@@ -201,8 +268,9 @@ void SpectrWidget::change_FI0_cuda_test(int count)
             bool b = CalcZ2Z(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(double*)mas);
         }
         catch(...) {
-            printf ("CUDA ERROR\n");
+            printf ("cuda error occur 205 line spectwidget\n");
             bInProgress = false;
+            delete mas;
             return;
         }
 
@@ -218,8 +286,6 @@ void SpectrWidget::change_FI0_cuda_test(int count)
                 (*z2vector)[i].y = mas[i].y;
             }
             delete mas;
-
-           //sp_plot->draw_spectr(*z2vector,get_xstart(),get_xstop(),get_zstart(),get_zstop(),-10.0,-60);
             sp_plot->draw_spectr(*z2vector,get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),get_xstart(),get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
             z2vector->startx = get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble();
             z2vector->stopx = get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble();
@@ -248,45 +314,80 @@ void SpectrWidget::change_FI0_cuda_test(int count)
             bInProgress = false;
             return;
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
         bInProgress = false;
     }
     else {
-        ui->progressBar->setValue(50);
+//        ui->progressBar->setValue(50);
 
+//        if(bInProgress) return;
+//        bInProgress = true;
+//        printf ("count enter %d \n", count);
+//        int NEWCOL=2048;
+//        int NEWROW=1024;
+//        float_complex *mas=new float_complex[NEWCOL*NEWROW];
+//        float dAzStart = (float)count - control->ui->Az_span_lineEdit->text().toDouble()/2;
+//        float dAzStop = (float)count + control->ui->Az_span_lineEdit->text().toDouble()/2;
+//        try{
+//            bool b = CalcC2C(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(float*)mas);
+//        }
+//        catch(...) {
+//            printf ("CUDA ERROR\n");
+//            bInProgress = false;
+//            return;
+//        }
+//        printf ("count proceed\n");
+//        try{
+//            //test end
+//            z2vector->resize(NEWROW*NEWCOL);
+//            printf ("count  %d \n", count);
+//            z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
+
+//            for (int i=0;i<z2vector->size()-1;i++)
+//            {
+//                (*z2vector)[i].x = mas[i].x;
+//                (*z2vector)[i].y = mas[i].y;
+//            }
+
+//            delete mas;
+
+//            sp_plot->draw_spectr(*z2vector,f_get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_xstart(),f_get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+//            ui->progressBar->setValue(100);
+//        }
+//        catch(...) {
+//            printf ("RENDER ERROR\n");
+//            bInProgress = false;
+//            return;
+//        }
+//        printf ("count exit\n");
+//        bInProgress = false;
+
+
+
+
+
+
+        ui->progressBar->setValue(50);
         if(bInProgress) return;
         bInProgress = true;
-        printf ("count enter %d \n", count);
         int NEWCOL=2048;
         int NEWROW=1024;
         float_complex *mas=new float_complex[NEWCOL*NEWROW];
-        float dAzStart = (float)count - control->ui->Az_span_lineEdit->text().toDouble()/2;
-        float dAzStop = (float)count + control->ui->Az_span_lineEdit->text().toDouble()/2;
+        float dAzStart = (float)count - control->ui->Az_span_lineEdit->text().toFloat()/2;
+        float dAzStop = (float)count + control->ui->Az_span_lineEdit->text().toFloat()/2;
         try{
-            bool b = CalcC2C(NEWCOL,NEWROW,GLOBAL_F_start,GLOBAL_F_stop,dAzStart,dAzStop,(float*)mas);
+            bool b = CalcC2C(NEWCOL,NEWROW,FLOAT_GLOBAL_F_start,FLOAT_GLOBAL_F_stop,(float)dAzStart,(float)dAzStop,(float*)mas);
         }
         catch(...) {
-            printf ("CUDA ERROR\n");
+            printf ("cuda error occur 205 line spectwidget\n");
             bInProgress = false;
+            delete mas;
             return;
         }
-        printf ("count proceed\n");
+
         try{
             //test end
             z2vector->resize(NEWROW*NEWCOL);
-            printf ("count  %d \n", count);
+
             z2vector->set_zero_vector(NEWCOL,NEWROW,-100,100,-100,100);
 
             for (int i=0;i<z2vector->size()-1;i++)
@@ -294,18 +395,35 @@ void SpectrWidget::change_FI0_cuda_test(int count)
                 (*z2vector)[i].x = mas[i].x;
                 (*z2vector)[i].y = mas[i].y;
             }
-
             delete mas;
-
             sp_plot->draw_spectr(*z2vector,f_get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble(),f_get_xstart(),f_get_xstop(),ui->max_spinbox->text().toDouble(),ui->min_spinbox->text().toDouble());
+            z2vector->startx = f_get_zstart()+control->ui->spectr_shift_lineedit->text().toDouble();
+            z2vector->stopx = f_get_zstop()+control->ui->spectr_shift_lineedit->text().toDouble();
+            z2vector->starty = f_get_xstart();
+            z2vector->stopy = f_get_xstop();
+
+           float scale = max(fabs(f_get_xstart()-f_get_xstop()),fabs(f_get_zstart()-f_get_zstop()));
+           z2vector->scale = scale;
+
+           sp_plot->setAxisScale(QwtPlot::yLeft,-scale/2,scale/2);
+           sp_plot->setAxisScale(QwtPlot::xBottom,-scale/2,scale/2);
+           if (zoomer_mod)
+           {
+               sp_plot->setAxisScale(QwtPlot::yLeft,sp_plot->trans_y(sp_plot->point_for_zoomer1.y()),sp_plot->trans_y(sp_plot->point_for_zoomer2.y()));
+               sp_plot->setAxisScale(QwtPlot::xBottom,sp_plot->trans_x(sp_plot->point_for_zoomer1.x()),sp_plot->trans_x(sp_plot->point_for_zoomer2.x()));
+           }
+           sp_plot->replot();
+
             ui->progressBar->setValue(100);
+            sp_plot->draw_widget->replot_sketch(control->ui->x_shift_lineEdit->text().toFloat(),control->ui->y_shift_lineEdit->text().toFloat(),control->ui->x_scale_lineEdit->text().toFloat(),control->ui->y_scale_lineEdit->text().toFloat(),
+                                                control->ui->fi_lineEdit->text().toFloat(),control->ui->horizontalSlider_for_cuda_test->value(),control->ui->k_lineEdit->text().toFloat());
+
         }
         catch(...) {
             printf ("RENDER ERROR\n");
             bInProgress = false;
             return;
         }
-        printf ("count exit\n");
         bInProgress = false;
     }
     emit set_gate_marker(count-control->ui->Az_span_lineEdit->text().toDouble()/2,count+control->ui->Az_span_lineEdit->text().toDouble()/2);
